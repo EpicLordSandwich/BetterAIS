@@ -86,6 +86,11 @@
       dark:  P('#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#3a3a3a', '#f5f5f5', '#9a9a9a', '#4a9eff', '#cc2222', '#4a9eff', '#e0a73e', '#e45a5a'),
       light: P('#faf9f6', '#faf9f6', '#ffffff', '#f0f0f0', '#dddddd', '#0a0a0a', '#6b6b6b', '#1a6bcc', '#cc2222', '#1a6bcc', '#966319', '#cc2222'),
     },
+    minimal: {
+      name: 'Minimal', tagline: 'Neutrálne sivé, Inter + JetBrains Mono', radius: 6, font: 'Inter, "Inter Variable", system-ui, sans-serif',
+      dark:  P('#151515', '#151515', '#1a1a1a', '#222222', '#2e2e2e', '#f5f5f5', '#848484', '#2a7fff', '#1f78ff', '#2a7fff', '#a5a5a5', '#2a7fff'),
+      light: P('#ffffff', '#ffffff', '#fafafa', '#f5f5f5', '#ededed', '#151515', '#717171', '#0266ff', '#1f78ff', '#0266ff', '#717171', '#0266ff'),
+    },
   };
 
   const FONTS = [

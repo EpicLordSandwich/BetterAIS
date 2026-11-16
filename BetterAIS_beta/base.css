@@ -553,3 +553,9 @@ html:not([data-bu-off])[data-bu-theme="og"] :is(input, select, textarea, button)
 
 /* focus-visible prístupnosť (lightweight) */
 html:not([data-bu-off]) :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-bu-off]) *, html:not([data-bu-off]) *::before, html:not([data-bu-off]) *::after {
+    animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; transform: none !important;
+  }
+}
