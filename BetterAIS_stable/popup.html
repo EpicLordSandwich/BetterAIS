@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><link rel="stylesheet" href="options.css">
+<style>body{width:320px;padding:14px} .seg{display:flex} .seg button{flex:1} select{width:100%} h2{margin:12px 0 6px} .muted{display:block;margin-top:4px}</style></head>
+<body>
+  <h2 style="margin-top:0" data-i18n="mode">Režim</h2>
+  <div class="seg" id="mode"><button data-v="dark" data-i18n="modeDarkBtn">Tmavý</button><button data-v="light" data-i18n="modeLightBtn">Svetlý</button><button data-v="auto" data-i18n="modeAutoBtn">Auto</button></div>
+  <h2 data-i18n="theme">Téma</h2>
+  <select id="theme"></select>
+  <h2 data-i18n="thisPage">Táto stránka</h2>
+  <button id="pageToggle" class="primary" style="width:100%"></button>
+  <p class="muted" id="pagePath" style="margin-top:6px;word-break:break-all"></p>
+  <p class="muted" style="margin:12px 0 0" data-i18n="hint">Paleta príkazov: Ctrl+K · Diagnostika: Ctrl+Shift+U</p>
+  <p style="margin:10px 0 0"><button id="more" class="primary" style="width:100%" data-i18n="allSettings">Všetky nastavenia…</button></p>
+  <script src="themes.js"></script><script src="popup.js"></script>
+</body></html>

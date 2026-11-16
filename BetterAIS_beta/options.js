@@ -94,6 +94,7 @@
 
     $('gradesOn').checked = S.grades.on;
     $('gradesRequired').value = S.grades.requiredCredits || '';
+    $('experimentalOn').checked = !!S.experimental;
 
     const pic = $('pic');
     const avStatus = $('avStatus');
@@ -294,6 +295,8 @@
 
   /* ================= dashboard hodnotení ================= */
   $('gradesOn').onchange = (e) => commit({ grades: Object.assign({}, S.grades, { on: e.target.checked }) });
+  $('experimentalOn').checked = !!S.experimental;
+  $('experimentalOn').onchange = (e) => commit({ experimental: e.target.checked });
   $('gradesRequired').onchange = (e) => {
     const n = Math.max(0, Math.min(400, Math.round(Number(e.target.value) || 0)));
     e.target.value = n || '';

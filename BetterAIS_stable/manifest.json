@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "betterUIS",
+  "version": "1.1.0",
+  "description": "Vlastný vzhľad pre is.stuba.sk – témy, tmavý režim, CSS snippety, paleta príkazov Ctrl+K, table-tools, vlastná profilovka, odkazy v lište a notifikácie pošty.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage", "activeTab"],
+  "optional_permissions": ["alarms", "notifications"],
+  "optional_host_permissions": ["https://is.stuba.sk/*"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "betterUIS",
+    "default_icon": { "16": "icon16.png", "32": "icon32.png", "48": "icon48.png", "128": "icon128.png" }
+  },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "icons": { "16": "icon16.png", "32": "icon32.png", "48": "icon48.png", "128": "icon128.png" },
+  "commands": {
+    "dump": {
+      "suggested_key": { "default": "Ctrl+Shift+U", "mac": "Command+Shift+U" },
+      "description": "betterUIS – diagnostika stránky (kopíruje štruktúru)"
+    },
+    "pick": {
+      "suggested_key": { "default": "Ctrl+Shift+Y", "mac": "Command+Shift+Y" },
+      "description": "betterUIS – vybrať prvok na stránke"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://is.stuba.sk/*"],
+      "css": ["base.css"],
+      "js": ["themes.js", "notifcore.js", "grades.js", "content.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    { "resources": ["logo.png", "pedro.gif"], "matches": ["https://is.stuba.sk/*"] }
+  ]
+}

@@ -110,6 +110,7 @@
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
     notif: { on: false, interval: 20, quietFrom: 23, quietTo: 7 }, // notifikácie (opt-in): interval min, tiché hodiny 23-7
     grades: { on: true, requiredCredits: 0 }, // dashboard hodnotení na E-indexe; 0 = cieľ kreditov nie je nastavený
+    experimental: false, // experimental mode: fetch latest from GitHub; stable otherwise
   };
 
   // Ikonky pre odkazy v lište (feather-štýl, viewBox 24)
@@ -357,6 +358,7 @@
       customThemes: customThemes,
       notif,
       grades,
+      experimental: s.experimental === undefined ? DEFAULTS.experimental : !!s.experimental,
     };
   }
 
@@ -473,7 +475,7 @@
   function hasStorage() {
     return typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local && chrome.storage.sync;
   }
-  const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'notif'];
+  const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'notif', 'experimental'];
   function syncPayload(n) {
     const o = {};
     for (const k of SYNC_KEYS) o[k] = n[k];

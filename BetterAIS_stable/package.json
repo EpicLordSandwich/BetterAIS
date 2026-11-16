@@ -1,0 +1,11 @@
+{
+  "name": "betteruis",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Vlastný vzhľad pre is.stuba.sk",
+  "scripts": {
+    "test": "node tools/tests/test-notif-core.mjs && node tools/tests/test-notif-settings.mjs && node tools/tests/test-settings-core.mjs && node tools/tests/test-grades-core.mjs && node tools/tests/test-integration.mjs && node tools/contrast-check.mjs",
+    "package": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/package.ps1",
+    "package:firefox": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/package.ps1 -Target firefox"
+  }
+}
