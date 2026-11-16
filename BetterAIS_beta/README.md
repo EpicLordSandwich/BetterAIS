@@ -25,7 +25,7 @@ pri Firefoxe sa `manifest.firefox.json` v balíku premenuje na `manifest.json`.
 
 ## Čo to vie
 
-- **Témy** – 11 vstavaných (Claude, Sleek, Nord, Bloom, Comfy, Catppuccin, Dracula, Gruvbox, STU modrá, OLED, OG AIS),
+- **Témy** – 14 vstavaných (Claude, Sleek, Nord, Bloom, Comfy, Catppuccin, Dracula, Gruvbox, STU modrá, OLED, OG AIS, Nothing, Techy, Clean),
   každá s tmavým aj svetlým variantom; vlastné témy vo formáte `theme.json` sa dajú importovať.
 - **OG AIS** – retro téma podľa starého AIS/UIS: bordová hlavička, krémové warning boxy,
   žlté info boxy, bordové odkazy a ostré rohy. Proces extrakcie a mapovanie tokenov je v

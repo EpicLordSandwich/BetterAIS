@@ -43,13 +43,13 @@
     },
     catppuccin: {
       name: 'Catppuccin', tagline: 'Mocha (tmavá) / Latte (svetlá)', radius: 12, font: '',
-      dark:  P('#11111b', '#1e1e2e', '#2a2b3c', '#313244', '#45475a', '#cdd6f4', '#a6adc8', '#89b4fa', '#cba6f7', '#89dceb', '#f9e2af', '#f38ba8'),
+      dark:  P('#11111b', '#1e1e2e', '#2a2b3c', '#313244', '#45475a', '#cdd6f4', '#a6adc8', '#89b4fa', '#89b4fa', '#89dceb', '#f9e2af', '#f38ba8'),
       light: P('#dce0e8', '#eff1f5', '#f7f8fb', '#e6e9ef', '#ccd0da', '#4c4f69', '#686b81', '#145ff5', '#8839ef', '#0374a1', '#986014', '#d20f39'),
     },
     dracula: {
-      name: 'Dracula', tagline: 'Fialová a neónové akcenty', radius: 10, font: '',
-      dark:  P('#21222c', '#282a36', '#303341', '#44475a', '#565a72', '#f8f8f2', '#b4b8d0', '#8be9fd', '#bd93f9', '#8be9fd', '#ffb86c', '#ff6f6f'),
-      light: P('#ecebf5', '#f8f8f2', '#ffffff', '#ebebf5', '#d5d5e6', '#282a36', '#636a8a', '#6a4fd6', '#8a63e8', '#187a95', '#a65f00', '#d42f2f'),
+      name: 'Dracula', tagline: 'Tmavá s neónovými akcentmi', radius: 10, font: '',
+      dark:  P('#21222c', '#282a36', '#303341', '#44475a', '#565a72', '#f8f8f2', '#b4b8d0', '#8be9fd', '#8be9fd', '#8be9fd', '#ffb86c', '#ff6f6f'),
+      light: P('#ecebf5', '#f8f8f2', '#ffffff', '#ebebf5', '#d5d5e6', '#282a36', '#636a8a', '#6a4fd6', '#187a95', '#187a95', '#a65f00', '#d42f2f'),
     },
     gruvbox: {
       name: 'Gruvbox', tagline: 'Retro teplé zemité farby', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Cascadia Code", Consolas, monospace',
@@ -70,6 +70,21 @@
       name: 'OG AIS', tagline: 'Pôvodný AIS/UIS: bordová, krémová, čierny text', radius: 0, font: 'Verdana, Tahoma, "Segoe UI", sans-serif', bar: { color: '#831135', text: '#ffffff' },
       dark:  P('#3a0a1c', '#1b1315', '#241a1d', '#2f2226', '#4a343a', '#f5ecef', '#c9b3b8', '#f0a3b8', '#c94d6e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
+    },
+    nothing: {
+      name: 'Nothing', tagline: 'Monochromatická, technická, OLED čierna', radius: 8, font: 'Space Grotesk, "DM Sans", system-ui, sans-serif',
+      dark:  P('#000000', '#000000', '#111111', '#1a1a1a', '#333333', '#e8e8e8', '#999999', '#5b9bf6', '#d71921', '#999999', '#d4a843', '#e83c43'),
+      light: P('#f5f5f5', '#f5f5f5', '#ffffff', '#f0f0f0', '#cccccc', '#1a1a1a', '#666666', '#006bdf', '#d71921', '#666666', '#8a6a20', '#d71921'),
+    },
+    techy: {
+      name: 'Techy', tagline: 'Modrá technická, ostré rohy', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Fira Code", Consolas, monospace',
+      dark:  P('#0a0a0a', '#0d1117', '#161b22', '#21262d', '#30363d', '#e6edf3', '#8b949e', '#58a6ff', '#00a8e9', '#58a6ff', '#e0a73e', '#ff4b33'),
+      light: P('#f6f8fa', '#ffffff', '#f6f8fa', '#eaeef2', '#d0d7de', '#1f2328', '#59636e', '#0969da', '#0061d8', '#0969da', '#9a6700', '#cf222e'),
+    },
+    clean: {
+      name: 'Clean', tagline: 'Editorial, teplá červená (Fajnorka)', radius: 8, font: 'Space Grotesk, system-ui, sans-serif',
+      dark:  P('#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#3a3a3a', '#f5f5f5', '#9a9a9a', '#4a9eff', '#cc2222', '#4a9eff', '#e0a73e', '#e45a5a'),
+      light: P('#faf9f6', '#faf9f6', '#ffffff', '#f0f0f0', '#dddddd', '#0a0a0a', '#6b6b6b', '#1a6bcc', '#cc2222', '#1a6bcc', '#966319', '#cc2222'),
     },
   };
 
