@@ -550,3 +550,6 @@ html:not([data-bu-off])[data-bu-theme="og"] :is(input, select, textarea, button)
 #bu-palette li mark { background: transparent; color: var(--accent); font-weight: 600; }
 #bu-palette .bu-pal-empty { padding: 14px 16px; color: var(--muted); }
 #bu-palette .bu-pal-hint { padding: 8px 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; display: flex; gap: 16px; }
+
+/* focus-visible prístupnosť (lightweight) */
+html:not([data-bu-off]) :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
