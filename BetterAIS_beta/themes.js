@@ -451,6 +451,10 @@
         '--shadow-3': dark ? '0 16px 40px rgba(0,0,0,.55)' : '0 16px 40px rgba(0,0,0,.18)',
         '--icon-glow': dark ? 'drop-shadow(0 0 3px rgba(255,255,255,.30))' : 'none',
         '--chip': dark ? '#f0eee6' : 'transparent',
+        '--hover': dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.06)',
+        '--accent-soft': 'color-mix(in srgb, ' + p.accent + ' 16%, transparent)',
+        '--border-strong': 'color-mix(in srgb, ' + p.border + ' 55%, ' + p.text + ')',
+        '--font-mono': 'Space Mono, "SF Mono", "JetBrains Mono", ui-monospace, monospace',
         '--accent-color': bar.color || p.bg0, '--accent-color-text-contrast': bar.text || p.text, // prebije bordovú lištu UIS
       },
     };
