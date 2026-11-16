@@ -30,22 +30,22 @@ BetterAIS_beta/
 ## Konvencie
 - CSS cez premenné `--bg`, `--text`, `--accent`, ... (počítané v `themes.js` → `compute()`).
 - Téma = `P(bg0,bg,bg2,bg3,border,text,muted,link,accent,info,warn,crit)` pre dark/light.
-- Žiadne gradienty, fialové farby, em-dashes v novom obsahu; monochromatické/konzistentné palety.
+- Žiadne gradienty, fialové farby, em-dashes v obsahu; monochromatické/konzistentné palety.
 - Farby `#rrggbb`, kontrast ≥ 4.5:1 (over `contrast-check.mjs`).
 - Relatívne linky na vlastný web (nikdy absolútne self-linky).
 - Secrets nikdy v kóde.
 
-## Štýl práce
-- Zdieľaný pracovný strom (Peter/Oliver): pred commitom `git status`, stage-uj len svoje súbory, nikdy `git add -A` naslepo.
-- Pred prácou/pushom `git pull --ff-only`.
-- Verifikácia: `npm test` pred commitom.
-- Commit + push na `main` po každej zmene (staging viditeľný); prod len po výslovnom áno.
-
-## Témy (aktuálne)
-Claude, Sleek, Nord, Bloom, Comfy, Catppuccin, Dracula, Gruvbox, STU modrá, OLED, OG AIS, Nothing, Techy, Clean (+ importované vlastné).
-
-## Dizajn princípy (naše)
+## Dizajn princípy
 - Konzistencia naprieč nastaveniami: všetko poháňané CSS premennými témy.
 - Žiadny AI slop: žiadne fialové gradienty, žiadne m-dashes, žiadne generické ilustrácie.
 - Používateľsky príjemné: čitateľné kontrasty, jasné hierarchie, minimálne dekorácie.
-- Inšpirácia: Nothing (monochromatická technická), dvojbodka.sk (modrá technická), fajnorka.sk (editorial červená, MONOLOG).
+- Lightweight CSS: žiadne ťažké blur efekty; rešpektovať `prefers-reduced-motion`.
+- Prístupnosť: viditeľné focus stavy, WCAG 4.5:1.
+
+## Témy
+Claude, Sleek, Nord, Bloom, Comfy, Catppuccin, Dracula, Gruvbox, STU modrá, OLED, OG AIS, Nothing, Techy, Clean, Minimal (+ importované vlastné).
+
+## Štýl práce
+- Pred commitom `git status`, stage-uj len svoje súbory, nikdy `git add -A` naslepo.
+- Pred prácou/pushom `git pull --ff-only`.
+- Verifikácia: `npm test` pred commitom.
