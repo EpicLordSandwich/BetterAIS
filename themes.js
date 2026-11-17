@@ -85,7 +85,7 @@
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { logoSwap: true, cardDensity: 'compact' }, // výmena loga UIS za FEI + hustota kariet
+    ui: { logoSwap: false, cardDensity: 'compact' }, // výmena loga UIS za FEI + hustota kariet
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
