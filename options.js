@@ -319,6 +319,42 @@
       });
     } catch (e) { $('updateStatus').textContent = 'Kontrola zlyhala.'; }
   };
+
+  /* ================= manuálna aktualizácia zipom ================= */
+  $('updateUpload').onclick = () => $('updateFile').click();
+  $('updateFile').onchange = async (e) => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    $('updateStatus').textContent = 'Čítam zip…';
+    try {
+      const files = await BU.zip.read(await f.arrayBuffer());
+      const base = (n) => n.split('/').pop();
+      const manifest = files.find((x) => base(x.name) === 'manifest.json' && !x.name.includes('firefox'));
+      const remote = files.find((x) => base(x.name) === 'remote.json');
+      let version = null, applied = [];
+      if (manifest) { try { version = JSON.parse(await manifest.text()).version; } catch (e2) { swallow(e2); } }
+      if (remote) {
+        try {
+          const data = JSON.parse(await remote.text());
+          if (data && data.themes && Object.keys(data.themes).length) {
+            await commit({ customThemes: Object.assign({}, S.customThemes || {}, data.themes) });
+            applied.push(Object.keys(data.themes).length + ' tém');
+          }
+        } catch (e2) { swallow(e2); }
+      }
+      for (const x of files) {                              // voľne ložené theme.json súbory v zipe
+        if (/^theme(-[\w-]+)?\.json$/i.test(base(x.name)) || /\/themes?\/[\w-]+\.json$/i.test(x.name)) {
+          try {
+            const v = BU.validateTheme(JSON.parse(await x.text()));
+            if (v) { await commit({ customThemes: Object.assign({}, S.customThemes, { ['c-' + BU.uid()]: v }) }); applied.push('téma ' + v.name); }
+          } catch (e2) { swallow(e2); }
+        }
+      }
+      if (!applied.length && !version) { $('updateStatus').textContent = 'V zipe sa nenašlo nič aplikovateľné.'; return; }
+      $('updateStatus').textContent = 'Aplikované z verzie ' + (version || '?') + (applied.length ? ' (' + applied.join(', ') + ')' : '') +
+        '. Zmeny jadra (JS/CSS) sa prejavia až po preinštalovaní rozšírenia.';
+    } catch (err) { $('updateStatus').textContent = 'Neplatný ZIP súbor.'; }
+  };
   $('gradesRequired').onchange = (e) => {
     const n = Math.max(0, Math.min(400, Math.round(Number(e.target.value) || 0)));
     e.target.value = n || '';
