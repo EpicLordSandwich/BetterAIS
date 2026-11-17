@@ -67,7 +67,7 @@
       light: P('#ffffff', '#f2f2f7', '#ffffff', '#e9e9ee', '#d8d8de', '#111111', '#6e6e73', '#0a63d6', '#0a84ff', '#006ad6', '#956219', '#cf2e23'),
     },
     og: {
-      name: 'OG AIS', tagline: 'Pôvodný AIS/UIS: bordová, krémová, čierny text', radius: 0, font: 'Verdana, Tahoma, "Segoe UI", sans-serif', bar: { color: '#831135', text: '#ffffff' },
+      name: 'OG AIS', tagline: 'Pôvodný AIS/UIS: bordová, krémová, čierny text', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' },
       dark:  P('#3a0a1c', '#1b1315', '#241a1d', '#2f2226', '#4a343a', '#f5ecef', '#c9b3b8', '#f0a3b8', '#c94d6e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
