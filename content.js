@@ -65,6 +65,8 @@
     setOff(false);
     applyTheme();
     applySnippets();
+    // hustota kariet
+    document.documentElement.dataset.buDensity = S.ui.cardDensity || 'compact';
     if (ready) runLightContentPass();
   }
   BU.load().then((s) => { S = s; cacheOff(); applyAll(); });
@@ -144,43 +146,48 @@
 
   function tagCards() {
     document.querySelectorAll('.menu-drzak:not([data-bu-done])').forEach((h) => {
-      let card;
-      if (h.querySelector('ul, ol')) card = h;                       // .menu-drzak je celá karta
-      else {                                                         // .menu-drzak je „držiak“ (hlavička)
-        card = h.parentElement;
-        while (card && !card.querySelector('ul, ol') && card.parentElement && card.parentElement !== document.body) card = card.parentElement;
-        if (!card || !card.querySelector('ul, ol')) return;
-        if (card.querySelectorAll('.menu-drzak').length > 1) return; // zachytili by sme viac kariet naraz
-      }
-      if (!rawCardHtml) rawCardHtml = slim(card, 5000);
-      h.dataset.buDone = '1';
-      card.dataset.buDone = '1';
-      card.classList.add('bu-card');
-
-      // hlavička = držiak; keď je karta sama držiakom, vyrobíme hlavičku z prvého textu
-      let head = h;
-      const titleNode = firstTitleText(card);
-      const icon = [...card.querySelectorAll('img')].find((i) => !i.closest('ul, ol') && !i.classList.contains('bu-avatar'));
-      if (card === h) {
-        if (titleNode) { const t = minimalWrapper(titleNode.parentElement, card, [icon].filter(Boolean)); head = t; }
-        else head = null;
-      }
-      if (!head) return;
-      head.classList.add('bu-card-head');
-
-      // názov do hlavičky (ak nie je vnútri), potom ikonka na začiatok
-      if (titleNode && card !== h && !head.contains(titleNode)) {
-        const t = minimalWrapper(titleNode.parentElement, card, [head, icon].filter(Boolean));
-        if (t !== head && !t.contains(head)) { const old = t.parentElement; head.appendChild(t); hideIfEmpty(old, [card, head]); }
-      }
-      if (icon) {
-        icon.classList.add('bu-icon');
-        if (!head.contains(icon) || head.firstChild !== icon) {
-          const old = icon.parentElement;
-          head.insertBefore(icon, head.firstChild);
-          hideIfEmpty(old, [card, head]);
+      try {
+        let card;
+        if (h.querySelector('ul, ol')) card = h;                       // .menu-drzak je celá karta
+        else {                                                         // .menu-drzak je „držiak“ (hlavička)
+          card = h.parentElement;
+          while (card && !card.querySelector('ul, ol') && card.parentElement && card.parentElement !== document.body) card = card.parentElement;
+          if (!card || !card.querySelector('ul, ol')) return;
+          if (card.querySelectorAll('.menu-drzak').length > 1) return; // zachytili by sme viac kariet naraz
         }
-      }
+        if (!rawCardHtml) rawCardHtml = slim(card, 5000);
+
+        // hlavička = držiak; keď je karta sama držiakom, vyrobíme hlavičku z prvého textu
+        let head = h;
+        const titleNode = firstTitleText(card);
+        const icon = [...card.querySelectorAll('img')].find((i) => !i.closest('ul, ol') && !i.classList.contains('bu-avatar'));
+        if (card === h) {
+          if (titleNode) { const t = minimalWrapper(titleNode.parentElement, card, [icon].filter(Boolean)); head = t; }
+          else head = null;
+        }
+        if (!head) return;
+        head.classList.add('bu-card-head');
+
+        card.classList.add('bu-card');
+
+        // názov do hlavičky (ak nie je vnútri), potom ikonka na začiatok
+        if (titleNode && card !== h && !head.contains(titleNode)) {
+          const t = minimalWrapper(titleNode.parentElement, card, [head, icon].filter(Boolean));
+          if (t !== head && !t.contains(head)) { const old = t.parentElement; head.appendChild(t); hideIfEmpty(old, [card, head]); }
+        }
+        if (icon) {
+          icon.classList.add('bu-icon');
+          if (!head.contains(icon) || head.firstChild !== icon) {
+            const old = icon.parentElement;
+            head.insertBefore(icon, head.firstChild);
+            hideIfEmpty(old, [card, head]);
+          }
+        }
+
+        // označíme až po úspešnom označení – inak sa neúspešná karta nikdy neskúsi znova
+        h.dataset.buDone = '1';
+        card.dataset.buDone = '1';
+      } catch (e) { swallow(e); }   // jedna chybná karta nesmie zastaviť ostatné
     });
   }
 
@@ -973,7 +980,25 @@
   }
 
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); }
+  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); }
+
+  /* ================= premenovanie UIS → AIS ================= */
+  const RENAME_SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1, NOSCRIPT: 1 };
+  const RENAME_RE = /\bUIS\b/;              // test (bez /g = bez stavu)
+  const RENAME_RE_G = /\bUIS\b/g;           // replace
+  function renameUis() {
+    if (offNow() || !S.rename.uisToAis) return;
+    if (isTop && RENAME_RE.test(document.title)) document.title = document.title.replace(RENAME_RE_G, 'AIS');
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) => (n.nodeValue && RENAME_RE.test(n.nodeValue) && n.parentElement && !RENAME_SKIP[n.parentElement.tagName] && !n.parentElement.closest('.bu-palette')
+        ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
+    });
+    let n, count = 0;
+    while ((n = walker.nextNode()) && count < 4000) {
+      n.nodeValue = n.nodeValue.replace(RENAME_RE_G, 'AIS');
+      count++;
+    }
+  }
   function runHeavyDomScan() {
     if (!isTop) return;   // ťažké skeny (hlavička, boxy, logo, popupy, sémantika) len v hlavnom frame (P0-3)
     tagHeader(); tagBoxes(); swapLogo(); scanPopups(); semanticScan();

@@ -84,12 +84,13 @@
     avatar: { mode: 'original', dataUrl: '' }, // pedro | custom | original (default original = súkromie P0-4)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { logoSwap: true }, // výmena loga UIS za FEI logo
+    ui: { logoSwap: true, cardDensity: 'compact' }, // výmena loga UIS za FEI + hustota kariet
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
     grades: { on: true, requiredCredits: 0 }, // dashboard hodnotení na E-indexe; 0 = cieľ kreditov nie je nastavený
     experimental: false, // experimental mode: fetch latest from GitHub; stable otherwise
+    rename: { uisToAis: true }, // premenovanie UIS → AIS v texte stránok
   };
 
   // Ikonky pre odkazy v lište (feather-štýl, viewBox 24)
@@ -320,11 +321,12 @@
       avatar,
       links,
       enabled: s.enabled === undefined ? DEFAULTS.enabled : !!s.enabled,
-      ui: Object.assign({}, DEFAULTS.ui, s.ui && typeof s.ui === 'object' ? { logoSwap: !!s.ui.logoSwap } : {}),
+      ui: Object.assign({}, DEFAULTS.ui, s.ui && typeof s.ui === 'object' ? { logoSwap: !!s.ui.logoSwap, cardDensity: ['comfortable', 'compact'].includes(s.ui.cardDensity) ? s.ui.cardDensity : DEFAULTS.ui.cardDensity } : {}),
       snippets, disabledPages,
       customThemes: customThemes,
       grades,
       experimental: s.experimental === undefined ? DEFAULTS.experimental : !!s.experimental,
+      rename: { uisToAis: s.rename && s.rename.uisToAis === undefined ? DEFAULTS.rename.uisToAis : !!(s.rename && s.rename.uisToAis) },
     };
   }
 
@@ -445,7 +447,7 @@
   function hasStorage() {
     return typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local && chrome.storage.sync;
   }
-  const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'experimental'];
+  const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'experimental', 'rename'];
   function syncPayload(n) {
     const o = {};
     for (const k of SYNC_KEYS) o[k] = n[k];

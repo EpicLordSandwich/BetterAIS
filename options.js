@@ -85,6 +85,7 @@
 
     $('masterSwitch').checked = S.enabled;
     $('logoSwap').checked = S.ui.logoSwap;
+  $('cardDensity').value = S.ui.cardDensity;
     $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('gradesOn').checked = S.grades.on;
@@ -232,6 +233,10 @@
   /* ================= zapínanie ================= */
   $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
   $('logoSwap').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { logoSwap: e.target.checked }) });
+  $('renameUis').checked = !!S.rename.uisToAis;
+  $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });
+  $('cardDensity').value = S.ui.cardDensity;
+  $('cardDensity').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { cardDensity: e.target.value }) });
   $('clearOff').onclick = () => commit({ disabledPages: [] });
 
   /* ================= dashboard hodnotení ================= */

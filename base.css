@@ -41,7 +41,10 @@ form, fieldset, legend, section, header, footer, nav, center, font, b, i, strong
   color: var(--text) !important;
   border-color: var(--border) !important;
 }
-html:not([data-bu-off]) :is(th, thead td, caption):not(.bu-keep) { background-color: var(--bg-3) !important; }
+html:not([data-bu-off]) :is(th, thead td, caption):not(.bu-keep) {
+  background-color: var(--bg-3) !important;
+  font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+}
 html:not([data-bu-off]) :is(td[bgcolor], tr[bgcolor], th[bgcolor]):not(.bu-keep) { background-color: var(--bg-2) !important; }
 
 /* Odkazy */
@@ -92,7 +95,7 @@ html:not([data-bu-off]) .sd-header * { color: var(--text) !important; }
 html:not([data-bu-off]) .sd-header img { filter: none !important; }
 html:not([data-bu-off]) #header .left { font-size: 0 !important; display: flex; align-items: center; }
 html:not([data-bu-off]) #header .left img#uis-logo {
-  height: 44px !important; width: auto !important; max-width: none !important;
+  height: 56px !important; width: auto !important; max-width: none !important;
   object-fit: contain; border-radius: var(--radius-sm);
 }
 html:not([data-bu-off]) #header .dvdr { background: var(--border) !important; }
@@ -576,3 +579,20 @@ html:not([data-bu-off])[data-bu-theme="og"] #header .left, html:not([data-bu-off
 /* Logo – prispôsobenie režimu (FEI logo je tmavé, v dark mode sa invertuje) */
 html:not([data-bu-off])[data-bu-mode="dark"] img.bu-logo { filter: brightness(0) invert(1); }
 html:not([data-bu-off]) img.bu-logo { object-fit: contain; }
+
+/* ===== Design polish (všetky témy) ===== */
+html:not([data-bu-off]) h1 { font-size: 1.45em; line-height: 1.25; }
+html:not([data-bu-off]) :is(h1, h2, h3, h4) { font-weight: 650; letter-spacing: -.01em; }
+html:not([data-bu-off]) :is(h2, h3) { line-height: 1.3; }
+html:not([data-bu-off]) legend {
+  font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+}
+html:not([data-bu-off]) input[type="submit"],
+html:not([data-bu-off]) input[type="button"],
+html:not([data-bu-off]) button { min-height: 32px; }
+html:not([data-bu-off]) a:hover { text-underline-offset: 3px; }
+html:not([data-bu-off]) { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+html:not([data-bu-off]) ::-webkit-scrollbar { width: 10px; height: 10px; }
+html:not([data-bu-off]) ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+html:not([data-bu-off]) ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+html:not([data-bu-off]) ::-webkit-scrollbar-track { background: transparent; }
