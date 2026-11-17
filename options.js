@@ -300,8 +300,12 @@
   function updateStatusText(info) {
     const el = $('updateStatus');
     if (!info) { el.textContent = 'Ešte neskontrolované.'; return; }
-    if (info.available) el.textContent = 'Dostupná nová verzia ' + info.version + ' (aktuálna ' + info.current + ').';
-    else el.textContent = 'Máš najnovšiu verziu ' + info.current + '.';
+    if (info.status === 'off') { el.textContent = 'Experimentálny režim je vypnutý.'; $('updateLink').hidden = true; return; }
+    if (info.status === 'error') { el.textContent = 'Kontrola zlyhala.'; $('updateLink').hidden = true; return; }
+    const cur = info.current || (chrome.runtime && chrome.runtime.getManifest ? chrome.runtime.getManifest().version : '?');
+    const ver = info.version || cur;
+    if (info.available) el.textContent = 'Dostupná nová verzia ' + ver + ' (aktuálna ' + cur + ').';
+    else el.textContent = 'Máš najnovšiu verziu ' + cur + '.';
     const link = $('updateLink');
     if (info.available && info.url) { link.href = info.url; link.hidden = false; } else { link.hidden = true; }
   }
