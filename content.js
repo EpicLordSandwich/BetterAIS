@@ -58,7 +58,7 @@
     try { localStorage.setItem('bu:cache', JSON.stringify(out)); } catch (e) { swallow(e); }
   }
   function applyAll() {
-    const off = offNow();
+    const off = offNow() || (S.theme === 'og');   // OG téma = pôvodný vzhľad stránky, len hlavička ostáva (už je OG)
     const wasOff = document.documentElement.dataset.buOff === '1';
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
     if (off) { setOff(true); return; }
