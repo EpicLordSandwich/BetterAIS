@@ -189,6 +189,16 @@
         card.dataset.buDone = '1';
       } catch (e) { swallow(e); }   // jedna chybná karta nesmie zastaviť ostatné
     });
+    // samokontrola: koľko kariet máme a koľko sa označilo
+    try {
+      const total = document.querySelectorAll('.menu-drzak').length;
+      const tagged = document.querySelectorAll('.bu-card').length;
+      const heads = document.querySelectorAll('.bu-card-head').length;
+      if (total > 0 && (tagged < total || heads < tagged)) {
+        console.warn('betterUIS: tagCards – označených ' + tagged + '/' + total + ' kariet, hlavičiek ' + heads);
+      }
+      (window.__buTagStats = { total, tagged, heads, at: Date.now() });
+    } catch (e) { swallow(e); }
   }
 
   /* ================= 3) Vlastné odkazy v lište ================= */
@@ -508,6 +518,7 @@
   async function dump() {
     const parts = ['=== betterUIS dump ===', 'URL: ' + BU.notif.redactText(location.pathname + location.search), 'Viewport: ' + innerWidth + 'x' + innerHeight, ''];
     parts.push('--- KARTA (pôvodné HTML) ---', rawCardHtml || '(na tejto stránke nie je .menu-drzak)', '');
+    if (window.__buTagStats) parts.push('--- tagCards stats ---', JSON.stringify(window.__buTagStats), '');
     const header = document.getElementById('header');
     parts.push('--- #header ---', header ? slim(header, 5000) : '(nenájdený)', '');
     const nav = document.querySelector('nav[aria-label="breadcrumb"]');

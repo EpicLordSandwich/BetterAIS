@@ -227,7 +227,7 @@
   }
   const PRESETS = [
     { id: 'preset-posta', name: 'Pošta', url: '/auth/posta/slozka.pl?lang=sk', icon: 'mail', hideOriginal: false },
-    { id: 'preset-dok', name: 'Dokumentový server', url: '/auth/dok_server/index.pl?lang=sk', icon: 'file', hideOriginal: true },
+    { id: 'preset-dok', name: 'Dokumentový server', url: '/auth/dok_server/nove_dok.pl?lang=sk', icon: 'file', hideOriginal: true },
   ];
 
   const KEY = 'bu';
