@@ -42,9 +42,9 @@
       light: P('#f1e4cf', '#faf3e8', '#fffaf1', '#f0e3cf', '#e0cfb4', '#4a3a2c', '#7d6a57', '#a35c1e', '#c47a35', '#45785d', '#966319', '#b9473a'),
     },
     catppuccin: {
-      name: 'Catppuccin', tagline: 'Mocha (tmavá) / Latte (svetlá)', radius: 12, font: '',
-      dark:  P('#11111b', '#1e1e2e', '#2a2b3c', '#313244', '#45475a', '#cdd6f4', '#a6adc8', '#89b4fa', '#89b4fa', '#89dceb', '#f9e2af', '#f38ba8'),
-      light: P('#dce0e8', '#eff1f5', '#f7f8fb', '#e6e9ef', '#ccd0da', '#4c4f69', '#686b81', '#145ff5', '#8839ef', '#0374a1', '#986014', '#d20f39'),
+      name: 'Catppuccin', tagline: 'Spotify štýl, levanduľová', radius: 8, font: '',
+      dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#d7bcf5', '#d7bcf5', '#d7bcf5', '#e0a73e', '#ff6b6b'),
+      light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#7c3aed', '#7c3aed', '#7c3aed', '#966319', '#c93a3a'),
     },
     dracula: {
       name: 'Dracula', tagline: 'Tmavá s neónovými akcentmi', radius: 10, font: '',
@@ -87,9 +87,9 @@
       light: P('#faf9f6', '#faf9f6', '#ffffff', '#f0f0f0', '#dddddd', '#0a0a0a', '#6b6b6b', '#1a6bcc', '#cc2222', '#1a6bcc', '#966319', '#cc2222'),
     },
     lime: {
-      name: 'Lime', tagline: 'Limetková zelená na tmavom', radius: 10, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-      dark:  P('#0a0f0a', '#0f1410', '#161c17', '#1f2820', '#2a362c', '#e8f0e9', '#8a9b8c', '#7dd3a0', '#a3e635', '#7dd3a0', '#e0a73e', '#ff6b6b'),
-      light: P('#f4f7f4', '#f7faf7', '#ffffff', '#eef3ee', '#d6e0d7', '#1a241b', '#5a6b5c', '#15803d', '#65a30d', '#15803d', '#966319', '#c93a3a'),
+      name: 'Lime', tagline: 'Spotify štýl, limetková zelená', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#1db954', '#1db954', '#1db954', '#e0a73e', '#ff6b6b'),
+      light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#14803a', '#1db954', '#14803a', '#966319', '#c93a3a'),
     },
   };
 
