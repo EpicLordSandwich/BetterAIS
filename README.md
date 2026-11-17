@@ -1,4 +1,4 @@
-# betterUIS v1.2.1
+# betterAIS v1.2.1
 
 Vlastný vzhľad a drobné vylepšenia pre [is.stuba.sk](https://is.stuba.sk) – témy, tmavý/svetlý režim, CSS snippety,
 paleta príkazov, table-tools, vlastná profilovka a odkazy v lište. Všetko beží len lokálne, nič sa neposiela na server.

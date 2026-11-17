@@ -1,7 +1,7 @@
-// Popup: rýchly režim/téma + vypínač betterUIS pre aktuálnu stránku.
+// Popup: rýchly režim/téma + vypínač betterAIS pre aktuálnu stránku.
 (async function () {
   'use strict';
-  if (!self.BU) throw new Error('betterUIS core not loaded (themes.js missing)');
+  if (!self.BU) throw new Error('betterAIS core not loaded (themes.js missing)');
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = BU.t(el.dataset.i18n); });
 
   let S = await BU.load();

@@ -82,6 +82,7 @@
     mode: 'dark', // dark | light | auto
     custom: { accent: '', link: '', radius: '', font: '' },
     avatar: { mode: 'original', dataUrl: '' }, // pedro | custom | original (default original = súkromie P0-4)
+    nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
     ui: { logoSwap: true, cardDensity: 'compact' }, // výmena loga UIS za FEI + hustota kariet
@@ -319,6 +320,7 @@
       mode: ['dark', 'light', 'auto'].includes(s.mode) ? s.mode : DEFAULTS.mode,
       custom: Object.assign({}, DEFAULTS.custom, s.custom && typeof s.custom === 'object' ? s.custom : {}),
       avatar,
+      nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: s.enabled === undefined ? DEFAULTS.enabled : !!s.enabled,
       ui: Object.assign({}, DEFAULTS.ui, s.ui && typeof s.ui === 'object' ? { logoSwap: !!s.ui.logoSwap, cardDensity: ['comfortable', 'compact'].includes(s.ui.cardDensity) ? s.ui.cardDensity : DEFAULTS.ui.cardDensity } : {}),

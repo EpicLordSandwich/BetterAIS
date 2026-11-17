@@ -237,8 +237,38 @@
       const tx = document.createElement('span');
       tx.textContent = l.name;                     // text používateľa vždy cez textContent
       a.append(ic, tx);
+      // badge nových dokumentov (len pre Dokumentový server)
+      if (/dok_server/i.test(l.url)) {
+        const badge = findDocBadge();
+        if (badge) {
+          const b = document.createElement('span');
+          b.className = 'bu-doc-badge';
+          b.textContent = badge;
+          a.appendChild(b);
+        }
+      }
       li.appendChild(a);
     });
+  }
+
+  function findDocBadge() {
+    // Hľadá badge s počtom nových dokumentov v pôvodnom UIS (class="badge" pri odkaze na dok_server).
+    try {
+      const candidates = [...document.querySelectorAll('.badge')];
+      for (const b of candidates) {
+        const txt = (b.textContent || '').trim();
+        if (!/^\d+$/.test(txt)) continue;
+        const link = b.closest('a') || b.parentElement && b.parentElement.closest('a');
+        const ctx = (link ? link.getAttribute('href') : '') + ' ' + (link ? link.textContent : '') + ' ' + (b.parentElement ? b.parentElement.textContent : '');
+        if (/dok_server|dokument/i.test(ctx)) return txt;
+      }
+      // fallback: prvý badge s číslom, ktorý je v hornom menu (nie v karte)
+      for (const b of candidates) {
+        const txt = (b.textContent || '').trim();
+        if (/^\d+$/.test(txt) && b.closest('#header, .sd-header, nav, .info')) return txt;
+      }
+    } catch (e) { swallow(e); }
+    return null;
   }
 
   function hideOriginals() {
@@ -1015,7 +1045,21 @@
   }
 
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); }
+  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); }
+
+  /* ================= prezývka v hlavičke ================= */
+  function swapNick() {
+    if (offNow()) return;
+    const info = document.querySelector('#header .info');
+    if (!info) return;
+    const divs = [...info.querySelectorAll('div')];
+    const nameDiv = divs.length ? divs[divs.length - 1] : null;
+    if (!nameDiv) return;
+    if (!nameDiv.dataset.buOrigName) nameDiv.dataset.buOrigName = nameDiv.textContent.trim();
+    const orig = nameDiv.dataset.buOrigName;
+    if (S.nick) nameDiv.textContent = S.nick;
+    else nameDiv.textContent = orig;
+  }
 
   /* ================= premenovanie UIS → AIS ================= */
   const RENAME_SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1, NOSCRIPT: 1 };

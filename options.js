@@ -1,7 +1,7 @@
-// betterUIS – nastavenia: témy, úpravy, profilovka, odkazy, snippety, zálohovanie.
+// betterAIS – nastavenia: témy, úpravy, profilovka, odkazy, snippety, zálohovanie.
 (async function () {
   'use strict';
-  if (!self.BU) throw new Error('betterUIS core not loaded (themes.js missing)');
+  if (!self.BU) throw new Error('betterAIS core not loaded (themes.js missing)');
   const $ = (id) => document.getElementById(id);
 
   let S = await BU.load();
@@ -11,7 +11,7 @@
     const r = await chrome.storage.local.get('bu-avatar-shot');
     const v = r && r['bu-avatar-shot'];
     avatarShot = typeof v === 'string' ? v : (v && v.data) || '';
-  } catch (e) { console.warn('betterUIS: avatar shot read failed', e); }
+  } catch (e) { console.warn('betterAIS: avatar shot read failed', e); }
 
   let toastT, toastResetT;
   function toast() { const t = $('toast'); t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1100); }
@@ -87,6 +87,8 @@
     $('logoSwap').checked = S.ui.logoSwap;
   $('cardDensity').value = S.ui.cardDensity;
     $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
+
+    $('nick').value = S.nick || '';
 
     $('gradesOn').checked = S.grades.on;
     $('gradesRequired').value = S.grades.requiredCredits || '';
@@ -203,7 +205,7 @@
     try {
       const obj = JSON.parse(await readJson(f));
       if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw new Error('not an object');
-      if (!confirm('Import nahradí všetky aktuálne nastavenia betterUIS (témy, odkazy, snippety). Pokračovať?')) return;
+      if (!confirm('Import nahradí všetky aktuálne nastavenia betterAIS (témy, odkazy, snippety). Pokračovať?')) return;
       S = BU.normalize(obj);
       await BU.save(S);
       render(); toastMsg('Nastavenia importované');
@@ -240,7 +242,8 @@
   $('clearOff').onclick = () => commit({ disabledPages: [] });
 
   /* ================= dashboard hodnotení ================= */
-  $('gradesOn').onchange = (e) => commit({ grades: Object.assign({}, S.grades, { on: e.target.checked }) });
+  $('nick').value = S.nick || '';
+  $('nick').onchange = (e) => commit({ nick: e.target.value });
   $('experimentalOn').checked = !!S.experimental;
   $('experimentalOn').onchange = (e) => commit({ experimental: e.target.checked });
   function updateStatusText(info) {
@@ -312,7 +315,7 @@
   const copyDiagBtn = $('copyDiag');
   if (copyDiagBtn) copyDiagBtn.onclick = async () => {
     const diag = {
-      betterUIS: (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getManifest) ? chrome.runtime.getManifest().version : '?',
+      betterAIS: (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getManifest) ? chrome.runtime.getManifest().version : '?',
       browser: (navigator && navigator.userAgent) || '',
       language: (navigator && navigator.language) || '',
       viewport: (window.innerWidth || 0) + 'x' + (window.innerHeight || 0),
@@ -331,7 +334,7 @@
         };
       })(),
     };
-    const text = '=== betterUIS diagnostika ===\n' + JSON.stringify(diag, null, 2) +
+    const text = '=== betterAIS diagnostika ===\n' + JSON.stringify(diag, null, 2) +
       '\n\nPozn.: vlož aj výpis z Ctrl+Shift+U (stránka UIS) pre presnú štruktúru.';
     const ok = await BU.copyText(text);
     if ($('diagStatus')) $('diagStatus').textContent = ok ? 'Skopírované – vlož do chatu.' : 'Kopírovanie zlyhalo – skús Ctrl+C ručne.';
@@ -370,7 +373,7 @@
     return c.toDataURL('image/webp', 0.9);
   }
 
-  $('reset').onclick = () => { if (confirm('Obnoviť všetky nastavenia betterUIS?')) { S = BU.normalize(null); BU.save(S); render(); toast(); } };
+  $('reset').onclick = () => { if (confirm('Obnoviť všetky nastavenia betterAIS?')) { S = BU.normalize(null); BU.save(S); render(); toast(); } };
 
   // Zmeny z inde (content script, iné zariadenie cez sync) sa prejavia naživo.
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {

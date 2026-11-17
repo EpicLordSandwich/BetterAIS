@@ -2,14 +2,14 @@
 <html lang="sk">
 <head>
   <meta charset="utf-8">
-  <title>betterUIS – nastavenia</title>
+  <title>betterAIS – nastavenia</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <img src="logo.png" alt="">
-    <h1>betterUIS <small>nastavenia vzhľadu</small></h1>
+    <h1>betterAIS <small>nastavenia vzhľadu</small></h1>
     <span class="ver" id="verBadge"></span>
   </header>
 
@@ -17,7 +17,7 @@
     <h2>Zapínanie</h2>
     <p class="sub">Hlavný vypínač a drobné preferencie. Jednotlivé stránky sa dajú vypnúť aj v popup-e rozšírenia.</p>
     <div class="row">
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="masterSwitch"> Zapnúť betterUIS</label>
+      <label class="switch" style="flex-direction:row"><input type="checkbox" id="masterSwitch"> Zapnúť betterAIS</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="logoSwap"> Vymeniť logo UIS za FEI</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="renameUis"> Premenovať UIS na AIS v texte</label>
       <label class="f">Hustota kariet
@@ -57,6 +57,15 @@
         <select id="fontSel"></select></label>
       <label class="f">Vlastné písmo (nainštalované v systéme)
         <input type="text" id="fontCustom" placeholder='napr. Inter alebo "Fira Sans"'></label>
+    </div>
+  </section>
+
+  <section>
+    <h2>Prezývka</h2>
+    <p class="sub">Lokálna prezývka, ktorá sa zobrazí v hlavičke UIS namiesto mena (len u teba, nesyncuje sa). Prázdne = pôvodné meno.</p>
+    <div class="row">
+      <label class="f">Tvoja prezývka
+        <input type="text" id="nick" placeholder="napr. Oliver" maxlength="40"></label>
     </div>
   </section>
 
