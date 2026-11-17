@@ -126,13 +126,15 @@ html:not([data-bu-off]) nav[aria-label="breadcrumb"] li.bu-links { display: inli
 html:not([data-bu-off]) nav[aria-label="breadcrumb"] li.bu-links::before { content: none !important; display: none !important; }
 html:not([data-bu-off]) li.bu-links a.bu-link {
   display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px 0 9px; box-sizing: border-box;
-  border: 1px solid var(--border); border-radius: 999px; background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 999px;
+  background: var(--accent-soft) !important;
   font-size: 13px; line-height: 1; white-space: nowrap; text-decoration: none !important;
-  color: var(--text) !important; transition: border-color .15s, background .15s;
+  color: var(--link) !important; transition: border-color .15s, background .15s, color .15s;
 }
 html:not([data-bu-off]) li.bu-links a.bu-link * { color: inherit !important; }
-html:not([data-bu-off]) li.bu-links a.bu-link:hover { border-color: var(--accent); background: var(--accent-soft) !important; }
-html:not([data-bu-off]) li.bu-links a.bu-link.on { border-color: var(--accent); background: var(--accent-soft) !important; }
+html:not([data-bu-off]) li.bu-links a.bu-link:hover,
+html:not([data-bu-off]) li.bu-links a.bu-link.on { background: var(--accent) !important; color: var(--on-accent) !important; border-color: var(--accent); }
+html:not([data-bu-off]) li.bu-links a.bu-link:hover * { color: inherit !important; }
 html:not([data-bu-off]) li.bu-links .bu-link-ic { display: inline-flex; }
 html:not([data-bu-off]) li.bu-links svg { width: 15px; height: 15px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 html:not([data-bu-off]) .bu-hide { display: none !important; }

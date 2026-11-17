@@ -32,7 +32,7 @@
       light: P('#e5e9f0', '#eceff4', '#f8f9fb', '#e5e9f0', '#d8dee9', '#2e3440', '#4c566a', '#4d6d95', '#5e81ac', '#496e94', '#a85237', '#b24852'),
     },
     catppuccin: {
-      name: 'Catppuccin', tagline: 'Spotify štýl, levanduľová', radius: 8, font: '',
+      name: 'Catppuccin', tagline: 'Levanduľová na tmavom pozadí', radius: 8, font: '',
       dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#d7bcf5', '#d7bcf5', '#d7bcf5', '#e0a73e', '#ff6b6b'),
       light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#7c3aed', '#7c3aed', '#7c3aed', '#966319', '#c93a3a'),
     },
@@ -62,7 +62,7 @@
       light: P('#f6f8fa', '#ffffff', '#f6f8fa', '#eaeef2', '#d0d7de', '#1f2328', '#59636e', '#0969da', '#0061d8', '#0969da', '#9a6700', '#cf222e'),
     },
     lime: {
-      name: 'Lime', tagline: 'Spotify štýl, limetková zelená', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      name: 'Lime', tagline: 'Limetková zelená na tmavom pozadí', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
       dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#1db954', '#1db954', '#1db954', '#e0a73e', '#ff6b6b'),
       light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#14803a', '#1db954', '#14803a', '#966319', '#c93a3a'),
     },
