@@ -45,7 +45,6 @@ eq(BU.normalize({ avatar: { mode: 'custom', dataUrl: 'data:image/png;base64,xx' 
 const n = BU.normalize(null);
 eq(n.theme, 'classic', 'default theme');
 eq(n.enabled, true, 'default enabled');
-eq(n.notif.on, false, 'notif opt-in off by default');
 eq(BU.normalize({ links: [{ name: 'x', url: '/auth/x.pl', icon: 'mail' }] }).links.length, 1, 'links normalized');
 eq(BU.normalize({ links: [{ name: 'x', url: 'https://evil.example.com/x', icon: 'mail' }] }).links[0].url, 'https://evil.example.com/x', 'absolute http(s) links allowed');
 eq(BU.normalize({ snippets: [{ id: 'a', name: 'n', css: '.x{}', on: true }] }).snippets.length, 1, 'snippets normalized');
@@ -60,7 +59,7 @@ eq(/evil\.example/.test(BU.sanitizeCss('.x{background:url("//evil.example/p.png"
 eq(/data:image\/png/.test(BU.sanitizeCss('.x{background:url(data:image/png;base64,AA)}')), true, 'sanitizeCss: data url kept');
 eq(/\/auth\/img\.png/.test(BU.sanitizeCss('.x{background:url(/auth/img.png)}')), true, 'sanitizeCss: same-origin url kept');
 eq(/evil\.example/.test(BU.sanitizeCss('.x{background:URL(  "HTTPS://evil.example/p.png"  )}')), false, 'sanitizeCss: uppercase/quoted remote url removed');
-eq(JSON.stringify(Object.keys(BU.normalize({ notif: { interval: 25 } }))), JSON.stringify(Object.keys(BU.normalize(null))), 'normalize shape stable');
+eq(JSON.stringify(Object.keys(BU.normalize({ extra: { interval: 25 } }))), JSON.stringify(Object.keys(BU.normalize(null))), 'normalize shape stable');
 
 console.log(failed ? `ZLYHALO: ${failed}` : 'VŠETKO OK');
 process.exitCode = failed ? 1 : 0;

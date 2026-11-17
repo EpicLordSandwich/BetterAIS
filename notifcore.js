@@ -1,62 +1,8 @@
-// betterUIS – čistá logika notifikácií pošty (bez chrome.* a DOMParsera),
-// aby bola testovateľná v node (tools/test-notif-core.mjs).
+// betterUIS – čistá logika zdieľaná content scriptom (bez chrome.* a DOMParsera),
+// aby bola testovateľná v node: hľadanie bez diakritiky, table-tools, redakcia výpisu.
 // background.js ju načíta cez importScripts; Firefox ju má v background.scripts.
 (function (g) {
   'use strict';
-
-  // Tiché hodiny: keď `from === to`, sú vypnuté. `to` je exkluzívne (23→7 znamená 23:00–6:59 ticho).
-  /** Tiché hodiny. from===to znamená vypnuté. @param {number} h @param {number} from @param {number} to @returns {boolean} */
-  function isQuiet(h, from, to) {
-    if (from === to) return false;
-    return from > to ? (h >= from || h < to) : (h >= from && h < to);
-  }
-
-  // Rozhodnutie po porovnaní s minulým stavom.
-  // prevCount === null → prvý beh: len baseline, nikdy neupozorňuj (inak by prvý beh "splašnil" všetky staré správy).
-  // Návrat: { badge: string pre chrome.action.setBadgeText, notify: bool }.
-  /** Rozhodnutie po porovnaní s minulým stavom. @param {number|null} prevCount @param {number} count @returns {{badge:string, notify:boolean}} */
-  function decide(prevCount, count) {
-    const n = Number.isFinite(count) ? Math.max(0, Math.min(99, Math.round(count))) : 0;
-    return { badge: n > 0 ? String(n) : '', notify: typeof prevCount === 'number' && n > prevCount };
-  }
-
-  // Neprečítané správy z HTML pošty. Regex namiesto DOMParsera – service worker (Chrome MV3)
-  // nemá DOMParser, takže parser musí bežať na čistom reťazci (a je tak testovateľný v node).
-  // 1) Nový dizajn UIS (15.11.2026): presný počet nesie badge v účtovom menu
-  //    (<span data-sysid="usermenu-email">…<span class="badge">704</span></a>) — server-side, celkový.
-  // 2) Fallback: riadok <tr> s odkazom do pošty = správa. Starý dizajn /auth/posta/…,
-  //    nový dizajn ./email.pl?eid=…. Neprečítaná = <b>/<strong> alebo inline font-weight ≥ 600.
-  // Žiadne správy → ok:false (status 'parse', ticho).
-  /** Počet neprečítaných správ z HTML pošty (regex). @param {string} html @returns {{count:number, ok:boolean}} */
-  function countUnreadHtml(html) {
-    try {
-      const h = String(html || '');
-      // 1) badge pri položke Pošta v účtovom menu
-      const item = h.match(/data-sysid=["']?usermenu-email["']?[\s\S]{0,1200}?<\/a>/i);
-      if (item) {
-        const badge = item[0].match(/class=["'][^"']*\bbadge\b[^"']*["'][^>]*>\s*(\d[\d\s.,]*)\s*\+?\s*</i);
-        const n = badge ? parseInt(badge[1].replace(/[^\d]/g, ''), 10) : NaN;
-        if (Number.isFinite(n)) return { count: Math.min(99, n), ok: true };
-      }
-      // 2) riadky správ (starý aj nový dizajn)
-      const rows = h.match(/<tr[\s\S]*?<\/tr>/gi) || [];
-      const msgs = rows.filter((r) => /href\s*=\s*["'][^"']*(?:\/auth\/posta\/|email\.pl\?eid=)/i.test(r));
-      if (!msgs.length) return { count: 0, ok: false };
-      let unread = 0;
-      for (const r of msgs) {
-        if (/<b[\s>]|<strong[\s>]/i.test(r)) { unread++; continue; }   // [\s>] aby <br> neprešlo
-        const w = r.match(/font-weight\s*:\s*(\d{3}|bold)/i);
-        if (w && (w[1].toLowerCase() === 'bold' || Number(w[1]) >= 600)) unread++;
-      }
-      return { count: Math.min(99, unread), ok: true };   // cap aj v snappote – 99+ sa už neodomknúť nedá
-    } catch (e) { swallow(e); return { count: 0, ok: false, error: String(e && e.message || e) }; }
-  }
-
-  // UIS login/redirect stránka obsahuje heslové pole; pošta nie.
-  /** Detekcia login stránky UIS. @param {string} html @returns {boolean} */
-  function looksLikeLogin(html) {
-    return /<input[^>]+type=["']?password/i.test(String(html || ''));
-  }
 
   /* ===== hľadanie bez diakritiky (Ctrl+K, table-tools filter) ===== */
   // NFD rozloží diakritiku na combining marks a tie odstránime; výsledok je lowercase.
@@ -146,17 +92,6 @@
     return s;
   }
 
-  // Normalizuje snapshot notifikácií (null pri neplatnom tvare).
-  function normalizeSnapshot(snap) {
-    if (!snap || typeof snap !== 'object') return null;
-    const statuses = ['ok', 'login', 'parse', 'quiet', 'off', 'error'];
-    const status = statuses.includes(snap.status) ? snap.status : null;
-    if (!status) return null;
-    const at = Number.isFinite(snap.at) ? snap.at : Date.now();
-    const count = Math.max(0, Math.min(99, Math.round(Number(snap.count) || 0)));
-    return { at, count, status, baseline: !!snap.baseline };
-  }
-
   // Sémantické farby UIS: detekcia sýtých inline farieb (pure funkcie, testovateľné).
   const NAMED_COLORS = { red: '#ff0000', green: '#008000', blue: '#0000ff', yellow: '#ffff00', orange: '#ffa500', purple: '#800080', pink: '#ffc0cb', maroon: '#800000', navy: '#000080', teal: '#008080', olive: '#808000', lime: '#00ff00', aqua: '#00ffff', cyan: '#00ffff', fuchsia: '#ff00ff', magenta: '#ff00ff', gold: '#ffd700', silver: '#c0c0c0', gray: '#808080', grey: '#808080' };
   function parseCol(str) {
@@ -189,7 +124,7 @@
   }
 
   g.BU = g.BU || {};
-  g.BU.notif = { isQuiet, decide, countUnreadHtml, looksLikeLogin, stripDiacritics, fuzzyScore, compareCells, cellNum, cellDate, toCsv, hasFormControls, redactText, normalizeSnapshot, parseCol, isSaturated };
+  g.BU.notif = { stripDiacritics, fuzzyScore, compareCells, cellNum, cellDate, toCsv, hasFormControls, redactText, parseCol, isSaturated };
   // Backward-compatible alias (some tests/old code still reference BUNOTIF).
   g.BUNOTIF = g.BU.notif;
 })(self);

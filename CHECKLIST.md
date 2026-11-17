@@ -39,16 +39,9 @@ Stav k vydaniu v4.8. Označenie: `[x]` = hotové a overené, `[ ]` = neimplement
 - [x] Sync cez `chrome.storage.sync` (téma, odkazy, snippety); profilovka len lokálne
 - [x] i18n rozhrania (sk/en/uk/ru, cz → sk)
 
-## 5. Notifikácie pošty (opt-in)
-- [x] Prepínač v nastaveniach + udelenie/odobranie oprávnení
-- [x] Interval 15/20/30/60 min, tiché hodiny (default 23:00–7:00)
-- [x] Notifikácia len s počtom, obsah ostáva v prehliadači
-- [x] Klik na notifikáciu otvorí poštu
-- [x] Baseline pri prvom behu
-- [x] Parser starého aj nového dizajnu pošty (badge + fallback riadky)
-- [x] Tiché preskočenie pri vypršaní prihlásenia
-- [x] Guarded registrácia listenerov (optional permissions, Firefox/Chrome)
-- [x] Oprava `Cannot read properties of undefined (reading 'onAlarm')` (v4.7)
+## 5. Notifikácie pošty – ODSTRÁNENÉ (v1.2.0)
+- [x] Kompletne odstránené: kontrola pošty na pozadí, notifikácie, alarmy, optional permissions
+- [x] Zostávajú v notifcore.js len zdieľané utility (diakritika, table-tools, redakcia výpisu)
 
 ## 6. Dashboard hodnotení (E-index) – NOVÉ v4.7
 - [x] Modul `grades.js` (čistá logika, testovateľná v node)

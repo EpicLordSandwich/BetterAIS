@@ -87,11 +87,6 @@
     $('logoSwap').checked = S.ui.logoSwap;
     $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
-    $('notifOn').checked = S.notif.on;
-    $('notifInterval').value = String(S.notif.interval);
-    $('notifQuietFrom').value = String(S.notif.quietFrom);
-    $('notifQuietTo').value = String(S.notif.quietTo);
-
     $('gradesOn').checked = S.grades.on;
     $('gradesRequired').value = S.grades.requiredCredits || '';
     $('experimentalOn').checked = !!S.experimental;
@@ -207,7 +202,7 @@
     try {
       const obj = JSON.parse(await readJson(f));
       if (!obj || typeof obj !== 'object' || Array.isArray(obj)) throw new Error('not an object');
-      if (!confirm('Import nahradí všetky aktuálne nastavenia betterUIS (témy, odkazy, snippety, notifikácie). Pokračovať?')) return;
+      if (!confirm('Import nahradí všetky aktuálne nastavenia betterUIS (témy, odkazy, snippety). Pokračovať?')) return;
       S = BU.normalize(obj);
       await BU.save(S);
       render(); toastMsg('Nastavenia importované');
@@ -238,60 +233,6 @@
   $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
   $('logoSwap').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { logoSwap: e.target.checked }) });
   $('clearOff').onclick = () => commit({ disabledPages: [] });
-
-  /* ================= notifikácie (opt-in) ================= */
-  const QUIET_PERM = BU.QUIET_PERM;
-  const hasPermApi = () => BU.hasPermissionApi();
-  const hh = (h) => String(h).padStart(2, '0') + ':00';
-  for (let h = 0; h <= 23; h++) {
-    $('notifQuietFrom').appendChild(new Option(hh(h), String(h)));
-    $('notifQuietTo').appendChild(new Option(hh(h), String(h)));
-  }
-  function notifStatusText(r) {
-    if (!r) return 'Kontrola zlyhala.';
-    const cas = new Date(r.at || Date.now()).toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' });
-    switch (r.status) {
-      case 'ok': return 'Neprečítaných: ' + r.count + ' (' + cas + ')';
-      case 'login': return 'Nie si prihlásený na UIS – kontrola preskočená (' + cas + ')';
-      case 'parse': return 'Rozhranie pošty nerozpoznané – na stránke pošty stlač Ctrl+Shift+U a pošli výpis (' + cas + ')';
-      case 'quiet': return 'Tiché hodiny – kontrola preskočená';
-      case 'off': return 'Notifikácie nie sú povolené';
-      default: return 'Kontrola zlyhala (' + cas + ')';
-    }
-  }
-  $('notifOn').onchange = async (e) => {
-    const want = e.target.checked;
-    if (want && !hasPermApi()) { e.target.checked = false; $('notifStatus').textContent = 'Test mimo rozšírenia – spusti ho z chrome://extensions.'; return; }
-    if (want) {
-      let granted = false;
-      try { granted = await chrome.permissions.request(QUIET_PERM); } catch (err) { granted = false; }
-      if (!granted) { e.target.checked = false; $('notifStatus').textContent = 'Oprávnenie nebolo udelené – notifikácie ostávajú vypnuté.'; return; }
-      await commit({ notif: Object.assign({}, S.notif, { on: true }) });
-      $('notifStatus').textContent = 'Zapnuté – prvá kontrola do minúty.';
-    } else {
-      await commit({ notif: Object.assign({}, S.notif, { on: false }) });
-      try { await chrome.permissions.remove(QUIET_PERM); } catch (err) { console.warn('betterUIS: permission remove failed', err); }
-      $('notifStatus').textContent = 'Vypnuté – oprávnenie odobraté.';
-    }
-  };
-  const setNotif = () => commit({ notif: Object.assign({}, S.notif, {
-    interval: Number($('notifInterval').value),
-    quietFrom: Number($('notifQuietFrom').value),
-    quietTo: Number($('notifQuietTo').value),
-  }) });
-  $('notifInterval').onchange = setNotif;
-  $('notifQuietFrom').onchange = setNotif;
-  $('notifQuietTo').onchange = setNotif;
-  $('notifTest').onclick = () => {
-    if (!hasPermApi()) { $('notifStatus').textContent = 'Test mimo rozšírenia – spusti ho z chrome://extensions.'; return; }
-    $('notifStatus').textContent = 'Kontrolujem…';
-    try {
-      chrome.runtime.sendMessage({ type: 'bu-notif-check' }, (r) => {
-        if (chrome.runtime.lastError || !r) { $('notifStatus').textContent = 'Kontrola zlyhala.'; return; }
-        $('notifStatus').textContent = notifStatusText(r);
-      });
-    } catch (e) { $('notifStatus').textContent = 'Kontrola zlyhala.'; }
-  };
 
   /* ================= dashboard hodnotení ================= */
   $('gradesOn').onchange = (e) => commit({ grades: Object.assign({}, S.grades, { on: e.target.checked }) });
@@ -380,7 +321,6 @@
           snippetsCount: Array.isArray(s.snippets) ? s.snippets.length : 0,
           disabledPagesCount: Array.isArray(s.disabledPages) ? s.disabledPages.length : 0,
           avatarMode: s.avatar && s.avatar.mode,
-          notif: s.notif,
           grades: s.grades,
           customThemesCount: s.customThemes ? Object.keys(s.customThemes).length : 0,
         };

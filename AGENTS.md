@@ -1,6 +1,6 @@
 # AGENTS.md — BetterAIS (betterUIS browser extension)
 
-Browser extension (Chrome/Firefox, MV3) pre STU UIS (is.stuba.sk). Zlepšuje vzhľad, ovládanie a používateľský komfort UIS: témy, tmavý/svetlý režim, CSS snippety, paleta príkazov (Ctrl+K), table-tools, vlastné odkazy, notifikácie pošty, dashboard hodnotení (E-index).
+Browser extension (Chrome/Firefox, MV3) pre STU UIS (is.stuba.sk). Zlepšuje vzhľad, ovládanie a používateľský komfort UIS: témy, tmavý/svetlý režim, CSS snippety, paleta príkazov (Ctrl+K), table-tools, vlastné odkazy, dashboard hodnotení (E-index).
 
 ## Stack
 - Vanilla JS (žiadny framework/build step), CSS, HTML
@@ -17,7 +17,7 @@ BetterAIS_beta/
   base.css         # základné pravidlá (visia na html:not([data-bu-off]))
   options.html/js/css  # nastavenia
   popup.html/js
-  notifcore.js, grades.js
+  notifcore.js (zdieľané utility), grades.js
   tools/           # testy, contrast-check, package.ps1
 ```
 

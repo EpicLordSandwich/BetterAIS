@@ -14,12 +14,9 @@ paleta príkazov, table-tools, vlastná profilovka a odkazy v lište. Všetko be
 Funguje v Chrome, Edge aj Brave (Chromium). Firefox: `about:debugging` → Dočasne načítať doplnok → vyber `manifest.firefox.json`.
 
 **Firefox:** `about:debugging` → „Dočasne načítať doplnok“ → vyber `manifest.firefox.json`
-(tento manifest je pre Firefox samostatný, lebo MV3 background sa líši). Vyžaduje Firefox 128+
-(lebo notifikácie používajú `optional_host_permissions`).
+(tento manifest je pre Firefox samostatný, lebo MV3 background sa líši).
 
 Po zmene súborov: obnov rozšírenie v `chrome://extensions` a na is.stuba.sk daj Ctrl+F5.
-Ak si rozšírenie odstránil a znova načítal („Vymazať všetko“), notifikácie pošty sú vypnuté –
-zapni ich znova v nastaveniach (udelí sa oprávnenie `alarms`/`notifications`).
 
 ## Balík na distribúciu
 
@@ -57,9 +54,7 @@ pri Firefoxe sa `manifest.firefox.json` v balíku premenuje na `manifest.json`.
   (profilovka ostáva len lokálna); ručný export/import do JSON v nastaveniach.
 - **Viacjazyčnosť** – rozhranie (názvy tlačidiel, paleta, nastavenia) sa prispôsobí jazyku prehliadača:
   slovenčina, angličtina, ukrajinčina, ruština (čeština → slovenčina). UIS stránky ostávajú v jazyku UIS.
-- **Notifikácie pošty (opt-in)** – každých 15–60 minút skontroluje neprečítané správy v UIS pošte,
-  upozorní notifikáciou s počtom a badge na ikonke. Len čítanie; nič sa neposiela na server.
-  Zapína sa v nastaveniach, zapnutie udelí oprávnenie na pozadie, vypnutie ho odoberie.
+- **Notifikácie pošty** – odstránené (väčšina používateľov má forwarding na univerzitný e-mail).
 - **Dashboard hodnotení (E-index)** – na stránke „Prehľady a informácie o Vašom štúdiu“
   (podrobný prehľad) zobrazí panel s **váženým priemerom** (váha = kredity), získanými
   kreditmi, rozdelením známok a zoznamom aktuálne neúspešných predmetov (dedupe: pre
@@ -101,19 +96,6 @@ Všetky témy prešli kontrolou podľa WCAG 2.1 (4,5:1). Kontrola po pridaní no
 node tools/contrast-check.mjs
 ```
 
-## Notifikácie pošty (fáza 1)
-
-- **Opt-in** – v nastaveniach prepínač „Zapnúť notifikácie pošty“. Zapnutie udelí oprávnenia
-  `alarms`, `notifications` a prístup na pozadie k `https://is.stuba.sk/*`; vypnutie ich zase odoberie.
-- Kontrola každých 15/20/30/60 minút (default 20), tiché hodiny (default 23:00–7:00) sa preskočia úplne.
-- Notifikácia ukáže **len počet** neprečítaných; obsah správ ostáva v prehliadači. Klik na notifikáciu otvorí poštu.
-- Prvý beh po zapnutí nastaví baseline – upozorní až na správy, ktoré prídu potom.
-- Parser rozumie starému aj novému dizajnu pošty (11/2026): presný počet berie z badge pri položke
-  „Pošta“ v účtovom menu, fallback je počítanie neprečítaných riadkov tabuľky.
-- Funguje len pri bežiacom prehliadači a prihlásenej session; keď vyprší prihlásenie, kontrola sa ticho preskočí.
-- Ak rozšírenie nerozozná rozhranie pošty (status „Rozhranie pošty nerozpoznané“), otvor
-  `/auth/posta/slozka.pl` a stlač `Ctrl+Shift+U` – výpis (redigovaný) vlož do chatu, parser doladíme.
-
 ## Pedro
 
 Predvolená profilovka je pôvodná fotka. Mód Pedro používa lokálny `pedro.gif` (96×96, 12 fps, ~440 kB,
@@ -143,7 +125,7 @@ Farby musia byť `#rrggbb`. Kontrola kontrastu po importe: `node tools/contrast-
 - `manifest.firefox.json` – Firefox (MV3, event page)
 - `themes.js` – spoločné jadro: témy, výpočet CSS premenných, ukladanie + sync, i18n
 - `pedro.gif` – voliteľná lokálna profilovka (96×96, súčasť balíka)
-- `notifcore.js` – čistá logika: notifikácie, hľadanie bez diakritiky, zoradenie buniek a CSV
+- `notifcore.js` – čistá logika: hľadanie bez diakritiky, zoradenie buniek a CSV
   (table-tools), redakcia výpisu
 - `grades.js` – čistá logika dashboardu hodnotení (parser E-indexu, dedupe, súhrn, priemer)
 - `content.js` – všetko, čo sa deje na stránke UIS (vrátane table-tools)
@@ -152,7 +134,7 @@ Farby musia byť `#rrggbb`. Kontrola kontrastu po importe: `node tools/contrast-
 - `options.html/js/css` – kompletné nastavenia
 - `tools/contrast-check.mjs` – WCAG kontrola tém
 - `tools/package.ps1` – čistý Chrome/Firefox zip (len runtime súbory)
-- `tools/test-notif-*.mjs`, `tools/test-settings-core.mjs`, `tools/test-grades-core.mjs` – testy logiky (node)
+- `tools/test-settings-core.mjs`, `tools/test-grades-core.mjs`, `tools/test-zip-core.mjs` – testy logiky (node)
 
 ## Čo ešte chýba (deferred, s dôvodom)
 

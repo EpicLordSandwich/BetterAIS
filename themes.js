@@ -88,7 +88,6 @@
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
-    notif: { on: false, interval: 20, quietFrom: 23, quietTo: 7 }, // notifikácie (opt-in): interval min, tiché hodiny 23-7
     grades: { on: true, requiredCredits: 0 }, // dashboard hodnotení na E-indexe; 0 = cieľ kreditov nie je nastavený
     experimental: false, // experimental mode: fetch latest from GitHub; stable otherwise
   };
@@ -231,11 +230,7 @@
   ];
 
   const KEY = 'bu';
-  const NOTIF_KEY = 'bu-notif';   // snapshot stavu notifikácií (vždy len local, nikdy sync)
   // Zdieľané konštanty oprávnení (background.js aj options.js)
-  const ORIGINS = { origins: ['https://is.stuba.sk/*'] };
-  const QUIET_PERM = { permissions: ['alarms', 'notifications'], origins: ['https://is.stuba.sk/*'] };
-  const hasPermissionApi = () => typeof chrome !== 'undefined' && !!chrome.permissions && !!chrome.permissions.request;
 
   /* ================= validácia importovaných tém ================= */
   const PAL_KEYS = ['bg0', 'bg', 'bg2', 'bg3', 'border', 'text', 'muted', 'link', 'accent', 'info', 'warn', 'crit'];
@@ -306,14 +301,6 @@
         })) : []; // zachovať aj prázdny snippet, aby sa dal najprv vytvoriť a potom editovať
     const disabledPages = Array.isArray(s.disabledPages)
       ? [...new Set(s.disabledPages.map((p) => String(p).slice(0, 300)).filter((p) => p.startsWith('/')))].slice(0, 200) : [];
-    const n = s.notif && typeof s.notif === 'object' ? s.notif : {};
-    const clampH = (v, d) => { const x = Math.round(Number(v)); return Number.isFinite(x) ? Math.min(23, Math.max(0, x)) : d; };
-    const notif = {
-      on: !!n.on,
-      interval: [15, 20, 30, 60].includes(Number(n.interval)) ? Number(n.interval) : 20,
-      quietFrom: clampH(n.quietFrom, 23),
-      quietTo: clampH(n.quietTo, 7),
-    };
     const av = (s.avatar && typeof s.avatar === 'object') ? s.avatar : (localAvatar && typeof localAvatar === 'object' ? localAvatar : {});
     const avMode = ['pedro', 'custom', 'original'].includes(av.mode) ? av.mode : DEFAULTS.avatar.mode;
     const avatar = {
@@ -336,7 +323,6 @@
       ui: Object.assign({}, DEFAULTS.ui, s.ui && typeof s.ui === 'object' ? { logoSwap: !!s.ui.logoSwap } : {}),
       snippets, disabledPages,
       customThemes: customThemes,
-      notif,
       grades,
       experimental: s.experimental === undefined ? DEFAULTS.experimental : !!s.experimental,
     };
@@ -459,7 +445,7 @@
   function hasStorage() {
     return typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local && chrome.storage.sync;
   }
-  const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'notif', 'experimental'];
+  const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'experimental'];
   function syncPayload(n) {
     const o = {};
     for (const k of SYNC_KEYS) o[k] = n[k];
@@ -490,7 +476,7 @@
   }
 
   g.BU = {
-    THEMES, FONTS, DEFAULTS, KEY, NOTIF_KEY, SYNC_KEYS, ICONS, ICON_LABELS, PRESETS, ORIGINS, QUIET_PERM, hasPermissionApi,
+    THEMES, FONTS, DEFAULTS, KEY, SYNC_KEYS, ICONS, ICON_LABELS, PRESETS,
     normalize, cleanLink, cleanUrl, uid, compute, applyVars, resolveMode, load, save, contrast, contrastRatio,
     getTheme, validateTheme, varKeys, I18N, t, langOf, uiLang, swallow, sanitizeCss, copyText, toast,
   };
