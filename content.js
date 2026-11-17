@@ -528,7 +528,19 @@
     parts.push('--- VIDITEĽNÉ MENU / POPUPY (' + pops.length + ') ---');
     pops.slice(0, 4).forEach((p) => parts.push(describe(p), slim(p, 5000), ''));
     const ok = await BU.copyText(parts.join('\n'));
-    BU.toast(ok ? BU.t('dumped') : BU.t('copyFail'));
+    if (!ok) {
+      const ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;';
+      const ta = document.createElement('textarea');
+      ta.value = parts.join('\n');
+      ta.style.cssText = 'width:min(90vw,800px);height:70vh;font:12px/1.4 monospace;padding:10px;border:0;border-radius:8px;';
+      ta.readOnly = true;
+      ov.appendChild(ta);
+      ov.addEventListener('click', (e) => { if (e.target === ov) ov.remove(); });
+      document.body.appendChild(ov);
+      ta.focus(); ta.select();
+      BU.toast(BU.t('copyFail'));
+    } else BU.toast(BU.t('dumped'));
   }
 
   let picking = false;
