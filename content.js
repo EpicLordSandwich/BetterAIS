@@ -701,6 +701,7 @@
       if (!img.dataset.sdLogo) return;
       img.onerror = null;
       img.src = img.dataset.sdOrigSrc;
+      img.classList.remove('bu-logo');
       if (img.dataset.sdOrigTitle !== undefined) img.title = img.dataset.sdOrigTitle;
       delete img.dataset.sdLogo;
       return;
@@ -711,6 +712,7 @@
     img.dataset.sdOrigTitle = img.title || '';
     img.removeAttribute('srcset'); img.removeAttribute('width'); img.removeAttribute('height');
     img.src = chrome.runtime.getURL('logo.png');
+    img.classList.add('bu-logo');
     img.title = 'FEI STU – informácie o UIS';
   }
 

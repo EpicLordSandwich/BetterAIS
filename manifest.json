@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "betterUIS",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Vlastný vzhľad pre is.stuba.sk – témy, tmavý režim, CSS snippety, paleta príkazov Ctrl+K, table-tools, vlastná profilovka, odkazy v lište a notifikácie pošty.",
   "minimum_chrome_version": "111",
   "permissions": ["storage", "activeTab"],

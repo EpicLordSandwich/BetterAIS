@@ -1,16 +1,18 @@
 :root { --bg:#262624; --bg-0:#1f1e1d; --bg-2:#2f2e2c; --bg-3:#3a3936; --border:#4a4844; --text:#f0eee6; --muted:#b8b5aa; --link:#8cb4e6; --accent:#3f74d9; --on-accent:#fff; --radius:8px; --radius-sm:4px; --shadow-1:0 1px 3px rgba(0,0,0,.3); --shadow-2:0 4px 14px rgba(0,0,0,.4); }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.wrap { max-width: 980px; margin: 0 auto; padding: 28px 20px 60px; }
-header.top { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-header.top img { height: 44px; border-radius: var(--radius-sm); }
-h1 { font-size: 1.5rem; margin: 0; } h1 small { color: var(--muted); font-weight: 400; font-size: .8rem; margin-left: 6px; }
-section { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 16px; }
-h2 { margin: 0 0 4px; font-size: 1.05rem; font-family: "Space Mono", monospace; text-transform: uppercase; letter-spacing: .08em; } p.sub { margin: 0 0 14px; color: var(--muted); font-size: .9em; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.55 "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 32px 20px 72px; }
+header.top { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+header.top img { height: 40px; border-radius: var(--radius-sm); }
+h1 { font-size: 1.4rem; margin: 0; font-weight: 650; letter-spacing: -.01em; } h1 small { color: var(--muted); font-weight: 400; font-size: .78rem; margin-left: 8px; letter-spacing: 0; }
+section { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 18px; }
+h2 { margin: 0 0 4px; font-size: .78rem; font-weight: 700; font-family: "Space Mono", monospace; text-transform: uppercase; letter-spacing: .1em; color: var(--text); }
+p.sub { margin: 0 0 14px; color: var(--muted); font-size: .88em; line-height: 1.5; }
 .row { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; }
 label.f { display: flex; flex-direction: column; gap: 4px; font-size: .85em; color: var(--muted); }
 button, select, input[type=text] { font: inherit; color: var(--text); background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 12px; font-family: "Space Mono", monospace; text-transform: uppercase; letter-spacing: .06em; font-size: 12px; }
 button { cursor: pointer; transition: border-color .15s, filter .15s; } button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 button.on { background: var(--accent-soft, rgba(63,116,217,.16)); border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent); }
 button.ghost { background: transparent; }

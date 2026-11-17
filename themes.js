@@ -22,7 +22,7 @@
       light: P('#ebe8de', '#f5f4ee', '#ffffff', '#ece9df', '#d9d5c7', '#2b2a27', '#6b675d', '#1f5fbf', '#3f74d9', '#2e6ccb', '#966319', '#c53b30'),
     },
     sleek: {
-      name: 'Sleek', tagline: 'Minimalistická, ostrá, takmer čierna', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      name: 'Sleek', tagline: 'Editorial minimum, takmer čierna', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
       dark:  P('#08090b', '#0d0e11', '#14161a', '#1c1f25', '#262a31', '#e8eaed', '#8b919a', '#9db4ff', '#6d7cff', '#7aa2ff', '#e6b450', '#f06a6a'),
       light: P('#ffffff', '#f6f7f9', '#ffffff', '#eef0f3', '#e1e4e8', '#14161a', '#6a717b', '#3a4bd8', '#4f5df0', '#3a63e0', '#99651a', '#d03a3a'),
     },
@@ -31,25 +31,10 @@
       dark:  P('#272c36', '#2e3440', '#3b4252', '#434c5e', '#4c566a', '#eceff4', '#aab3c5', '#88c0d0', '#5e81ac', '#99b3cd', '#ebcb8b', '#d9a2a7'),
       light: P('#e5e9f0', '#eceff4', '#f8f9fb', '#e5e9f0', '#d8dee9', '#2e3440', '#4c566a', '#4d6d95', '#5e81ac', '#496e94', '#a85237', '#b24852'),
     },
-    bloom: {
-      name: 'Bloom', tagline: 'Pastelová ružová, veľmi zaoblená', radius: 20, font: ROUND,
-      dark:  P('#221a25', '#2a2030', '#362a3d', '#45354d', '#5a4663', '#fbeaf3', '#cdb3c4', '#f7a8d2', '#ec6fa8', '#b69cf2', '#f2c078', '#f27a8a'),
-      light: P('#ffe9f3', '#fff5fa', '#ffffff', '#ffe3ef', '#f4c6da', '#4a2b3b', '#8a6678', '#c2417d', '#e0558f', '#8258cf', '#966716', '#d13148'),
-    },
-    comfy: {
-      name: 'Comfy', tagline: 'Útulná hnedá, krémová a mäkké rohy', radius: 16, font: ROUND,
-      dark:  P('#221c18', '#2b2420', '#362d27', '#443830', '#5a4a3f', '#f3e6d3', '#c2ae96', '#e8b47a', '#d08a4e', '#8fb8a0', '#e5b25d', '#e27a6a'),
-      light: P('#f1e4cf', '#faf3e8', '#fffaf1', '#f0e3cf', '#e0cfb4', '#4a3a2c', '#7d6a57', '#a35c1e', '#c47a35', '#45785d', '#966319', '#b9473a'),
-    },
     catppuccin: {
       name: 'Catppuccin', tagline: 'Spotify štýl, levanduľová', radius: 8, font: '',
       dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#d7bcf5', '#d7bcf5', '#d7bcf5', '#e0a73e', '#ff6b6b'),
       light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#7c3aed', '#7c3aed', '#7c3aed', '#966319', '#c93a3a'),
-    },
-    dracula: {
-      name: 'Dracula', tagline: 'Tmavá s neónovými akcentmi', radius: 10, font: '',
-      dark:  P('#21222c', '#282a36', '#303341', '#44475a', '#565a72', '#f8f8f2', '#b4b8d0', '#8be9fd', '#8be9fd', '#8be9fd', '#ffb86c', '#ff6f6f'),
-      light: P('#ecebf5', '#f8f8f2', '#ffffff', '#ebebf5', '#d5d5e6', '#282a36', '#636a8a', '#6a4fd6', '#187a95', '#187a95', '#a65f00', '#d42f2f'),
     },
     gruvbox: {
       name: 'Gruvbox', tagline: 'Retro teplé zemité farby', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Cascadia Code", Consolas, monospace',
@@ -60,11 +45,6 @@
       name: 'STU modrá', tagline: 'Hlboká námornícka modrá podľa FEI', radius: 12, font: '',
       dark:  P('#0b1a33', '#0f2342', '#15305a', '#1c3c70', '#2a4f8a', '#eaf1ff', '#a9bddf', '#7fb2ff', '#2f7bff', '#7fb2ff', '#f0b94d', '#ff6b6b'),
       light: P('#dbe7fb', '#f2f6fd', '#ffffff', '#e3ecfb', '#c6d6f1', '#0f2342', '#4d6389', '#1c56c4', '#2f6fe0', '#2769df', '#98641a', '#c93a3a'),
-    },
-    oled: {
-      name: 'OLED', tagline: 'Čistá čierna, šetrí batériu', radius: 10, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-      dark:  P('#000000', '#000000', '#0b0b0c', '#161618', '#26262a', '#f2f2f3', '#8e8e93', '#6cb2ff', '#0a84ff', '#64d2ff', '#ffd60a', '#ff453a'),
-      light: P('#ffffff', '#f2f2f7', '#ffffff', '#e9e9ee', '#d8d8de', '#111111', '#6e6e73', '#0a63d6', '#0a84ff', '#006ad6', '#956219', '#cf2e23'),
     },
     og: {
       name: 'OG AIS', tagline: 'Pôvodný AIS/UIS: bordová, krémová, čierny text', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' },
@@ -77,14 +57,9 @@
       light: P('#f5f5f5', '#f5f5f5', '#ffffff', '#f0f0f0', '#cccccc', '#1a1a1a', '#666666', '#006bdf', '#d71921', '#666666', '#8a6a20', '#d71921'),
     },
     techy: {
-      name: 'Techy', tagline: 'Modrá technická, ostré rohy', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Fira Code", Consolas, monospace',
-      dark:  P('#0a0a0a', '#0d1117', '#161b22', '#21262d', '#30363d', '#e6edf3', '#8b949e', '#58a6ff', '#00a8e9', '#58a6ff', '#e0a73e', '#ff4b33'),
+      name: 'Techy', tagline: 'OLED čierna, technická modrá, monospace', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Fira Code", Consolas, monospace',
+      dark:  P('#000000', '#000000', '#111111', '#1a1a1a', '#30363d', '#e6edf3', '#8b949e', '#58a6ff', '#00a8e9', '#58a6ff', '#e0a73e', '#ff4b33'),
       light: P('#f6f8fa', '#ffffff', '#f6f8fa', '#eaeef2', '#d0d7de', '#1f2328', '#59636e', '#0969da', '#0061d8', '#0969da', '#9a6700', '#cf222e'),
-    },
-    clean: {
-      name: 'Clean', tagline: 'Editorial, čisté línie', radius: 8, font: 'Space Grotesk, system-ui, sans-serif',
-      dark:  P('#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#3a3a3a', '#f5f5f5', '#9a9a9a', '#4a9eff', '#cc2222', '#4a9eff', '#e0a73e', '#e45a5a'),
-      light: P('#faf9f6', '#faf9f6', '#ffffff', '#f0f0f0', '#dddddd', '#0a0a0a', '#6b6b6b', '#1a6bcc', '#cc2222', '#1a6bcc', '#966319', '#cc2222'),
     },
     lime: {
       name: 'Lime', tagline: 'Spotify štýl, limetková zelená', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
