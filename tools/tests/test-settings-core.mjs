@@ -14,7 +14,7 @@ function eq(actual, expected, name) {
 /* ===== compute / contrast / validateTheme / getTheme / resolveMode ===== */
 const out = BU.compute(BU.DEFAULTS);
 eq(typeof out.vars, 'object', 'compute: vars object');
-eq(out.vars['--accent'], BU.DEFAULTS.custom.accent || BU.THEMES.claude.dark.accent, 'compute: accent from theme');
+eq(out.vars['--accent'], BU.DEFAULTS.custom.accent || BU.THEMES.classic.dark.accent, 'compute: accent from theme');
 eq(BU.contrast('#3f74d9'), '#000000', 'contrast: blue accent -> black text');
 eq(BU.contrast('#1f1e1d'), '#ffffff', 'contrast: dark bg -> white text');
 eq(BU.contrast('#ffffff'), '#000000', 'contrast: white -> black text');
@@ -22,18 +22,18 @@ eq(BU.contrast('bad'), null, 'contrast: invalid -> null');
 eq(Math.abs(BU.contrastRatio('#ffffff', '#000000') - 21) < 0.01, true, 'contrastRatio: black/white = 21');
 eq(BU.contrastRatio('#777777', '#777777'), 1, 'contrastRatio: same color = 1');
 eq(BU.contrastRatio('bad', '#ffffff'), null, 'contrastRatio: invalid -> null');
-eq(BU.contrastRatio(BU.THEMES.claude.dark.text, BU.THEMES.claude.dark.bg) >= 4.5, true, 'contrastRatio: builtin theme passes');
+eq(BU.contrastRatio(BU.THEMES.classic.dark.text, BU.THEMES.classic.dark.bg) >= 4.5, true, 'contrastRatio: builtin theme passes');
 eq(BU.resolveMode('dark'), 'dark', 'resolveMode: dark');
 eq(BU.resolveMode('light'), 'light', 'resolveMode: light');
 eq(BU.validateTheme(null), null, 'validateTheme: null -> null');
-eq(BU.validateTheme({ colors: { dark: BU.THEMES.claude.dark, light: BU.THEMES.claude.light } }).name, 'Téma', 'validateTheme: valid');
-eq(BU.getTheme('claude', null).name, 'Claude', 'getTheme: builtin');
+eq(BU.validateTheme({ colors: { dark: BU.THEMES.classic.dark, light: BU.THEMES.classic.light } }).name, 'Téma', 'validateTheme: valid');
+eq(BU.getTheme('classic', null).name, 'Classic', 'getTheme: builtin');
 eq(BU.getTheme('og', null).name, 'OG AIS', 'getTheme: OG AIS builtin');
 eq(BU.compute({ theme: 'og', mode: 'light' }).theme, 'og', 'compute: OG theme id');
 eq(BU.compute({ theme: 'og', mode: 'light' }).vars['--bg-0'], BU.THEMES.og.light.bg0, 'compute: OG light header token');
 eq(BU.compute({ theme: 'og', mode: 'light' }).vars['--accent-color'], '#831135', 'compute: OG accent bar maroon');
 eq(BU.contrastRatio(BU.THEMES.og.light.link, BU.THEMES.og.light.bg) >= 4.5, true, 'OG: light link contrast');
-eq(BU.getTheme('c-abc', { 'c-abc': { name: 'X', tagline: '', radius: 5, font: '', colors: { dark: BU.THEMES.claude.dark, light: BU.THEMES.claude.light } } }).name, 'X', 'getTheme: custom');
+eq(BU.getTheme('c-abc', { 'c-abc': { name: 'X', tagline: '', radius: 5, font: '', colors: { dark: BU.THEMES.classic.dark, light: BU.THEMES.classic.light } } }).name, 'X', 'getTheme: custom');
 eq(BU.getTheme('nope', null), null, 'getTheme: missing -> null');
 // globalThis.self je nastavené na začiatku súboru, aby themes.js (IIFE nad self) bežal v node.
 eq(BU.normalize(null).avatar.mode, 'original', 'default avatar mode = original (privacy)');
@@ -43,7 +43,7 @@ eq(BU.normalize({ avatar: { mode: 'custom', dataUrl: 'data:image/png;base64,xx' 
 
 /* ===== základné normalize sanity (regresia) ===== */
 const n = BU.normalize(null);
-eq(n.theme, 'claude', 'default theme');
+eq(n.theme, 'classic', 'default theme');
 eq(n.enabled, true, 'default enabled');
 eq(n.notif.on, false, 'notif opt-in off by default');
 eq(BU.normalize({ links: [{ name: 'x', url: '/auth/x.pl', icon: 'mail' }] }).links.length, 1, 'links normalized');

@@ -58,7 +58,7 @@
         del.onclick = (e) => {
           e.stopPropagation();
           const th = Object.assign({}, S.customThemes); delete th[id];
-          commit(S.theme === id ? { customThemes: th, theme: 'claude' } : { customThemes: th });
+          commit(S.theme === id ? { customThemes: th, theme: 'classic' } : { customThemes: th });
         };
         meta.appendChild(del);
       }
@@ -73,7 +73,7 @@
     document.querySelectorAll('#mode button').forEach((b) => b.classList.toggle('on', b.dataset.v === S.mode));
     renderStore(out.mode);
 
-    const t = BU.getTheme(S.theme, S.customThemes) || BU.THEMES.claude;
+    const t = BU.getTheme(S.theme, S.customThemes) || BU.THEMES.classic;
     const p = t[out.mode];
     $('accent').value = S.custom.accent || p.accent;
     $('link').value = S.custom.link || p.link;

@@ -16,8 +16,8 @@
   const ROUND = 'ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", system-ui, sans-serif';
 
   const THEMES = {
-    claude: {
-      name: 'Claude', tagline: 'Teplé odtiene sivej (pôvodná téma)', radius: 12, font: '',
+    classic: {
+      name: 'Classic', tagline: 'Teplé neutrálne tóny', radius: 12, font: '',
       dark:  P('#1f1e1d', '#262624', '#2f2e2c', '#3a3936', '#4a4844', '#f0eee6', '#b8b5aa', '#8cb4e6', '#3f74d9', '#5b9bf0', '#e0a73e', '#e8756c'),
       light: P('#ebe8de', '#f5f4ee', '#ffffff', '#ece9df', '#d9d5c7', '#2b2a27', '#6b675d', '#1f5fbf', '#3f74d9', '#2e6ccb', '#966319', '#c53b30'),
     },
@@ -98,7 +98,7 @@
   ];
 
   const DEFAULTS = {
-    theme: 'claude',
+    theme: 'classic',
     mode: 'dark', // dark | light | auto
     custom: { accent: '', link: '', radius: '', font: '' },
     avatar: { mode: 'original', dataUrl: '' }, // pedro | custom | original (default original = súkromie P0-4)

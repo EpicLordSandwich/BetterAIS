@@ -255,11 +255,7 @@ html:not([data-bu-off]) .bu-card-head > *:not(img) {
   margin: 0 !important; padding: 0 !important; font: inherit !important; line-height: inherit !important;
   background: none !important; color: var(--text) !important; transform: none !important;
 }
-html:not([data-bu-off]) .bu-card-head::after {                /* nenápadné „držadlo“ – ukáže sa pri prechode myšou */
-  content: ""; margin-left: auto; flex: none; width: 10px; height: 15px; opacity: 0; transition: opacity .15s;
-  background: radial-gradient(circle, var(--muted) 1.3px, transparent 1.7px) 0 0 / 5px 5px;
-}
-html:not([data-bu-off]) .bu-card:hover .bu-card-head::after { opacity: .5; }
+html:not([data-bu-off]) .bu-card-head::after { content: none; }
 html:not([data-bu-off]) .bu-card img.bu-icon {
   position: static !important; float: none !important; flex: none; display: block !important;
   width: 26px !important; height: 26px !important; max-width: none !important; margin: 0 !important;

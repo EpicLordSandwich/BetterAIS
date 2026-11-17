@@ -33,7 +33,7 @@
   };
   const render = () => {
     BU.applyVars(BU.compute(S));
-    sel.value = (S.theme in BU.THEMES || (S.customThemes && S.theme in S.customThemes)) ? S.theme : 'claude';
+    sel.value = (S.theme in BU.THEMES || (S.customThemes && S.theme in S.customThemes)) ? S.theme : 'classic';
     document.querySelectorAll('#mode button').forEach((b) => b.classList.toggle('on', b.dataset.v === S.mode));
     renderPageToggle();
   };

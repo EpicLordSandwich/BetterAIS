@@ -5,8 +5,13 @@ paleta príkazov, table-tools, vlastná profilovka a odkazy v lište. Všetko be
 
 ## Inštalácia
 
-**Chrome / Edge / Brave:** `chrome://extensions` → Režim pre vývojárov → „Načítať rozbalené“ → vyber tento priečinok
-(alebo nahoď zip).
+1. Stiahni zip z GitHubu a rozbaľ ho.
+2. Otvor `chrome://extensions/` (funguje aj v Brave: `brave://extensions/`).
+3. Zapni „Režim pre vývojárov“ (Developer mode).
+4. Klikni „Načítať rozbalené“ (Load unpacked) a vyber rozbalený priečinok (ten, kde je `manifest.json`).
+5. Otvor is.stuba.sk a daj Ctrl+F5.
+
+Funguje v Chrome, Edge aj Brave (Chromium). Firefox: `about:debugging` → Dočasne načítať doplnok → vyber `manifest.firefox.json`.
 
 **Firefox:** `about:debugging` → „Dočasne načítať doplnok“ → vyber `manifest.firefox.json`
 (tento manifest je pre Firefox samostatný, lebo MV3 background sa líši). Vyžaduje Firefox 128+
