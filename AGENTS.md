@@ -43,7 +43,7 @@ BetterAIS_beta/
 - Prístupnosť: viditeľné focus stavy, WCAG 4.5:1.
 
 ## Témy
-Claude, Sleek, Nord, Bloom, Comfy, Catppuccin, Dracula, Gruvbox, STU modrá, OLED, OG AIS, Nothing, Techy, Clean, Minimal (+ importované vlastné).
+Claude, Sleek, Nord, Bloom, Comfy, Catppuccin, Dracula, Gruvbox, STU modrá, OLED, OG AIS, Nothing, Techy, Clean (+ importované vlastné).
 
 ## Štýl práce
 - Pred commitom `git status`, stage-uj len svoje súbory, nikdy `git add -A` naslepo.
