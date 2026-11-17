@@ -10,6 +10,7 @@ if (typeof importScripts === 'function') importScripts('themes.js', 'notifcore.j
 const MAIL_URL = 'https://is.stuba.sk/auth/posta/slozka.pl?lang=sk';
 const UPDATE_URL = 'https://raw.githubusercontent.com/EpicLordSandwich/BetterAIS/main/manifest.json';
 const UPDATE_ZIP = 'https://github.com/EpicLordSandwich/BetterAIS/archive/refs/heads/main.zip';
+const REMOTE_THEMES_URL = 'https://raw.githubusercontent.com/EpicLordSandwich/BetterAIS/main/updates/remote.json';
 const ALARM = 'bu-mail';
 const BADGE_COLOR = '#3f74d9';
 
@@ -126,18 +127,6 @@ async function checkUpdate() {
     const newer = String(m.version) !== String(cur);
     const info = { version: m.version, current: cur, available: newer, url: UPDATE_ZIP, at: Date.now() };
     await chrome.storage.local.set({ 'bu-update': info });
-    // Soft update: stiahne vzdialené témy (JSON) a zlúči ich do customThemes (len experimental).
-    try {
-      const r2 = await fetch('https://raw.githubusercontent.com/EpicLordSandwich/BetterAIS/main/updates/remote.json', { cache: 'no-store' });
-      if (r2.ok) {
-        const remote = await r2.json();
-        if (remote && remote.themes && typeof remote.themes === 'object') {
-          const curS = await settings();
-          const merged = Object.assign({}, curS.customThemes || {}, remote.themes);
-          await chrome.storage.local.set({ [BU.KEY]: Object.assign({}, curS, { customThemes: merged }) });
-        }
-      }
-    } catch (e) { swallow(e); }
     return { ok: true, ...info };
   } catch (e) { swallow(e); return { ok: false, status: 'error' }; }
 }
@@ -169,6 +158,22 @@ function ensureListeners() {
 }
 try { ensureListeners(); } catch (e) { swallow(e); }
 
+async function fetchRemoteThemes() {
+  try {
+    const now = Date.now();
+    const r = await chrome.storage.local.get('bu-remote-ts');
+    const last = (r && r['bu-remote-ts']) || 0;
+    if (now - last < 24 * 60 * 60 * 1000) return; // raz denne
+    const resp = await fetch(REMOTE_THEMES_URL, { cache: 'no-store' });
+    if (!resp.ok) return;
+    const remote = await resp.json();
+    if (!remote || !remote.themes || typeof remote.themes !== 'object') return;
+    const S = await settings();
+    const merged = Object.assign({}, S.customThemes || {}, remote.themes);
+    await chrome.storage.local.set({ [BU.KEY]: Object.assign({}, S, { customThemes: merged }), 'bu-remote-ts': now });
+  } catch (e) { swallow(e); }
+}
+
 async function ensureAlarm() {
   try { ensureListeners(); } catch (e) { swallow(e); }
   try {
@@ -180,8 +185,8 @@ async function ensureAlarm() {
   } catch (e) { try { if (chrome && chrome.alarms) chrome.alarms.clear(ALARM); } catch (e2) { swallow(e2); } setBadge(''); }
 }
 
-chrome.runtime.onInstalled.addListener(() => { ensureAlarm(); checkUpdate(); });
-chrome.runtime.onStartup.addListener(() => { ensureAlarm(); checkUpdate(); });
+chrome.runtime.onInstalled.addListener(() => { ensureAlarm(); checkUpdate(); fetchRemoteThemes(); });
+chrome.runtime.onStartup.addListener(() => { ensureAlarm(); checkUpdate(); fetchRemoteThemes(); });
 chrome.storage.onChanged.addListener((ch, area) => {
   if (area === 'local' && ch[BU.KEY]) { ensureAlarm(); checkUpdate(); }
 });
