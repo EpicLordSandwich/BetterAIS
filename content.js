@@ -587,6 +587,18 @@
     if (e.code === 'KeyD') { e.preventDefault(); dump(); }
     else if (e.code === 'KeyI') { e.preventDefault(); startPicker(); }
   }, true);
+  // manuálna záloha skratiek (Chrome niekedy nepriradí default)
+  document.addEventListener('keydown', (e) => {
+    if (!isTop) return;
+    if (e.ctrlKey && e.shiftKey && !e.altKey && e.code === 'KeyU') { e.preventDefault(); dump(); }
+    else if (e.ctrlKey && e.shiftKey && !e.altKey && e.code === 'KeyY') { e.preventDefault(); startPicker(); }
+    else if (e.ctrlKey && e.shiftKey && !e.altKey && e.code === 'KeyM') {
+      e.preventDefault();
+      const next = BU.resolveMode(S.mode) === 'dark' ? 'light' : 'dark';
+      S = BU.normalize(Object.assign({}, S, { mode: next }));
+      applyAll(); BU.save(S);
+    }
+  }, true);
 
   /* ================= 9) Príkazová paleta (Ctrl+K) ================= */
   function buildIndex() {
