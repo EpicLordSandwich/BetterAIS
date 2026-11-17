@@ -232,16 +232,16 @@ html:not([data-bu-off]) .sd-box li:hover { background-color: var(--hover) !impor
 /* =====================================================================
    KARTY hlavného menu (.menu-drzak) – triedy pridáva content.js
    ===================================================================== */
-html:not([data-bu-off]) .bu-card {
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card {
   position: relative; box-sizing: border-box; padding: 2px !important;
   background: var(--bg-2) !important; background-image: none !important;
   border: 1px solid var(--border) !important; border-radius: var(--radius) !important;
   box-shadow: none; transition: border-color .2s;
 }
-html:not([data-bu-off]) .bu-card:hover { border-color: var(--border-strong) !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card:hover { border-color: var(--border-strong) !important; }
 
 /* hlavička = pôvodný „držiak“ (ťahanie kariet funguje ďalej) – label štýl */
-html:not([data-bu-off]) .bu-card-head {
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head {
   display: flex !important; align-items: center; gap: 8px; box-sizing: border-box;
   position: relative !important; float: none !important; width: auto !important; height: auto !important; min-height: 0 !important;
   margin: 0 !important; padding: 12px 12px 6px !important;
@@ -250,53 +250,53 @@ html:not([data-bu-off]) .bu-card-head {
   font-size: 12px; font-weight: 700; line-height: 1.2; letter-spacing: .06em; text-transform: uppercase;
   color: var(--muted); cursor: grab;
 }
-html:not([data-bu-off]) .bu-card-head:active { cursor: grabbing; }
-html:not([data-bu-off]) .bu-card-head > *:not(img) {
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head:active { cursor: grabbing; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head > *:not(img) {
   position: static !important; float: none !important; width: auto !important; height: auto !important;
   margin: 0 !important; padding: 0 !important; font: inherit !important; line-height: inherit !important;
   background: none !important; color: inherit !important; transform: none !important;
   text-transform: inherit !important; letter-spacing: inherit !important;
 }
-html:not([data-bu-off]) .bu-card-head::after { content: none; }
-html:not([data-bu-off]) .bu-card img.bu-icon {
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head::after { content: none; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card img.bu-icon {
   position: static !important; float: none !important; flex: none; display: block !important;
   width: 18px !important; height: 18px !important; max-width: none !important; margin: 0 !important;
   object-fit: contain; opacity: .75; filter: var(--icon-glow); transform: none !important;
 }
 
-html:not([data-bu-off]) .bu-card ul,
-html:not([data-bu-off]) .bu-card ol {
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card ul,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card ol {
   list-style: none !important; margin: 0 !important; padding: 4px 6px 8px !important;
   display: flex; flex-direction: column; gap: 1px;
 }
-html:not([data-bu-off]) .bu-card li { list-style: none !important; margin: 0 !important; padding: 0 !important; }
-html:not([data-bu-off]) .bu-card li::marker { content: none; }
-html:not([data-bu-off]) .bu-card li > a,
-html:not([data-bu-off]) .bu-card li a {
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li { list-style: none !important; margin: 0 !important; padding: 0 !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li::marker { content: none; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li > a,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a {
   display: flex; align-items: center; min-height: 30px; box-sizing: border-box; padding: 5px 10px;
   border-radius: var(--radius-sm); font-size: 14px; line-height: 1.3; text-decoration: none !important;
   color: var(--muted) !important; transition: background .12s, color .12s;
 }
-html:not([data-bu-off]) .bu-card li a * { color: inherit !important; }
-html:not([data-bu-off]) .bu-card li a b,
-html:not([data-bu-off]) .bu-card li a strong,
-html:not([data-bu-off]) .bu-card li b a,
-html:not([data-bu-off]) .bu-card li strong a { font-weight: 600; color: var(--text) !important; }
-html:not([data-bu-off]) .bu-card li a:hover { background: var(--hover) !important; color: var(--text) !important; box-shadow: inset 2px 0 0 var(--accent); }
-html:not([data-bu-off]) .bu-card li a:hover b,
-html:not([data-bu-off]) .bu-card li a:hover strong { color: var(--text) !important; }
-html:not([data-bu-off]) .bu-card .ui-resizable-handle { opacity: .25; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a * { color: inherit !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a b,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a strong,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li b a,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li strong a { font-weight: 600; color: var(--text) !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a:hover { background: var(--hover) !important; color: var(--text) !important; box-shadow: inset 2px 0 0 var(--accent); }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a:hover b,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a:hover strong { color: var(--text) !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .ui-resizable-handle { opacity: .25; }
 
 /* ---- Starý tabuľkový tvar hlavného menu (ak ho UIS ešte niekde používa) ---- */
-html:not([data-bu-off]) #stranka .mainpage > table { border-collapse: separate !important; border-spacing: 0 10px !important; width: 100% !important; max-width: 1000px; }
-html:not([data-bu-off]) #stranka .mainpage > table > tbody > tr:not(:has(.polozky-obr)) { display: none; }
-html:not([data-bu-off]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td {
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table { border-collapse: separate !important; border-spacing: 0 10px !important; width: 100% !important; max-width: 1000px; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:not(:has(.polozky-obr)) { display: none; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td {
   background: var(--bg-2) !important; border-top: 1px solid var(--border) !important; border-bottom: 1px solid var(--border) !important;
   padding-top: 12px !important; padding-bottom: 12px !important; transition: background .15s, border-color .15s;
 }
-html:not([data-bu-off]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td:first-child { border-left: 4px solid var(--accent) !important; border-radius: var(--radius) 0 0 var(--radius); padding-left: 12px !important; }
-html:not([data-bu-off]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td:last-child { border-right: 1px solid var(--border) !important; border-radius: 0 var(--radius) var(--radius) 0; padding-right: 16px !important; }
-html:not([data-bu-off]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr):hover > td { background: var(--bg-3) !important; border-color: var(--border-strong) !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td:first-child { border-left: 4px solid var(--accent) !important; border-radius: var(--radius) 0 0 var(--radius); padding-left: 12px !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td:last-child { border-right: 1px solid var(--border) !important; border-radius: 0 var(--radius) var(--radius) 0; padding-right: 16px !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr):hover > td { background: var(--bg-3) !important; border-color: var(--border-strong) !important; }
 html:not([data-bu-off]) .sekce-nadpis,
 html:not([data-bu-off]) .sekce-nadpis b { font-size: 1.05rem; letter-spacing: .01em; }
 
