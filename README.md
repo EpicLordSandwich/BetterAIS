@@ -72,6 +72,7 @@ pri Firefoxe sa `manifest.firefox.json` v balíku premenuje na `manifest.json`.
 | Skratka | Akcia |
 |---|---|
 | `Ctrl+K` | paleta príkazov (vyhľadávanie v menu, bez diakritiky) |
+| `Ctrl+Shift+M` | prepnúť tmavý/svetlý režim |
 | `Ctrl+Shift+U` | diagnostika – skopíruje štruktúru stránky (redigované osobné údaje) |
 | `Ctrl+Shift+Y` | vybrať prvok a skopírovať len jeho HTML |
 | `Alt+Shift+D` / `Alt+Shift+I` | fallback diagnostiky (ak sú skratky premapované/zablokované) |

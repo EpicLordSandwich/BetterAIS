@@ -45,6 +45,7 @@
   };
 
   fillThemes();
+  try { chrome.runtime.sendMessage({ type: 'bu-update-check' }, () => { void chrome.runtime.lastError; }); } catch (e) {}   // refresh dostupnosti novej verzie
   document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => commit({ mode: b.dataset.v })));
   sel.onchange = () => commit({ theme: sel.value });
   pt.onclick = () => {

@@ -296,9 +296,9 @@
       box.id = 'bu-ctl';
       box.innerHTML =
         '<button type="button" class="bu-btn" data-a="mode"></button>' +
-        '<button type="button" class="bu-btn" data-a="find" title="' + BU.t('findTitle') + '">' + ICON_FIND + '</button>' +
-        '<button type="button" class="bu-btn" data-a="add" title="' + BU.t('addTitle') + '">' + ICON_PLUS + '</button>' +
-        '<button type="button" class="bu-btn" data-a="settings" title="' + BU.t('setTitle') + '">' + ICON_SET + '</button>';
+        '<button type="button" class="bu-btn" data-a="find" title="' + BU.t('findTitle') + '" aria-label="' + BU.t('findTitle') + '">' + ICON_FIND + '</button>' +
+        '<button type="button" class="bu-btn" data-a="add" title="' + BU.t('addTitle') + '" aria-label="' + BU.t('addTitle') + '">' + ICON_PLUS + '</button>' +
+        '<button type="button" class="bu-btn" data-a="settings" title="' + BU.t('setTitle') + '" aria-label="' + BU.t('setTitle') + '">' + ICON_SET + '</button>';
       box.addEventListener('click', (e) => {
         const b = e.target.closest('button[data-a]');
         if (!b) return;
@@ -329,6 +329,7 @@
       modeBtn.innerHTML = eff === 'dark' ? ICON_SUN : ICON_MOON;
     }
     modeBtn.title = eff === 'dark' ? BU.t('modeLight') : BU.t('modeDark');
+    modeBtn.setAttribute('aria-label', modeBtn.title);
   }
 
   /* ================= 5) Profilovka (len lokálne) ================= */
@@ -554,7 +555,14 @@
   // príkazy z manifestu (premapovateľné v chrome://extensions/shortcuts) + Alt+Shift fallback
   chrome.runtime.onMessage.addListener((m, sender) => {
     if (!m || typeof m !== 'object' || sender.id !== chrome.runtime.id) return;
-    if (m.type === 'bu-cmd') { if (m.name === 'pick') startPicker(); else dump(); }
+    if (m.type === 'bu-cmd') {
+      if (m.name === 'pick') startPicker();
+      else if (m.name === 'toggle-mode') {
+        const next = BU.resolveMode(S.mode) === 'dark' ? 'light' : 'dark';
+        S = BU.normalize(Object.assign({}, S, { mode: next }));
+        applyAll(); BU.save(S);
+      } else dump();
+    }
   });
   document.addEventListener('keydown', (e) => {
     if (!isTop || !e.altKey || !e.shiftKey) return;

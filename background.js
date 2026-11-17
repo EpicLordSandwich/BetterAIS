@@ -185,7 +185,17 @@ async function ensureAlarm() {
   } catch (e) { try { if (chrome && chrome.alarms) chrome.alarms.clear(ALARM); } catch (e2) { swallow(e2); } setBadge(''); }
 }
 
-chrome.runtime.onInstalled.addListener(() => { ensureAlarm(); checkUpdate(); fetchRemoteThemes(); });
+chrome.runtime.onInstalled.addListener((details) => {
+  ensureAlarm(); checkUpdate(); fetchRemoteThemes();
+  if (details && details.reason === 'install') {           // vitaj: raz otvor nastavenia po prvej inštalácii
+    chrome.storage.local.get('bu-welcomed').then((r) => {
+      if (!r || !r['bu-welcomed']) {
+        chrome.storage.local.set({ 'bu-welcomed': true }).catch((e) => swallow(e));
+        try { chrome.runtime.openOptionsPage(); } catch (e) { swallow(e); }
+      }
+    }).catch((e) => swallow(e));
+  }
+});
 chrome.runtime.onStartup.addListener(() => { ensureAlarm(); checkUpdate(); fetchRemoteThemes(); });
 chrome.storage.onChanged.addListener((ch, area) => {
   if (area === 'local' && ch[BU.KEY]) { ensureAlarm(); checkUpdate(); }
