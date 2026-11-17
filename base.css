@@ -562,3 +562,8 @@ html:not([data-bu-off])[data-bu-theme="og"] #univerzita { color: #ffffff !import
 html:not([data-bu-off])[data-bu-theme="og"] #menu { color: #c8c8db !important; font-size: 11px !important; border-top: 1px solid #ffffff !important; height: 25px; }
 html:not([data-bu-off])[data-bu-theme="og"] #odkazy_fakult a { color: #c8c8db !important; }
 html:not([data-bu-off])[data-bu-theme="og"] #svatek { color: #c8c8db !important; }
+
+/* ===== OG AIS – nový header (#header) v štýle archívu ===== */
+html:not([data-bu-off])[data-bu-theme="og"] #header { background-color: #831135 !important; }
+html:not([data-bu-off])[data-bu-theme="og"] #header, html:not([data-bu-off])[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
+html:not([data-bu-off])[data-bu-theme="og"] #header .left, html:not([data-bu-off])[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
