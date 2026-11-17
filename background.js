@@ -126,6 +126,18 @@ async function checkUpdate() {
     const newer = String(m.version) !== String(cur);
     const info = { version: m.version, current: cur, available: newer, url: UPDATE_ZIP, at: Date.now() };
     await chrome.storage.local.set({ 'bu-update': info });
+    // Soft update: stiahne vzdialené témy (JSON) a zlúči ich do customThemes (len experimental).
+    try {
+      const r2 = await fetch('https://raw.githubusercontent.com/EpicLordSandwich/BetterAIS/main/updates/remote.json', { cache: 'no-store' });
+      if (r2.ok) {
+        const remote = await r2.json();
+        if (remote && remote.themes && typeof remote.themes === 'object') {
+          const curS = await settings();
+          const merged = Object.assign({}, curS.customThemes || {}, remote.themes);
+          await chrome.storage.local.set({ [BU.KEY]: Object.assign({}, curS, { customThemes: merged }) });
+        }
+      }
+    } catch (e) { swallow(e); }
     return { ok: true, ...info };
   } catch (e) { swallow(e); return { ok: false, status: 'error' }; }
 }
