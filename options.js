@@ -297,6 +297,24 @@
   $('gradesOn').onchange = (e) => commit({ grades: Object.assign({}, S.grades, { on: e.target.checked }) });
   $('experimentalOn').checked = !!S.experimental;
   $('experimentalOn').onchange = (e) => commit({ experimental: e.target.checked });
+  function updateStatusText(info) {
+    const el = $('updateStatus');
+    if (!info) { el.textContent = 'Ešte neskontrolované.'; return; }
+    if (info.available) el.textContent = 'Dostupná nová verzia ' + info.version + ' (aktuálna ' + info.current + ').';
+    else el.textContent = 'Máš najnovšiu verziu ' + info.current + '.';
+    const link = $('updateLink');
+    if (info.available && info.url) { link.href = info.url; link.hidden = false; } else { link.hidden = true; }
+  }
+  (async () => { try { const r = await chrome.storage.local.get('bu-update'); updateStatusText(r && r['bu-update']); } catch (e) {} })();
+  $('updateCheck').onclick = () => {
+    $('updateStatus').textContent = 'Kontrolujem…';
+    try {
+      chrome.runtime.sendMessage({ type: 'bu-update-check' }, (r) => {
+        if (chrome.runtime.lastError || !r) { $('updateStatus').textContent = 'Kontrola zlyhala.'; return; }
+        updateStatusText(r);
+      });
+    } catch (e) { $('updateStatus').textContent = 'Kontrola zlyhala.'; }
+  };
   $('gradesRequired').onchange = (e) => {
     const n = Math.max(0, Math.min(400, Math.round(Number(e.target.value) || 0)));
     e.target.value = n || '';

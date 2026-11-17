@@ -8,6 +8,8 @@ if (typeof importScripts === 'function') importScripts('themes.js', 'notifcore.j
   if (!BU || !BU.notif) throw new Error('betterUIS core not loaded (themes.js/notifcore.js missing)');
 // Úlohy: relay príkazov (open-options, chrome.commands) + notifikácie pošty (fáza 1, opt-in).
 const MAIL_URL = 'https://is.stuba.sk/auth/posta/slozka.pl?lang=sk';
+const UPDATE_URL = 'https://raw.githubusercontent.com/EpicLordSandwich/BetterAIS/main/manifest.json';
+const UPDATE_ZIP = 'https://github.com/EpicLordSandwich/BetterAIS/archive/refs/heads/main.zip';
 const ALARM = 'bu-mail';
 const BADGE_COLOR = '#3f74d9';
 
@@ -113,6 +115,21 @@ function notifyNew(count) {
   } catch (e) { swallow(e); }
 }
 
+async function checkUpdate() {
+  try {
+    const S = await settings();
+    if (!S.experimental) { await chrome.storage.local.remove('bu-update'); return { ok: false, status: 'off' }; }
+    const resp = await fetch(UPDATE_URL, { cache: 'no-store' });
+    if (!resp.ok) return { ok: false, status: 'error' };
+    const m = await resp.json();
+    const cur = chrome.runtime.getManifest().version;
+    const newer = String(m.version) !== String(cur);
+    const info = { version: m.version, current: cur, available: newer, url: UPDATE_ZIP, at: Date.now() };
+    await chrome.storage.local.set({ 'bu-update': info });
+    return { ok: true, ...info };
+  } catch (e) { swallow(e); return { ok: false, status: 'error' }; }
+}
+
 // Alarm drží v syncu s nastaveniami a permissionami (volá sa aj po zmene nastavení).
 // Listeneri pre alarms/notifications sú optional permissions – bez udelenej permission môže byť
 // API nedostupné, preto guarded registrácia + lazy re-registrácia (inak SW padne status 15).
@@ -151,10 +168,10 @@ async function ensureAlarm() {
   } catch (e) { try { if (chrome && chrome.alarms) chrome.alarms.clear(ALARM); } catch (e2) { swallow(e2); } setBadge(''); }
 }
 
-chrome.runtime.onInstalled.addListener(() => { ensureAlarm(); });
-chrome.runtime.onStartup.addListener(() => { ensureAlarm(); });
+chrome.runtime.onInstalled.addListener(() => { ensureAlarm(); checkUpdate(); });
+chrome.runtime.onStartup.addListener(() => { ensureAlarm(); checkUpdate(); });
 chrome.storage.onChanged.addListener((ch, area) => {
-  if (area === 'local' && ch[BU.KEY]) ensureAlarm();
+  if (area === 'local' && ch[BU.KEY]) { ensureAlarm(); checkUpdate(); }
 });
 // Permission odobraná mimo našich nastavení (chrome://extensions) → žiadna zastaraná hodnota, žiadny orphan alarm.
 if (typeof chrome.permissions !== 'undefined' && chrome.permissions) {
@@ -169,6 +186,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'bu-notif-check') {
     checkMail().catch(() => ({ ok: false, count: 0, status: 'error', at: Date.now() })).then((r) => sendResponse(r));
     return true;                        // async sendResponse
+  }
+  if (msg.type === 'bu-update-check') {
+    checkUpdate().then((r) => sendResponse(r));
+    return true;
   }
 });
 
