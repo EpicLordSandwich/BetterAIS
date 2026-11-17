@@ -596,3 +596,13 @@ html:not([data-bu-off]) ::-webkit-scrollbar { width: 10px; height: 10px; }
 html:not([data-bu-off]) ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
 html:not([data-bu-off]) ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
 html:not([data-bu-off]) ::-webkit-scrollbar-track { background: transparent; }
+
+/* ===== Karty: reset vnútorných kontajnerov ===== */
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .ramecek-boky,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .polozky,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .polozky-obr {
+  padding: 0 !important; margin: 0 !important; border: 0 !important; background: none !important;
+}
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .sekce-drive { display: none !important; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionsetup,
+html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionclose { display: none !important; }
