@@ -238,7 +238,7 @@ html:not([data-bu-off]) .sd-box li:hover { background-color: var(--hover) !impor
    KARTY hlavného menu (.menu-drzak) – triedy pridáva content.js
    ===================================================================== */
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card {
-  position: relative; box-sizing: border-box; padding: 2px !important;
+  position: relative; box-sizing: border-box; padding: 0 !important; height: auto !important; max-height: none !important; min-height: 0 !important;
   background: var(--bg-2) !important; background-image: none !important;
   border: 1px solid var(--border) !important; border-radius: var(--radius) !important;
   box-shadow: none; transition: border-color .2s;
@@ -249,7 +249,7 @@ html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card:hover { border-color:
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head {
   display: flex !important; align-items: center; gap: 8px; box-sizing: border-box;
   position: relative !important; float: none !important; width: auto !important; height: auto !important; min-height: 0 !important;
-  margin: 0 !important; padding: 12px 12px 6px !important;
+  margin: 0 !important; padding: 8px 10px 4px !important;
   border: 0 !important; border-radius: 0 !important;
   background: none !important; background-image: none !important;
   font-size: 12px; font-weight: 700; line-height: 1.2; letter-spacing: .06em; text-transform: uppercase;
@@ -265,21 +265,21 @@ html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head > *:not(img) {
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card-head::after { content: none; }
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card img.bu-icon {
   position: static !important; float: none !important; flex: none; display: block !important;
-  width: 18px !important; height: 18px !important; max-width: none !important; margin: 0 !important;
+  width: 16px !important; height: 16px !important; max-width: none !important; margin: 0 !important;
   object-fit: contain; opacity: .75; filter: var(--icon-glow); transform: none !important;
 }
 
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card ul,
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card ol {
-  list-style: none !important; margin: 0 !important; padding: 4px 6px 8px !important;
+  list-style: none !important; margin: 0 !important; padding: 2px 4px 6px !important;
   display: flex; flex-direction: column; gap: 1px;
 }
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li { list-style: none !important; margin: 0 !important; padding: 0 !important; }
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li::marker { content: none; }
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li > a,
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a {
-  display: flex; align-items: center; min-height: 30px; box-sizing: border-box; padding: 5px 10px;
-  border-radius: var(--radius-sm); font-size: 14px; line-height: 1.3; text-decoration: none !important;
+  display: flex; align-items: center; min-height: 24px; box-sizing: border-box; padding: 3px 8px;
+  border-radius: var(--radius-sm); font-size: 13px; line-height: 1.25; text-decoration: none !important;
   color: var(--muted) !important; transition: background .12s, color .12s;
 }
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a * { color: inherit !important; }
