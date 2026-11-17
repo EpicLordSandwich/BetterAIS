@@ -86,6 +86,11 @@
       dark:  P('#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#3a3a3a', '#f5f5f5', '#9a9a9a', '#4a9eff', '#cc2222', '#4a9eff', '#e0a73e', '#e45a5a'),
       light: P('#faf9f6', '#faf9f6', '#ffffff', '#f0f0f0', '#dddddd', '#0a0a0a', '#6b6b6b', '#1a6bcc', '#cc2222', '#1a6bcc', '#966319', '#cc2222'),
     },
+    lime: {
+      name: 'Lime', tagline: 'Limetková zelená na tmavom', radius: 10, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      dark:  P('#0a0f0a', '#0f1410', '#161c17', '#1f2820', '#2a362c', '#e8f0e9', '#8a9b8c', '#7dd3a0', '#a3e635', '#7dd3a0', '#e0a73e', '#ff6b6b'),
+      light: P('#f4f7f4', '#f7faf7', '#ffffff', '#eef3ee', '#d6e0d7', '#1a241b', '#5a6b5c', '#15803d', '#65a30d', '#15803d', '#966319', '#c93a3a'),
+    },
   };
 
   const FONTS = [
