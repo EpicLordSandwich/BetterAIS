@@ -778,10 +778,15 @@
     const img = document.getElementById('uis-logo') || [...document.images].find((i) => { const r = i.getBoundingClientRect(); return r.top < 150 && r.left < 400; });
     if (!img) return;
     if (!S.ui.logoSwap) {
-      if (!img.dataset.sdLogo) return;
+      if (!img.dataset.sdLogo) {
+        // pôvodné UIS logo – v tmavom režime invertuj, aby bolo viditeľné
+        img.classList.add('bu-logo-orig');
+        return;
+      }
       img.onerror = null;
       img.src = img.dataset.sdOrigSrc;
       img.classList.remove('bu-logo');
+      img.classList.add('bu-logo-orig');
       if (img.dataset.sdOrigTitle !== undefined) img.title = img.dataset.sdOrigTitle;
       delete img.dataset.sdLogo;
       return;
@@ -1045,7 +1050,7 @@
   }
 
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); }
+  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); swapLogo(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {
