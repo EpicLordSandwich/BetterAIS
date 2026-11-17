@@ -225,7 +225,7 @@ html:not([data-bu-off]) .sd-box {
 }
 html:not([data-bu-off]) table.sd-box { border-collapse: separate !important; border-spacing: 0 !important; }
 html:not([data-bu-off]) .sd-box:hover { border-color: var(--border-strong) !important; }
-html:not([data-bu-off]) .sd-box img { filter: var(--icon-glow); }
+html:not([data-bu-off]) .sd-box img { filter: grayscale(0.15) var(--icon-glow); }
 html:not([data-bu-off]) .sd-box li { border-radius: 4px; }
 html:not([data-bu-off]) .sd-box li:hover { background-color: var(--hover) !important; }
 
@@ -259,7 +259,7 @@ html:not([data-bu-off]) .bu-card-head::after { content: none; }
 html:not([data-bu-off]) .bu-card img.bu-icon {
   position: static !important; float: none !important; flex: none; display: block !important;
   width: 26px !important; height: 26px !important; max-width: none !important; margin: 0 !important;
-  object-fit: contain; filter: var(--icon-glow); transform: none !important;
+  object-fit: contain; filter: grayscale(0.15) var(--icon-glow); transform: none !important;
 }
 
 html:not([data-bu-off]) .bu-card ul,
