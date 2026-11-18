@@ -28,7 +28,7 @@
     },
     og: {
       name: 'OG AIS', tagline: 'Pôvodný AIS/UIS: bordová, krémová, čierny text', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' },
-      dark:  P('#3a0a1c', '#1b1315', '#241a1d', '#2f2226', '#4a343a', '#ffffff', '#c9b3b8', '#f0a3b8', '#c94d6e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      dark:  P('#2a0e18', '#160f12', '#1f1619', '#2a1f23', '#3d2c31', '#ffffff', '#cfc6c8', '#8ec5ff', '#b8405e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
     minimal: {
@@ -388,7 +388,7 @@ const FONTS = [
   function compute(raw) {
     const s = normalize(raw);
     const t = getTheme(s.theme, s.customThemes) || THEMES[DEFAULTS.theme];
-    const mode = s.theme === 'og' ? 'light' : resolveMode(s.mode);
+    const mode = resolveMode(s.mode);
     const dark = mode === 'dark';
     const p = Object.assign({}, t[mode]);
     if (s.custom.accent && HEX.test(s.custom.accent)) p.accent = s.custom.accent.toLowerCase();

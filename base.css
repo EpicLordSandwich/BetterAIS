@@ -487,7 +487,7 @@ html[data-bu-theme="og"] .sd-header :is(a, span, div, p, b, strong, small, li, t
   color: #ffffff !important;
 }
 html[data-bu-theme="og"] #header .lang-switcher img { filter: none !important; }
-html[data-bu-theme="og"] .zasadky-warning[class] {
+html[data-bu-theme="og"][data-bu-mode="light"] .zasadky-warning[class] {
   background: #fff1dd !important;
   border: 1px solid #e0c9a8 !important;
   border-left: 4px solid #dc150e !important;
@@ -495,8 +495,8 @@ html[data-bu-theme="og"] .zasadky-warning[class] {
   box-shadow: none !important;
   color: #831135 !important;
 }
-html[data-bu-theme="og"] .zasadky-warning :is(td, b, strong, span, div, p, a) { color: #831135 !important; }
-html[data-bu-theme="og"] .zasadky-info[class] {
+html[data-bu-theme="og"][data-bu-mode="light"] .zasadky-warning :is(td, b, strong, span, div, p, a) { color: #831135 !important; }
+html[data-bu-theme="og"][data-bu-mode="light"] .zasadky-info[class] {
   background: #ffffcc !important;
   border: 1px solid #d9d98a !important;
   border-left: 4px solid #2196f3 !important;
@@ -504,17 +504,17 @@ html[data-bu-theme="og"] .zasadky-info[class] {
   box-shadow: none !important;
   color: #831135 !important;
 }
-html[data-bu-theme="og"] .zasadky-info :is(td, b, strong, span, div, p) { color: #831135 !important; }
-html[data-bu-theme="og"] .zasadky-info a { color: #831135 !important; }
-html[data-bu-theme="og"] h1,
-html[data-bu-theme="og"] h2,
-html[data-bu-theme="og"] h3,
-html[data-bu-theme="og"] h4,
-html[data-bu-theme="og"] h5,
-html[data-bu-theme="og"] h6,
-html[data-bu-theme="og"] .sekce-nadpis,
-html[data-bu-theme="og"] .sekce-nadpis b { color: #831135 !important; }
-html[data-bu-theme="og"] :is(th, thead td, caption):not(.bu-keep) {
+html[data-bu-theme="og"][data-bu-mode="light"] .zasadky-info :is(td, b, strong, span, div, p) { color: #831135 !important; }
+html[data-bu-theme="og"][data-bu-mode="light"] .zasadky-info a { color: #831135 !important; }
+html[data-bu-theme="og"][data-bu-mode="light"] h1,
+html[data-bu-theme="og"][data-bu-mode="light"] h2,
+html[data-bu-theme="og"][data-bu-mode="light"] h3,
+html[data-bu-theme="og"][data-bu-mode="light"] h4,
+html[data-bu-theme="og"][data-bu-mode="light"] h5,
+html[data-bu-theme="og"][data-bu-mode="light"] h6,
+html[data-bu-theme="og"][data-bu-mode="light"] .sekce-nadpis,
+html[data-bu-theme="og"][data-bu-mode="light"] .sekce-nadpis b { color: #831135 !important; }
+html[data-bu-theme="og"][data-bu-mode="light"] :is(th, thead td, caption):not(.bu-keep) {
   background: #f2f2f2 !important;
   color: #831135 !important;
   border-radius: 0 !important;

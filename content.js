@@ -65,7 +65,10 @@
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
     if (off) { setOff(true); return; }
     setOff(false);
-    if (S.theme === 'og') document.documentElement.dataset.buOff = '1';
+    // OG v svetlom režime = 1:1 pôvodný AIS (vypnuté všetky CSS).
+    // V tmavom režime necháme CSS pôsobiť, aby téma mala reálny tmavý vzhľad.
+    const mode = BU.compute(S).mode;
+    if (S.theme === 'og' && mode === 'light') document.documentElement.dataset.buOff = '1';
     else delete document.documentElement.dataset.buOff;
     applyTheme();
     applySnippets();
