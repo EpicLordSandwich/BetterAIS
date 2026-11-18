@@ -72,7 +72,7 @@
             // označíme až po úspešnom označení – inak sa neúspešná karta nikdy neskúsi znova
             h.dataset.buDone = '1';
             card.dataset.buDone = '1';
-          } catch (e) { swallow(e); }   // jedna chybná karta nesmie zastaviť ostatné
+          } catch (e) { if (BU.log) BU.log.warn("tag-cards", e); }   // jedna chybná karta nesmie zastaviť ostatné
         });
         // samokontrola: koľko kariet máme a koľko sa označilo
         try {
@@ -83,7 +83,7 @@
             console.warn('betterUIS: tagCards, označených ' + tagged + '/' + total + ' kariet, hlavičiek ' + heads);
           }
           (window.__buTagStats = { total, tagged, heads, at: Date.now() });
-        } catch (e) { swallow(e); }
+        } catch (e) { if (BU.log) BU.log.warn("tag-cards", e); }
       }
     },
   });

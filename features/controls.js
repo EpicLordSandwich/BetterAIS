@@ -75,7 +75,7 @@
             else if (b.dataset.a === 'add') addCurrentPage();
             else {
               try { chrome.runtime.sendMessage({ type: 'open-options' }, () => { if (chrome.runtime.lastError) chrome.runtime.openOptionsPage(); }); }
-              catch (e) { try { chrome.runtime.openOptionsPage(); } catch (e2) { swallow(e2); } }
+              catch (e) { try { chrome.runtime.openOptionsPage(); } catch (e2) { if (BU.log) BU.log.warn("controls", e2); } }
             }
           });
           // Vpravo v hlavičke, tesne pred účtom/jazykom (aby sa neprekrývalo)

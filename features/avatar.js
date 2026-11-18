@@ -51,12 +51,12 @@
           return res.blob().then((b) => {
             if (!b || b.size > 512 * 1024) return null;
             const fr = new FileReader();
-            fr.onload = () => { try { chrome.storage.local.set({ [AVATAR_SHOT_KEY]: { url: abs, data: String(fr.result) } }); } catch (e) { swallow(e); } };
+            fr.onload = () => { try { chrome.storage.local.set({ [AVATAR_SHOT_KEY]: { url: abs, data: String(fr.result) } }); } catch (e) { if (BU.log) BU.log.warn("avatar", e); } };
             fr.readAsDataURL(b);
           });
         });
-      }).catch((e) => swallow(e));
-    } catch (e) { swallow(e); }
+      }).catch((e) => { if (BU.log) BU.log.warn("avatar", e); });
+    } catch (e) { if (BU.log) BU.log.warn("avatar", e); }
   }
   function avatar() {
     if (offNow()) return;
@@ -100,7 +100,8 @@
     name: 'avatar', frames: 'all', cost: 'light',
     run(state) {
       if (typeof document === 'undefined' || offNow(state)) return;
-      // call the original avatar logic with S bound
+      S = state;
+      // call the original avatar logic
       try { avatar(); } catch (e) { if (BU.log) BU.log.warn('avatar', e); }
     },
   });
