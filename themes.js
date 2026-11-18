@@ -1,5 +1,5 @@
 // Spoločné pre content script, popup aj nastavenia: témy, výpočet CSS premenných, ukladanie, i18n.
-// Toto je jediné „jadro“ betterUIS – všetko ostatné len číta BU.*.
+// Toto je jediné „jadro“ betterUIS, všetko ostatné len číta BU.*.
 (function (g) {
   'use strict';
 
@@ -21,28 +21,8 @@
       dark:  P('#1f1e1d', '#262624', '#2f2e2c', '#3a3936', '#4a4844', '#f0eee6', '#b8b5aa', '#8cb4e6', '#3f74d9', '#5b9bf0', '#e0a73e', '#e8756c'),
       light: P('#ebe8de', '#f5f4ee', '#ffffff', '#ece9df', '#d9d5c7', '#2b2a27', '#6b675d', '#1f5fbf', '#3f74d9', '#2e6ccb', '#966319', '#c53b30'),
     },
-    sleek: {
-      name: 'Sleek', tagline: 'Editorial minimum, takmer čierna', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-      dark:  P('#08090b', '#0d0e11', '#14161a', '#1c1f25', '#262a31', '#e8eaed', '#8b919a', '#9db4ff', '#6d7cff', '#7aa2ff', '#e6b450', '#f06a6a'),
-      light: P('#ffffff', '#f6f7f9', '#ffffff', '#eef0f3', '#e1e4e8', '#14161a', '#6a717b', '#3a4bd8', '#4f5df0', '#3a63e0', '#99651a', '#d03a3a'),
-    },
-    nord: {
-      name: 'Nord', tagline: 'Chladná arktická modrosivá', radius: 10, font: '',
-      dark:  P('#272c36', '#2e3440', '#3b4252', '#434c5e', '#4c566a', '#eceff4', '#aab3c5', '#88c0d0', '#5e81ac', '#99b3cd', '#ebcb8b', '#d9a2a7'),
-      light: P('#e5e9f0', '#eceff4', '#f8f9fb', '#e5e9f0', '#d8dee9', '#2e3440', '#4c566a', '#4d6d95', '#5e81ac', '#496e94', '#a85237', '#b24852'),
-    },
-    catppuccin: {
-      name: 'Catppuccin', tagline: 'Levanduľová na tmavom pozadí', radius: 8, font: '',
-      dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#d7bcf5', '#d7bcf5', '#d7bcf5', '#e0a73e', '#ff6b6b'),
-      light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#7c3aed', '#7c3aed', '#7c3aed', '#966319', '#c93a3a'),
-    },
-    gruvbox: {
-      name: 'Gruvbox', tagline: 'Retro teplé zemité farby', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Cascadia Code", Consolas, monospace',
-      dark:  P('#1d2021', '#282828', '#32302f', '#3c3836', '#504945', '#ebdbb2', '#a89984', '#83a598', '#d79921', '#8ec07c', '#fabd2f', '#fc6b5a'),
-      light: P('#ebdbb2', '#fbf1c7', '#f9f5d7', '#ebdbb2', '#d5c4a1', '#3c3836', '#766a60', '#076678', '#b57614', '#407755', '#956111', '#9d0006'),
-    },
     stu: {
-      name: 'STU modrá', tagline: 'Hlboká námornícka modrá podľa FEI', radius: 12, font: '',
+      name: 'STU modrá', tagline: 'Hlboká námornícka modrá', radius: 12, font: '',
       dark:  P('#0b1a33', '#0f2342', '#15305a', '#1c3c70', '#2a4f8a', '#eaf1ff', '#a9bddf', '#7fb2ff', '#2f7bff', '#7fb2ff', '#f0b94d', '#ff6b6b'),
       light: P('#dbe7fb', '#f2f6fd', '#ffffff', '#e3ecfb', '#c6d6f1', '#0f2342', '#4d6389', '#1c56c4', '#2f6fe0', '#2769df', '#98641a', '#c93a3a'),
     },
@@ -51,47 +31,44 @@
       dark:  P('#3a0a1c', '#1b1315', '#241a1d', '#2f2226', '#4a343a', '#f5ecef', '#c9b3b8', '#f0a3b8', '#c94d6e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
-    nothing: {
-      name: 'Nothing', tagline: 'Monochromatická, technická, OLED čierna', radius: 8, font: 'Space Grotesk, "DM Sans", system-ui, sans-serif',
-      dark:  P('#000000', '#000000', '#111111', '#1a1a1a', '#333333', '#e8e8e8', '#999999', '#5b9bf6', '#d71921', '#999999', '#d4a843', '#e83c43'),
-      light: P('#f5f5f5', '#f5f5f5', '#ffffff', '#f0f0f0', '#cccccc', '#1a1a1a', '#666666', '#006bdf', '#d71921', '#666666', '#8a6a20', '#d71921'),
+    minimal: {
+      name: 'Minimal', tagline: 'Čistá čiernobiela, bez farebného akcentu', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      dark:  P('#000000', '#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#f5f5f5', '#9a9a9a', '#b0b0b0', '#ffffff', '#b0b0b0', '#d4a843', '#e83c43'),
+      light: P('#ffffff', '#f7f7f7', '#ffffff', '#efefef', '#dcdcdc', '#111111', '#666666', '#444444', '#111111', '#444444', '#8a6a20', '#c93a3a'),
     },
-    techy: {
-      name: 'Techy', tagline: 'OLED čierna, technická modrá, monospace', radius: 6, font: 'ui-monospace, "JetBrains Mono", "Fira Code", Consolas, monospace',
-      dark:  P('#000000', '#000000', '#111111', '#1a1a1a', '#30363d', '#e6edf3', '#8b949e', '#58a6ff', '#00a8e9', '#58a6ff', '#e0a73e', '#ff4b33'),
-      light: P('#f6f8fa', '#ffffff', '#f6f8fa', '#eaeef2', '#d0d7de', '#1f2328', '#59636e', '#0969da', '#0061d8', '#0969da', '#9a6700', '#cf222e'),
+    warm: {
+      name: 'Teplá', tagline: 'Teplé zemité tóny, béžová a tehlová', radius: 10, font: '',
+      dark:  P('#1c1713', '#231d18', '#2c241d', '#3a3026', '#4d4033', '#f2e8dc', '#b8a892', '#d4a574', '#c97b3a', '#8ec07c', '#e0a73e', '#e8756c'),
+      light: P('#f2e8dc', '#faf3ea', '#ffffff', '#f0e4d4', '#e0d2be', '#2c241d', '#726350', '#8a5a2a', '#b5651e', '#407755', '#956111', '#9d0006'),
     },
-    lime: {
-      name: 'Lime', tagline: 'Limetková zelená na tmavom pozadí', radius: 8, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-      dark:  P('#121212', '#121212', '#181818', '#282828', '#282828', '#ffffff', '#b3b3b3', '#1db954', '#1db954', '#1db954', '#e0a73e', '#ff6b6b'),
-      light: P('#ffffff', '#ffffff', '#f6f6f6', '#eeeeee', '#e0e0e0', '#121212', '#535353', '#14803a', '#1db954', '#14803a', '#966319', '#c93a3a'),
+    cool: {
+      name: 'Chladná', tagline: 'Chladné modrosivé, oceánske tóny', radius: 10, font: '',
+      dark:  P('#151c24', '#1b2430', '#232e3d', '#2d3a4d', '#3a4a60', '#e6edf5', '#9fb0c8', '#7fb2ff', '#4a90d9', '#7fb8ff', '#e0a73e', '#ff8a7a'),
+      light: P('#e6edf5', '#f0f4fa', '#ffffff', '#e2eaf4', '#c8d4e4', '#1b2430', '#4d5f78', '#2a6bb0', '#2f6fe0', '#2769df', '#98641a', '#c93a3a'),
     },
   };
-
-  const FONTS = [
+const FONTS = [
     { label: 'Podľa témy', value: '' },
-    { label: 'Systémové', value: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' },
-    { label: 'Zaoblené', value: ROUND },
-    { label: 'Humanistické', value: '"Segoe UI", Candara, "Trebuchet MS", sans-serif' },
+    { label: 'Systémové', value: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' },
     { label: 'Serif', value: 'Georgia, "Times New Roman", serif' },
-    { label: 'Monospace', value: 'ui-monospace, "JetBrains Mono", "Cascadia Code", Consolas, monospace' },
+    { label: 'Monospace', value: 'ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace' },
   ];
 
   const DEFAULTS = {
     theme: 'classic',
     mode: 'dark', // dark | light | auto
     custom: { accent: '', link: '', radius: '', font: '' },
-    avatar: { mode: 'original', dataUrl: '' }, // pedro | custom | original (default original = súkromie P0-4)
+    avatar: { mode: 'original', dataUrl: '', url: '' }, // custom (dataUrl) | url (obrázok z odkazu) | original
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { logoSwap: false, cardDensity: 'compact' }, // výmena loga UIS za FEI + hustota kariet
+    ui: { cardDensity: 'compact' }, // hustota kariet
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
     grades: { on: true, requiredCredits: 0 }, // dashboard hodnotení na E-indexe; 0 = cieľ kreditov nie je nastavený
     experimental: false, // experimental mode: fetch latest from GitHub; stable otherwise
-    rename: { uisToAis: true }, // premenovanie UIS → AIS v texte stránok
+    rename: { uisToAis: false }, // premenovanie UIS → AIS v texte stránok (predvolene vypnuté)
   };
 
   // Ikonky pre odkazy v lište (feather-štýl, viewBox 24)
@@ -111,6 +88,11 @@
 
   const uid = () => Math.random().toString(36).slice(2, 9);
 
+  // Malé pomocníky pre validáciu v normalize() (B1: predvolené boolean hodnoty).
+  const bool = (v, def) => (typeof v === 'boolean' ? v : def);
+  const oneOf = (v, allowed, def) => (allowed.includes(v) ? v : def);
+  const clampInt = (v, lo, hi, def) => { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def; };
+
   /* ================= i18n ( UIS má ;lang=sk aj ;lang=en ) ================= */
   const I18N = {
     sk: {
@@ -118,10 +100,10 @@
       ok: 'OK', cancel: 'Zrušiť',
       added: 'Pridané do lišty: ',
       alreadyThere: 'Táto stránka už v lište je',
-      dumped: 'Diagnostika skopírovaná – vlož ju do chatu (Ctrl+V)',
+      dumped: 'Diagnostika skopírovaná, vlož (Ctrl+V)',
       copyFail: 'Kopírovanie zlyhalo',
       pickHint: 'Klikni na prvok, ktorý chceš skopírovať (Esc = zrušiť)',
-      picked: 'Prvok skopírovaný – vlož ho do chatu (Ctrl+V)',
+      picked: 'Prvok skopírovaný, vlož (Ctrl+V)',
       searchPh: 'Hľadať v UIS…', noResults: 'Nič nenájdené',
       confirmLink: 'Pridať', dialogTitle: 'Nový odkaz do lišty',
       myLinks: 'Moje odkazy',
@@ -141,10 +123,10 @@
       ok: 'OK', cancel: 'Cancel',
       added: 'Added to the bar: ',
       alreadyThere: 'This page is already in the bar',
-      dumped: 'Diagnostics copied – paste it into the chat (Ctrl+V)',
+      dumped: 'Diagnostics copied, paste (Ctrl+V)',
       copyFail: 'Copying failed',
       pickHint: 'Click the element you want to copy (Esc = cancel)',
-      picked: 'Element copied – paste it into the chat (Ctrl+V)',
+      picked: 'Element copied, paste (Ctrl+V)',
       searchPh: 'Search UIS…', noResults: 'No results',
       confirmLink: 'Add', dialogTitle: 'New link for the bar',
       myLinks: 'My links',
@@ -162,9 +144,9 @@
     uk: {
       linkName: 'Назва посилання в панелі:', ok: 'OK', cancel: 'Скасувати',
       added: 'Додано до панелі: ', alreadyThere: 'Ця сторінка вже в панелі',
-      dumped: 'Діагностику скопійовано – вставте її в чат (Ctrl+V)', copyFail: 'Копіювання не вдалося',
+      dumped: 'Діагностику скопійовано, вставте (Ctrl+V)', copyFail: 'Копіювання не вдалося',
       pickHint: 'Клацніть на елемент, який хочете скопіювати (Esc = скасувати)',
-      picked: 'Елемент скопійовано – вставте його в чат (Ctrl+V)',
+      picked: 'Елемент скопійовано, вставте (Ctrl+V)',
       searchPh: 'Пошук в UIS…', noResults: 'Нічого не знайдено',
       confirmLink: 'Додати', dialogTitle: 'Нове посилання в панель', myLinks: 'Мої посилання',
       palEnter: '↵ відкрити', palEsc: 'Esc закрити', palArrows: '↑↓ вибір',
@@ -178,9 +160,9 @@
     ru: {
       linkName: 'Название ссылки в панели:', ok: 'OK', cancel: 'Отмена',
       added: 'Добавлено в панель: ', alreadyThere: 'Эта страница уже в панели',
-      dumped: 'Диагностика скопирована – вставьте её в чат (Ctrl+V)', copyFail: 'Копирование не удалось',
+      dumped: 'Диагностика скопирована, вставьте (Ctrl+V)', copyFail: 'Копирование не удалось',
       pickHint: 'Кликните на элемент, который хотите скопировать (Esc = отмена)',
-      picked: 'Элемент скопирован – вставьте его в чат (Ctrl+V)',
+      picked: 'Элемент скопирован, вставьте (Ctrl+V)',
       searchPh: 'Поиск в UIS…', noResults: 'Ничего не найдено',
       confirmLink: 'Добавить', dialogTitle: 'Новая ссылка в панель', myLinks: 'Мои ссылки',
       palEnter: '↵ открыть', palEsc: 'Esc закрыть', palArrows: '↑↓ выбор',
@@ -304,16 +286,18 @@
     const disabledPages = Array.isArray(s.disabledPages)
       ? [...new Set(s.disabledPages.map((p) => String(p).slice(0, 300)).filter((p) => p.startsWith('/')))].slice(0, 200) : [];
     const av = (s.avatar && typeof s.avatar === 'object') ? s.avatar : (localAvatar && typeof localAvatar === 'object' ? localAvatar : {});
-    const avMode = ['pedro', 'custom', 'original'].includes(av.mode) ? av.mode : DEFAULTS.avatar.mode;
+    const avMode = ['custom', 'url', 'original'].includes(av.mode) ? av.mode : DEFAULTS.avatar.mode;
+    // migrácia: starý 'pedro' režim už neexistuje (pedro.gif odstránený) -> original
+    const mode = av.mode === 'pedro' ? 'original' : avMode;
     const avatar = {
-      mode: avMode,
-      dataUrl: avMode === 'custom' && typeof av.dataUrl === 'string' && av.dataUrl.startsWith('data:image/') ? av.dataUrl : '',
+      mode,
+      dataUrl: mode === 'custom' && typeof av.dataUrl === 'string' && av.dataUrl.startsWith('data:image/') ? av.dataUrl : '',
+      url: mode === 'url' && typeof av.url === 'string' && /^https?:\/\//i.test(av.url) ? av.url : '',
     };
     const gr = (s.grades && typeof s.grades === 'object') ? s.grades : {};
-    const reqCredits = Math.round(Number(gr.requiredCredits));
     const grades = {
-      on: gr.on === undefined ? DEFAULTS.grades.on : !!gr.on,
-      requiredCredits: Number.isFinite(reqCredits) ? Math.min(400, Math.max(0, reqCredits)) : 0,
+      on: bool(gr.on, DEFAULTS.grades.on),
+      requiredCredits: clampInt(gr.requiredCredits, 0, 400, DEFAULTS.grades.requiredCredits),
     };
     return {
       theme: s.theme && s.theme.startsWith('c-') ? s.theme : (THEMES[s.theme] ? s.theme : DEFAULTS.theme),
@@ -322,13 +306,13 @@
       avatar,
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
-      enabled: s.enabled === undefined ? DEFAULTS.enabled : !!s.enabled,
-      ui: Object.assign({}, DEFAULTS.ui, s.ui && typeof s.ui === 'object' ? { logoSwap: !!s.ui.logoSwap, cardDensity: ['comfortable', 'compact'].includes(s.ui.cardDensity) ? s.ui.cardDensity : DEFAULTS.ui.cardDensity } : {}),
+      enabled: bool(s.enabled, DEFAULTS.enabled),
+      ui: { cardDensity: oneOf(s.ui && s.ui.cardDensity, ['comfortable', 'compact'], DEFAULTS.ui.cardDensity) },
       snippets, disabledPages,
       customThemes: customThemes,
       grades,
-      experimental: s.experimental === undefined ? DEFAULTS.experimental : !!s.experimental,
-      rename: { uisToAis: s.rename && s.rename.uisToAis === undefined ? DEFAULTS.rename.uisToAis : !!(s.rename && s.rename.uisToAis) },
+      experimental: bool(s.experimental, DEFAULTS.experimental),
+      rename: { uisToAis: bool(s.rename && s.rename.uisToAis, DEFAULTS.rename.uisToAis) },
     };
   }
 
@@ -349,7 +333,6 @@
     return mode;
   }
 
-  // Relative luminance → text na zvýraznení (prah 0,179 ≈ prieseň 4,5:1 pre biele aj čierne).
   function toast(msg, ms) {
     if (typeof document === 'undefined') return;
     const el = document.getElementById('bu-toast') || document.getElementById('toast');
@@ -383,11 +366,12 @@
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   }
   /** Vypočíta farbu textu (čierna/biela) pre daný hex akcent (WCAG 4.5:1). Vracia null pre neplatný hex. @param {string} hex @returns {string|null} */
+  // Relative luminance → text na zvýraznení (prah 0,179 ≈ prieseň 4,5:1 pre biele aj čierne).
   function contrast(hex) {
     const l = luminance(hex);
     return l == null ? null : l > 0.179 ? '#000000' : '#ffffff';
   }
-  /** WCAG kontrastný pomer dvoch farieb (1–21); null ak je niektorá neplatná. @param {string} a @param {string} b @returns {number|null} */
+  /** WCAG kontrastný pomer dvoch farieb (1-21); null ak je niektorá neplatná. @param {string} a @param {string} b @returns {number|null} */
   function contrastRatio(a, b) {
     const x = luminance(a), y = luminance(b);
     if (x == null || y == null) return null;
@@ -450,38 +434,121 @@
     return typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local && chrome.storage.sync;
   }
   const SYNC_KEYS = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'snippets', 'disabledPages', 'customThemes', 'experimental', 'rename'];
-  function syncPayload(n) {
+  const SYNC_CORE = 'bu:sync:core';
+  const SYNC_SNIP = 'bu:sync:snip:';
+  const SYNC_THEME = 'bu:sync:theme:';
+  const SYNC_MAX_ITEM = 7000;
+  const syncBytes = (v) => { try { return new TextEncoder().encode(JSON.stringify(v)).length; } catch (e) { swallow(e); return Infinity; } };
+
+  function coreOf(n) {
     const o = {};
-    for (const k of SYNC_KEYS) o[k] = n[k];
-    if (JSON.stringify(o).length > 95000) { delete o.snippets; if (JSON.stringify(o).length > 95000) delete o.customThemes; }
+    for (const k of ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'disabledPages', 'experimental', 'rename']) o[k] = n[k];
     return o;
+  }
+  function toSyncItems(n) {
+    const items = {};
+    const core = coreOf(n);
+    if (syncBytes({ [SYNC_CORE]: core }) <= SYNC_MAX_ITEM) items[SYNC_CORE] = core;
+    const skipped = [];
+    for (const sn of (n.snippets || [])) {
+      const key = SYNC_SNIP + sn.id;
+      const item = { id: sn.id, name: sn.name, css: sn.css, on: sn.on };
+      if (syncBytes({ [key]: item }) > SYNC_MAX_ITEM) skipped.push(sn.id);
+      else items[key] = item;
+    }
+    if (n.customThemes) {
+      for (const [id, th] of Object.entries(n.customThemes)) {
+        const key = SYNC_THEME + id;
+        if (syncBytes({ [key]: th }) > SYNC_MAX_ITEM) skipped.push(id);
+        else items[key] = th;
+      }
+    }
+    return { items, skipped };
+  }
+  function fromSyncItems(all) {
+    const core = all[SYNC_CORE] || {};
+    const snippets = [];
+    const customThemes = {};
+    for (const [k, v] of Object.entries(all)) {
+      if (k.startsWith(SYNC_SNIP)) snippets.push(v);
+      else if (k.startsWith(SYNC_THEME)) customThemes[k.slice(SYNC_THEME.length)] = v;
+    }
+    const n = normalize({ ...core, snippets, customThemes: Object.keys(customThemes).length ? customThemes : null });
+    return n;
+  }
+  async function readSyncAll() {
+    if (!hasStorage()) return {};
+    const all = await chrome.storage.sync.get(null).catch((e) => { swallow(e); return {}; });
+    const out = {};
+    for (const [k, v] of Object.entries(all || {})) {
+      if (k === SYNC_CORE || k.startsWith(SYNC_SNIP) || k.startsWith(SYNC_THEME)) out[k] = v;
+    }
+    return out;
   }
   async function load() {
     if (!hasStorage()) return normalize(null);
     const r = await chrome.storage.local.get(KEY).catch((e) => { swallow(e); return {}; });
     let raw = r[KEY];
-    if (!raw) {                                        // nový počítač – dosadíme zo syncu (témа/odkazy putujú s tebou)
-      const sy = await chrome.storage.sync.get(KEY).catch((e) => { swallow(e); return {}; });
-      if (sy[KEY]) { raw = sy[KEY]; try { await chrome.storage.local.set({ [KEY]: raw }); } catch (e) { swallow(e); } }
+    if (!raw) {                                        // nový počítač, dosadíme zo syncu (témа/odkazy putujú s tebou)
+      const items = await readSyncAll();
+      if (Object.keys(items).length) {
+        raw = fromSyncItems(items);
+        try { await chrome.storage.local.set({ [KEY]: raw }); } catch (e) { swallow(e); }
+      }
     }
     return normalize(raw);
   }
-  /** Uloží stav (local + sync mirror). @param {any} state @returns {Promise<object>} */
-  function save(state) {
+  /** Uloží stav (local + sync mirror sharded). @param {any} state @returns {Promise<object>} */
+  async function save(state) {
     const n = normalize(state);
-    if (!hasStorage()) return Promise.resolve({ state: n, truncated: false, ok: true });
-    const payload = syncPayload(n);
-    const truncated = (Array.isArray(n.snippets) && n.snippets.length > 0 && !payload.snippets) ||
-      (!!n.customThemes && !payload.customThemes);
-    if (truncated) console.warn('betterUIS: sync payload truncated (snippets/customThemes dropped)');
-    const local = chrome.storage.local.set({ [KEY]: n }).then(() => true).catch((e) => { swallow(e); return false; });
-    const sync = chrome.storage.sync.set({ [KEY]: payload }).then(() => true).catch(() => false);
-    return Promise.all([local, sync]).then(([localOk, syncOk]) => ({ state: n, truncated, ok: !!localOk, syncOk: !!syncOk }));
+    if (!hasStorage()) return { state: n, truncated: false, ok: true, syncOk: true, skipped: [] };
+    const { items, skipped } = toSyncItems(n);
+    const localOk = await chrome.storage.local.set({ [KEY]: n }).then(() => true).catch((e) => { swallow(e); return false; });
+    // odstráň osirelé shardy
+    let syncOk = true;
+    try {
+      const all = await chrome.storage.sync.get(null);
+      const toRemove = Object.keys(all || {}).filter((k) => (k === KEY || k.startsWith('bu:sync:')) && !(k in items) && k !== 'bu:sync:core' ? true : (k === KEY));
+      // remove legacy single key
+      if (all && all[KEY]) toRemove.push(KEY);
+      // only remove keys that are shards or legacy, not arbitrary
+      const removeKeys = Object.keys(all || {}).filter((k) => (k === KEY) || (k.startsWith('bu:sync:') && !(k in items)));
+      if (removeKeys.length) await chrome.storage.sync.remove(removeKeys).catch((e) => { swallow(e); });
+      await chrome.storage.sync.set(items);
+    } catch (e) { swallow(e); syncOk = false; }
+    const truncated = skipped.length > 0;
+    if (truncated) console.warn('betterUIS: sync skipped (too large):', skipped);
+    return { state: n, truncated, ok: !!localOk, syncOk: !!syncOk, skipped };
   }
 
+  const log = {
+    warn:  (ctx, e) => { try { console.warn('[betterAIS] ' + ctx, e); } catch (err) { void err; } },
+    error: (ctx, e) => { try { console.error('[betterAIS] ' + ctx, e); } catch (err) { void err; } },
+  };
+  // store + features registry (F3)
+  const storeState = { value: normalize(null) };
+  const storeSubs = new Set();
+  const store = {
+    get: () => storeState.value,
+    set(next) { storeState.value = normalize(next); storeSubs.forEach((fn) => { try { fn(storeState.value); } catch (e) { log.warn('store:sub', e); } }); },
+    subscribe(fn) { storeSubs.add(fn); return () => storeSubs.delete(fn); },
+  };
+  const featuresList = [];
+  const features = {
+    register(f) { featuresList.push(f); },
+    runAll(cost) {
+      for (const f of featuresList) {
+        if (f.frames === 'top' && (typeof window !== 'undefined' ? window.top !== window : false)) continue;
+        if (cost && f.cost !== cost) continue;
+        try { f.run(store.get()); } catch (e) { log.error('feature:' + (f.name || '?'), e); }
+      }
+    },
+    list: () => featuresList.slice(),
+  };
+  g.log = log;
   g.BU = {
     THEMES, FONTS, DEFAULTS, KEY, SYNC_KEYS, ICONS, ICON_LABELS, PRESETS,
     normalize, cleanLink, cleanUrl, uid, compute, applyVars, resolveMode, load, save, contrast, contrastRatio,
-    getTheme, validateTheme, varKeys, I18N, t, langOf, uiLang, swallow, sanitizeCss, copyText, toast,
+    getTheme, validateTheme, varKeys, I18N, t, langOf, uiLang, swallow, log, store, features, sanitizeCss, copyText, toast,
   };
 })(self);

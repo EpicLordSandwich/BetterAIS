@@ -34,12 +34,15 @@ function fixFor(fg, bg, ciel) {
 
 const PAIRS = [
   ['text', 'bg'], ['text', 'bg0'], ['text', 'bg2'], ['text', 'bg3'],
-  ['muted', 'bg'], ['muted', 'bg2'],
-  ['link', 'bg'], ['link', 'bg2'],
+  ['muted', 'bg'], ['muted', 'bg2'], ['muted', 'bg3'],
+  ['link', 'bg'], ['link', 'bg2'], ['link', 'bg3'],
   ['info', 'bg'], ['info', 'bg2'],
   ['warn', 'bg'], ['warn', 'bg2'],
   ['crit', 'bg'], ['crit', 'bg2'],
 ];
+const ACCENT_PAIRS = [['accent', 'bg'], ['accent', 'bg2']];
+const ACCENT_PRAH = 3.0;
+const ACCENT_ZOSIL = 3.1;
 
 let fails = 0;
 const fixes = [];
@@ -57,6 +60,16 @@ for (const [id, t] of Object.entries(BU.THEMES)) {
         const L = lum(nf);
         if (!cand[f] || (L > 0.18 ? L > cand[f].lum : L < cand[f].lum)) cand[f] = { lum: L, hex: nf };
         rows.push(`    ${mode} ${f}/${b}: ${r.toFixed(2)} -> ${nf} (bolo ${p[f]})`);
+        changed = true; fails++;
+      }
+    }
+    for (const [f, b] of ACCENT_PAIRS) {
+      const r = ratio(p[f], p[b]);
+      if (r < ACCENT_PRAH) {
+        const nf = fixFor(p[f], p[b], ACCENT_ZOSIL);
+        const L = lum(nf);
+        if (!cand[f] || (L > 0.18 ? L > cand[f].lum : L < cand[f].lum)) cand[f] = { lum: L, hex: nf };
+        rows.push(`    ${mode} ${f}/${b}: ${r.toFixed(2)} -> ${nf} (bodo ${p[f]})`);
         changed = true; fails++;
       }
     }
