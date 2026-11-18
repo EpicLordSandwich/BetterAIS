@@ -86,7 +86,6 @@
     $('masterSwitch').checked = S.enabled;
     if ($('hideOperinfo')) $('hideOperinfo').checked = !!(S.ui && S.ui.hideOperinfo);
     if ($('aisLogo')) $('aisLogo').checked = !!(S.ui && S.ui.aisLogo);
-    if ($('oled')) $('oled').checked = !!(S.ui && S.ui.oled);
     if ($('mailPreview')) $('mailPreview').checked = !!(S.ui && S.ui.mail);
      $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
@@ -235,12 +234,7 @@
   $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
   if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) });
   if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) });
-  if ($('oled')) $('oled').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { oled: e.target.checked }) });
   if ($('mailPreview')) $('mailPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { mail: e.target.checked }) });
-
-  $('renameUis').checked = !!S.rename.uisToAis;
-  $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });
-  $('clearOff').onclick = () => commit({ disabledPages: [] });
 
   /* ================= dashboard hodnotení ================= */
   $('nick').value = S.nick || '';
@@ -357,7 +351,7 @@
       zoomInput.value = crop.zoom;
       cropImg.src = source;
       $('avEditor').hidden = false;
-      layoutCrop();
+      requestAnimationFrame(() => { requestAnimationFrame(layoutCrop); });
     };
     im.onerror = () => toast('Obrázok sa nepodarilo načítať.');
     im.src = source;

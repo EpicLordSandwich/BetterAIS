@@ -1123,6 +1123,7 @@
   let mailState = { items: [], unread: null, time: 0, status: '', error: '' };
   let mailTimer = null;
   let mailFetching = false;
+  let mailCollapsed = false;
 
   function mailOn() {
     return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.mail);
@@ -1194,6 +1195,16 @@
     panel.replaceChildren();
 
     const head = mailMk('div', 'bu-mail-head');
+    const toggle = mailMk('button', 'bu-mail-toggle', mailCollapsed ? '▸' : '▾');
+    toggle.type = 'button';
+    toggle.title = mailCollapsed ? 'Rozbaliť' : 'Zbaliť';
+    toggle.setAttribute('aria-label', mailCollapsed ? 'Rozbaliť poštu' : 'Zbaliť poštu');
+    toggle.addEventListener('click', () => {
+      mailCollapsed = !mailCollapsed;
+      try { chrome.storage.local.set({ 'bu:mail-collapsed': mailCollapsed }); } catch (e) { swallow(e); }
+      mailRender();
+    });
+    head.appendChild(toggle);
     const title = mailMk('a', 'bu-mail-title', 'Pošta');
     title.href = MAIL_URL;
     head.appendChild(title);
@@ -1206,6 +1217,8 @@
     btn.addEventListener('click', () => mailFetch());
     head.appendChild(btn);
     panel.appendChild(head);
+
+    if (mailCollapsed) return;
 
     if (mailState.error) panel.appendChild(mailMk('p', 'bu-mail-msg bu-mail-err', mailState.error));
     else if (!mailState.items.length) panel.appendChild(mailMk('p', 'bu-mail-msg', mailState.time ? 'Žiadne správy.' : 'Načítavam…'));
@@ -1252,8 +1265,9 @@
   function mailStart() {
     if (mailTimer) return;
     mailTimer = setInterval(mailFetch, MAIL_REFRESH_MS);
-    chrome.storage.local.get(MAIL_CACHE).then((r) => {
-      const c = r && r[MAIL_CACHE];
+    chrome.storage.local.get(['bu:mail', 'bu:mail-collapsed']).then((r) => {
+      const c = r && r['bu:mail'];
+      if (typeof r['bu:mail-collapsed'] === 'boolean') mailCollapsed = r['bu:mail-collapsed'];
       if (c && Array.isArray(c.items) && c.items.length && !mailOn()) return;
       if (c && Array.isArray(c.items) && c.items.length) {
         mailState = {
@@ -1285,7 +1299,7 @@
   }
 
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); mailPreview(); }
+  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); gradesDashboard(); swapNick(); mailPreview(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {

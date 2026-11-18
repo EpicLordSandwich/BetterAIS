@@ -33,7 +33,7 @@
     },
     minimal: {
       name: 'Minimal', tagline: 'Čistá čiernobiela, bez farebného akcentu', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif',
-      dark:  P('#000000', '#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#f5f5f5', '#9a9a9a', '#b0b0b0', '#ffffff', '#b0b0b0', '#d4a843', '#e83c43'),
+      dark:  P('#000000', '#000000', '#0a0a0a', '#141414', '#2a2a2a', '#f5f5f5', '#9a9a9a', '#b0b0b0', '#ffffff', '#b0b0b0', '#d4a843', '#e83c43'),
       light: P('#ffffff', '#f7f7f7', '#ffffff', '#efefef', '#dcdcdc', '#111111', '#666666', '#444444', '#111111', '#444444', '#8a6a20', '#c93a3a'),
     },
     cool: {
@@ -48,12 +48,12 @@
     },
     pink: {
       name: 'Ružová', tagline: 'Jemná ružová v tmavom aj svetlom', radius: 12, font: '',
-      dark:  P('#1a0f14', '#21151a', '#2a1b21', '#35222a', '#4a2f3a', '#fbeaf0', '#c9a8b6', '#f472b6', '#f472b6', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      dark:  P('#2a1620', '#241218', '#2e1a22', '#3a222c', '#5a3644', '#fbeaf0', '#d4b3c0', '#f472b6', '#f472b6', '#9fd0ff', '#e8b45a', '#ff8a7a'),
       light: P('#fbeef4', '#fdf6f9', '#ffffff', '#f7e8ef', '#ecd3de', '#2a1620', '#6d5560', '#be185d', '#be185d', '#1d6fd0', '#8a5a00', '#b3261e'),
     },
   softbrown: {
       name: 'Soft Brown', tagline: 'Tmavohnedý, mäkký a teplý', radius: 10, font: '',
-      dark:  P('#1a1410', '#221a14', '#2c221a', '#3a2e22', '#4d3e2e', '#f2e8dc', '#b8a892', '#d4a574', '#a0622a', '#8ec07c', '#e0a73e', '#e8756c'),
+      dark:  P('#241a12', '#2c2218', '#362a1e', '#443426', '#5a4634', '#f2e8dc', '#c4b09a', '#d4a574', '#b8743a', '#9ed08c', '#e0a73e', '#e8756c'),
       light: P('#f2e8dc', '#faf3ea', '#ffffff', '#f0e4d4', '#e0d2be', '#2c241d', '#726350', '#8a5a2a', '#8b5a2b', '#407755', '#956111', '#9d0006'),
     },
   highcontrast: {
@@ -77,7 +77,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false, aisLogo: true, oled: false, mail: false }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
+    ui: { hideOperinfo: false, aisLogo: true, mail: false }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -119,11 +119,11 @@ const FONTS = [
       copyFail: 'Kopírovanie zlyhalo',
       pickHint: 'Klikni na prvok, ktorý chceš skopírovať (Esc = zrušiť)',
       picked: 'Prvok skopírovaný, vlož (Ctrl+V)',
-      searchPh: 'Hľadať v UIS…', noResults: 'Nič nenájdené',
+      searchPh: 'Hľadať v AIS…', noResults: 'Nič nenájdené',
       confirmLink: 'Pridať', dialogTitle: 'Nový odkaz do lišty',
       myLinks: 'Moje odkazy',
       palEnter: '↵ otvoriť', palEsc: 'Esc zavrieť', palArrows: '↑↓ výber',
-      findTitle: 'Hľadať v UIS (Ctrl+K)',
+      findTitle: 'Hľadať v AIS (Ctrl+K)',
       addTitle: 'Pridať túto stránku do lišty', setTitle: 'Nastavenia betterUIS',
       modeLight: 'Prepnúť na svetlý režim', modeDark: 'Prepnúť na tmavý režim',
       mode: 'Režim', modeDarkBtn: 'Tmavý', modeLightBtn: 'Svetlý', modeAutoBtn: 'Auto', theme: 'Téma',
@@ -142,11 +142,11 @@ const FONTS = [
       copyFail: 'Copying failed',
       pickHint: 'Click the element you want to copy (Esc = cancel)',
       picked: 'Element copied, paste (Ctrl+V)',
-      searchPh: 'Search UIS…', noResults: 'No results',
+      searchPh: 'Search AIS…', noResults: 'No results',
       confirmLink: 'Add', dialogTitle: 'New link for the bar',
       myLinks: 'My links',
       palEnter: '↵ open', palEsc: 'Esc close', palArrows: '↑↓ select',
-      findTitle: 'Search UIS (Ctrl+K)',
+      findTitle: 'Search AIS (Ctrl+K)',
       addTitle: 'Add this page to the bar', setTitle: 'betterUIS settings',
       modeLight: 'Switch to light mode', modeDark: 'Switch to dark mode',
       mode: 'Mode', modeDarkBtn: 'Dark', modeLightBtn: 'Light', modeAutoBtn: 'Auto', theme: 'Theme',
@@ -162,10 +162,10 @@ const FONTS = [
       dumped: 'Діагностику скопійовано, вставте (Ctrl+V)', copyFail: 'Копіювання не вдалося',
       pickHint: 'Клацніть на елемент, який хочете скопіювати (Esc = скасувати)',
       picked: 'Елемент скопійовано, вставте (Ctrl+V)',
-      searchPh: 'Пошук в UIS…', noResults: 'Нічого не знайдено',
+      searchPh: 'Пошук в AIS…', noResults: 'Нічого не знайдено',
       confirmLink: 'Додати', dialogTitle: 'Нове посилання в панель', myLinks: 'Мої посилання',
       palEnter: '↵ відкрити', palEsc: 'Esc закрити', palArrows: '↑↓ вибір',
-      findTitle: 'Пошук в UIS (Ctrl+K)', addTitle: 'Додати цю сторінку до панелі', setTitle: 'Налаштування betterUIS',
+      findTitle: 'Пошук в AIS (Ctrl+K)', addTitle: 'Додати цю сторінку до панелі', setTitle: 'Налаштування betterUIS',
       modeLight: 'Перемкнути на світлий режим', modeDark: 'Перемкнути на темний режим',
       mode: 'Режим', modeDarkBtn: 'Темний', modeLightBtn: 'Світлий', modeAutoBtn: 'Авто', theme: 'Тема',
       thisPage: 'Ця сторінка', disableHere: 'Вимкнути на цій сторінці', enableHere: 'Увімкнути на цій сторінці',
@@ -178,10 +178,10 @@ const FONTS = [
       dumped: 'Диагностика скопирована, вставьте (Ctrl+V)', copyFail: 'Копирование не удалось',
       pickHint: 'Кликните на элемент, который хотите скопировать (Esc = отмена)',
       picked: 'Элемент скопирован, вставьте (Ctrl+V)',
-      searchPh: 'Поиск в UIS…', noResults: 'Ничего не найдено',
+      searchPh: 'Поиск в AIS…', noResults: 'Ничего не найдено',
       confirmLink: 'Добавить', dialogTitle: 'Новая ссылка в панель', myLinks: 'Мои ссылки',
       palEnter: '↵ открыть', palEsc: 'Esc закрыть', palArrows: '↑↓ выбор',
-      findTitle: 'Поиск в UIS (Ctrl+K)', addTitle: 'Добавить эту страницу в панель', setTitle: 'Настройки betterUIS',
+      findTitle: 'Поиск в AIS (Ctrl+K)', addTitle: 'Добавить эту страницу в панель', setTitle: 'Настройки betterUIS',
       modeLight: 'Переключить на светлый режим', modeDark: 'Переключить на тёмный режим',
       mode: 'Режим', modeDarkBtn: 'Тёмный', modeLightBtn: 'Светлый', modeAutoBtn: 'Авто', theme: 'Тема',
       thisPage: 'Эта страница', disableHere: 'Отключить на этой странице', enableHere: 'Включить на этой странице',
@@ -328,7 +328,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), oled: bool(s.ui && s.ui.oled, DEFAULTS.ui.oled), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail) },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail) },
       snippets, disabledPages,
       customThemes: customThemes,
       grades,
@@ -407,7 +407,7 @@ const FONTS = [
     const mode = resolveMode(s.mode);
     const dark = mode === 'dark';
     const p = Object.assign({}, t[mode]);
-    if (dark && s.ui && s.ui.oled && s.theme !== 'minimal' && s.theme !== 'highcontrast') { p.bg0 = '#000000'; p.bg = '#000000'; p.bg2 = '#0a0a0a'; p.bg3 = '#141414'; }
+
     if (s.custom.accent && HEX.test(s.custom.accent)) p.accent = s.custom.accent.toLowerCase();
     if (s.custom.link && HEX.test(s.custom.link)) p.link = s.custom.link.toLowerCase();
     p.onAccent = contrast(p.accent) || '#ffffff';

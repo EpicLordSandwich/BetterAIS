@@ -43,16 +43,6 @@ test('avatar crop a source sa validujú', () => {
   assert.equal(BU.normalize({ avatar: { mode: 'custom', dataUrl: 'data:image/webp;base64,AAAA', crop: 'nope' } }).avatar.crop, null);
 });
 
-test('OLED prepne tmavé pozadie na čiernu', () => {
-  const on = BU.compute({ theme: 'classic', mode: 'dark', ui: { oled: true } });
-  assert.equal(on.vars['--bg'], '#000000');
-  assert.equal(on.vars['--bg-2'], '#0a0a0a');
-  const off = BU.compute({ theme: 'classic', mode: 'dark', ui: { oled: false } });
-  assert.notEqual(off.vars['--bg'], '#000000');
-  const light = BU.compute({ theme: 'classic', mode: 'light', ui: { oled: true } });
-  assert.notEqual(light.vars['--bg'], '#000000');
-});
-
 test('náhľad pošty je opt-in a zachová sa', () => {
   assert.equal(BU.normalize(null).ui.mail, false);
   assert.equal(BU.normalize({ ui: { mail: true } }).ui.mail, true);
