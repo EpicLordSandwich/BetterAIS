@@ -477,17 +477,17 @@ html:not([data-bu-off]) .searchinbreadcrumbs:hover { background: var(--accent-so
 /* ===== OG AIS – pôvodný AIS/UIS vzhľad (bordová hlavička, krémové boxy) =====
    Téma je farebná; tieto pravidlá doladujú iba charakteristické prvky starého UIS.
    Všetko visí na data-bu-theme="og", takže iné témy ostávajú nedotknuté. */
-html:not([data-bu-off])[data-bu-theme="og"] #header,
-html:not([data-bu-off])[data-bu-theme="og"] .sd-header {
+html[data-bu-theme="og"] #header,
+html[data-bu-theme="og"] .sd-header {
   background: #831135 !important;
   border-radius: 0 !important;
 }
-html:not([data-bu-off])[data-bu-theme="og"] #header :is(a, span, div, p, b, strong, small, li, td),
-html:not([data-bu-off])[data-bu-theme="og"] .sd-header :is(a, span, div, p, b, strong, small, li, td) {
+html[data-bu-theme="og"] #header :is(a, span, div, p, b, strong, small, li, td),
+html[data-bu-theme="og"] .sd-header :is(a, span, div, p, b, strong, small, li, td) {
   color: #ffffff !important;
 }
-html:not([data-bu-off])[data-bu-theme="og"] #header .lang-switcher img { filter: none !important; }
-html:not([data-bu-off])[data-bu-theme="og"] .zasadky-warning[class] {
+html[data-bu-theme="og"] #header .lang-switcher img { filter: none !important; }
+html[data-bu-theme="og"] .zasadky-warning[class] {
   background: #fff1dd !important;
   border: 1px solid #e0c9a8 !important;
   border-left: 4px solid #dc150e !important;
@@ -495,8 +495,8 @@ html:not([data-bu-off])[data-bu-theme="og"] .zasadky-warning[class] {
   box-shadow: none !important;
   color: #831135 !important;
 }
-html:not([data-bu-off])[data-bu-theme="og"] .zasadky-warning :is(td, b, strong, span, div, p, a) { color: #831135 !important; }
-html:not([data-bu-off])[data-bu-theme="og"] .zasadky-info[class] {
+html[data-bu-theme="og"] .zasadky-warning :is(td, b, strong, span, div, p, a) { color: #831135 !important; }
+html[data-bu-theme="og"] .zasadky-info[class] {
   background: #ffffcc !important;
   border: 1px solid #d9d98a !important;
   border-left: 4px solid #2196f3 !important;
@@ -504,22 +504,22 @@ html:not([data-bu-off])[data-bu-theme="og"] .zasadky-info[class] {
   box-shadow: none !important;
   color: #831135 !important;
 }
-html:not([data-bu-off])[data-bu-theme="og"] .zasadky-info :is(td, b, strong, span, div, p) { color: #831135 !important; }
-html:not([data-bu-off])[data-bu-theme="og"] .zasadky-info a { color: #831135 !important; }
-html:not([data-bu-off])[data-bu-theme="og"] h1,
-html:not([data-bu-off])[data-bu-theme="og"] h2,
-html:not([data-bu-off])[data-bu-theme="og"] h3,
-html:not([data-bu-off])[data-bu-theme="og"] h4,
-html:not([data-bu-off])[data-bu-theme="og"] h5,
-html:not([data-bu-off])[data-bu-theme="og"] h6,
-html:not([data-bu-off])[data-bu-theme="og"] .sekce-nadpis,
-html:not([data-bu-off])[data-bu-theme="og"] .sekce-nadpis b { color: #831135 !important; }
-html:not([data-bu-off])[data-bu-theme="og"] :is(th, thead td, caption):not(.bu-keep) {
+html[data-bu-theme="og"] .zasadky-info :is(td, b, strong, span, div, p) { color: #831135 !important; }
+html[data-bu-theme="og"] .zasadky-info a { color: #831135 !important; }
+html[data-bu-theme="og"] h1,
+html[data-bu-theme="og"] h2,
+html[data-bu-theme="og"] h3,
+html[data-bu-theme="og"] h4,
+html[data-bu-theme="og"] h5,
+html[data-bu-theme="og"] h6,
+html[data-bu-theme="og"] .sekce-nadpis,
+html[data-bu-theme="og"] .sekce-nadpis b { color: #831135 !important; }
+html[data-bu-theme="og"] :is(th, thead td, caption):not(.bu-keep) {
   background: #f2f2f2 !important;
   color: #831135 !important;
   border-radius: 0 !important;
 }
-html:not([data-bu-off])[data-bu-theme="og"] :is(input, select, textarea, button) { border-radius: 0 !important; }
+html[data-bu-theme="og"] :is(input, select, textarea, button) { border-radius: 0 !important; }
 
 /* =====================================================================
    VLASTNÉ KOMPONENTY betterUIS – tieto fungujú aj keď je restyle vypnutý
@@ -588,21 +588,21 @@ html:not([data-bu-off]) :focus-visible { outline: 2px solid var(--accent); outli
 }
 
 /* ===== OG AIS – hlavička presne podľa archivovaného UIS ===== */
-html:not([data-bu-off])[data-bu-theme="og"] #hlavicka { background-color: #831135 !important; height: 170px; min-width: 940px; }
-html:not([data-bu-off])[data-bu-theme="og"] #univerzita { color: #ffffff !important; font: 3em Tahoma, Verdana, Arial, sans-serif !important; text-transform: uppercase !important; text-align: right !important; padding: 3px 20px 7px 0 !important; }
-html:not([data-bu-off])[data-bu-theme="og"] #menu { color: #c8c8db !important; font-size: 11px !important; border-top: 1px solid #ffffff !important; height: 25px; }
-html:not([data-bu-off])[data-bu-theme="og"] #odkazy_fakult a { color: #c8c8db !important; }
-html:not([data-bu-off])[data-bu-theme="og"] #svatek { color: #c8c8db !important; }
+html[data-bu-theme="og"] #hlavicka { background-color: #831135 !important; height: 170px; min-width: 940px; }
+html[data-bu-theme="og"] #univerzita { color: #ffffff !important; font: 3em Tahoma, Verdana, Arial, sans-serif !important; text-transform: uppercase !important; text-align: right !important; padding: 3px 20px 7px 0 !important; }
+html[data-bu-theme="og"] #menu { color: #c8c8db !important; font-size: 11px !important; border-top: 1px solid #ffffff !important; height: 25px; }
+html[data-bu-theme="og"] #odkazy_fakult a { color: #c8c8db !important; }
+html[data-bu-theme="og"] #svatek { color: #c8c8db !important; }
 
 /* ===== OG AIS – nový header (#header) v štýle archívu ===== */
-html:not([data-bu-off])[data-bu-theme="og"] #header { background-color: #831135 !important; min-height: 200px !important; }
-html:not([data-bu-off])[data-bu-theme="og"] #header, html:not([data-bu-off])[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
-html:not([data-bu-off])[data-bu-theme="og"] #header .info,
-html:not([data-bu-off])[data-bu-theme="og"] #pfp,
-html:not([data-bu-off])[data-bu-theme="og"] img.bu-avatar,
-html:not([data-bu-off])[data-bu-theme="og"] #header img[src*="foto.pl"],
-html:not([data-bu-off])[data-bu-theme="og"] #header img[src*="podobizn"] { display: none !important; }
-html:not([data-bu-off])[data-bu-theme="og"] #header .left, html:not([data-bu-off])[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
+html[data-bu-theme="og"] #header { background-color: #831135 !important; min-height: 200px !important; }
+html[data-bu-theme="og"] #header, html[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
+html[data-bu-theme="og"] #header .info,
+html[data-bu-theme="og"] #pfp,
+html[data-bu-theme="og"] img.bu-avatar,
+html[data-bu-theme="og"] #header img[src*="foto.pl"],
+html[data-bu-theme="og"] #header img[src*="podobizn"] { display: none !important; }
+html[data-bu-theme="og"] #header .left, html[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
 
 
 /* Logo – nový AIS logo (červený kruh, biele písmo) – bez invertovania, viditeľné v oboch režimoch */

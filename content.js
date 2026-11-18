@@ -65,6 +65,8 @@
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
     if (off) { setOff(true); return; }
     setOff(false);
+    if (S.theme === 'og') document.documentElement.dataset.buOff = '1';
+    else delete document.documentElement.dataset.buOff;
     applyTheme();
     applySnippets();
     document.documentElement.dataset.buHideOperinfo = (S.ui && S.ui.hideOperinfo) ? '1' : '0';
