@@ -173,12 +173,28 @@ html:not([data-bu-off]) .zasadky-crit {
 }
 html:not([data-bu-off]) .zasadky-warning { border-left-color: var(--warn) !important; }
 html:not([data-bu-off]) .zasadky-crit { border-left-color: var(--crit) !important; }
+
+/* ===== Polozky-obal (karty s obsahom) ako zasadky-info ===== */
+html:not([data-bu-off]) .polozky-obal,
+html:not([data-bu-off]) .polozky-obal.bu-card {
+  background: var(--bg-2) !important; border: 1px solid var(--border) !important;
+  border-left: 4px solid var(--info) !important; border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-1); border-collapse: separate !important;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+html:not([data-bu-off]) .polozky-obal:hover,
+html:not([data-bu-off]) .polozky-obal.bu-card:hover { box-shadow: var(--shadow-2); }
+html:not([data-bu-off]) .polozky-obal td,
+html:not([data-bu-off]) .polozky-obal.bu-card td { background: transparent !important; border: 0 !important; }
 html:not([data-bu-off]) .zasadky-info:hover,
 html:not([data-bu-off]) .zasadky-warning:hover,
 html:not([data-bu-off]) .zasadky-crit:hover { box-shadow: var(--shadow-2); }
 html:not([data-bu-off]) .zasadky-info td,
 html:not([data-bu-off]) .zasadky-warning td,
 html:not([data-bu-off]) .zasadky-crit td { background: transparent !important; border: 0 !important; }
+
+/* ===== Skryť vyhľadávanie v breadcrumbs ===== */
+html:not([data-bu-off]) .searchinbreadcrumbs { display: none !important; }
 
 /* ===== Vyskakovacie okná ===== */
 html:not([data-bu-off]) #uisFixedBox { background: rgba(15, 14, 13, .72) !important; backdrop-filter: blur(4px); }
