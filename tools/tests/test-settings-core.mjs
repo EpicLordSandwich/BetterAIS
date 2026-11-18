@@ -28,11 +28,11 @@ eq(BU.resolveMode('light'), 'light', 'resolveMode: light');
 eq(BU.validateTheme(null), null, 'validateTheme: null -> null');
 eq(BU.validateTheme({ colors: { dark: BU.THEMES.classic.dark, light: BU.THEMES.classic.light } }).name, 'Téma', 'validateTheme: valid');
 eq(BU.getTheme('classic', null).name, 'Classic', 'getTheme: builtin');
-eq(BU.getTheme('og', null).name, 'OG AIS', 'getTheme: OG AIS builtin');
-eq(BU.compute({ theme: 'og', mode: 'light' }).theme, 'og', 'compute: OG theme id');
-eq(BU.compute({ theme: 'og', mode: 'light' }).vars['--bg-0'], BU.THEMES.og.light.bg0, 'compute: OG light header token');
-eq(BU.compute({ theme: 'og', mode: 'light' }).vars['--accent-color'], '#831135', 'compute: OG accent bar maroon');
-eq(BU.contrastRatio(BU.THEMES.og.light.link, BU.THEMES.og.light.bg) >= 4.5, true, 'OG: light link contrast');
+eq(BU.getTheme('nostalgia', null).name, 'Nostalgia', 'getTheme: Nostalgia builtin');
+eq(BU.compute({ theme: 'nostalgia', mode: 'light' }).theme, 'nostalgia', 'compute: Nostalgia theme id');
+eq(BU.compute({ theme: 'nostalgia', mode: 'light' }).vars['--bg-0'], BU.THEMES.nostalgia.light.bg0, 'compute: Nostalgia light header token');
+eq(BU.compute({ theme: 'nostalgia', mode: 'light' }).vars['--accent-color'], '#831135', 'compute: Nostalgia accent bar maroon');
+eq(BU.contrastRatio(BU.THEMES.nostalgia.light.link, BU.THEMES.nostalgia.light.bg) >= 4.5, true, 'Nostalgia: light link contrast');
 eq(BU.getTheme('c-abc', { 'c-abc': { name: 'X', tagline: '', radius: 5, font: '', colors: { dark: BU.THEMES.classic.dark, light: BU.THEMES.classic.light } } }).name, 'X', 'getTheme: custom');
 eq(BU.getTheme('nope', null), null, 'getTheme: missing -> null');
 // globalThis.self je nastavené na začiatku súboru, aby themes.js (IIFE nad self) bežal v node.

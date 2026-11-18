@@ -65,11 +65,8 @@
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
     if (off) { setOff(true); mailPreview(); schedPreview(); return; }
     setOff(false);
-    // OG v svetlom režime = 1:1 pôvodný AIS (vypnuté všetky CSS).
-    // V tmavom režime necháme CSS pôsobiť, aby téma mala reálny tmavý vzhľad.
     const mode = BU.compute(S).mode;
-    if (S.theme === 'og' && mode === 'light') document.documentElement.dataset.buOff = '1';
-    else delete document.documentElement.dataset.buOff;
+    delete document.documentElement.dataset.buOff;
     applyTheme();
     applySnippets();
     document.documentElement.dataset.buHideOperinfo = (S.ui && S.ui.hideOperinfo) ? '1' : '0';
@@ -1246,7 +1243,7 @@
     schedStart();
   }
 
-  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); swapNick(); mailPreview(); schedPreview(); }
+  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); swapNick(); mailPreview(); schedPreview(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {
@@ -1265,7 +1262,7 @@
   /* ================= premenovanie UIS → AIS ================= */
   function runHeavyDomScan() {
     if (!isTop) return;   // ťažké skeny (hlavička, boxy, logo, popupy, sémantika) len v hlavnom frame (P0-3)
-    tagHeader(); applyLogo(); if (S.theme !== "og") tagBoxes(); scanPopups(); semanticScan();
+    tagHeader(); applyLogo(); tagBoxes(); scanPopups(); semanticScan();
   }
 
   let timer;

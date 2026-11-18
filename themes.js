@@ -22,12 +22,12 @@
       light: P('#ebe8de', '#f5f4ee', '#ffffff', '#ece9df', '#d9d5c7', '#2b2a27', '#6b675d', '#1f5fbf', '#3f74d9', '#2e6ccb', '#966319', '#c53b30'),
     },
     stu: {
-      name: 'STU modrá', tagline: 'Hlboká námornícka modrá', radius: 12, font: '',
+      name: 'Som feikár', tagline: 'Hlboká námornícka modrá', radius: 12, font: '',
       dark:  P('#0b1a33', '#0f2342', '#15305a', '#1c3c70', '#2a4f8a', '#eaf1ff', '#a9bddf', '#7fb2ff', '#2f7bff', '#7fb2ff', '#f0b94d', '#ff6b6b'),
       light: P('#dbe7fb', '#f2f6fd', '#ffffff', '#e3ecfb', '#c6d6f1', '#0f2342', '#4d6389', '#1c56c4', '#2f6fe0', '#2769df', '#98641a', '#c93a3a'),
     },
-    og: {
-      name: 'OG AIS', tagline: 'Pôvodný AIS/UIS: bordová, krémová, čierny text', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' },
+    nostalgia: {
+      name: 'Nostalgia', tagline: 'Bordová hlavička, klasický vzhľad', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' },
       dark:  P('#2a0e18', '#160f12', '#1f1619', '#2a1f23', '#3d2c31', '#ffffff', '#cfc6c8', '#8ec5ff', '#b8405e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
@@ -60,6 +60,36 @@
       name: 'Vysoký kontrast', tagline: 'Maximálny kontrast, prístupnosť', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
       dark:  P('#000000', '#000000', '#0a0a0a', '#141414', '#ffffff', '#ffffff', '#ffffff', '#66ccff', '#66ccff', '#66ccff', '#ffcc00', '#ff6666'),
       light: P('#ffffff', '#ffffff', '#f5f5f5', '#eaeaea', '#000000', '#000000', '#000000', '#0000cc', '#0000cc', '#0000cc', '#8a5a00', '#9d0006'),
+    },
+  matrix: {
+      name: 'Matrix', tagline: 'Čiernozelený terminál', radius: 0, font: 'ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace',
+      dark:  P('#000000', '#000000', '#0a0f0a', '#0f1a0f', '#1a2e1a', '#00ff41', '#00b32c', '#00ff41', '#00ff41', '#00ff41', '#00ff41', '#ff3333'),
+      light: P('#e8f5e9', '#f1f8f2', '#ffffff', '#e0f2e1', '#c8e6c9', '#1b3a1b', '#2e5e2e', '#1b5e20', '#1b5e20', '#1b5e20', '#8a5a00', '#b3261e'),
+    },
+  pastelYellow: {
+      name: 'Pastelová žltá', tagline: 'Jemná žltá', radius: 12, font: '',
+      dark:  P('#1a1808', '#22200e', '#2c2a14', '#3a381c', '#4d4a28', '#f5f0d0', '#c4bc8a', '#e8d44d', '#e8d44d', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      light: P('#fffbe6', '#fffdf2', '#ffffff', '#fff8d6', '#f0e6a8', '#3a3310', '#6b6330', '#817000', '#af8f0a', '#1d6fd0', '#8a5a00', '#b3261e'),
+    },
+  pastelRed: {
+      name: 'Pastelová červená', tagline: 'Jemná červená', radius: 12, font: '',
+      dark:  P('#1a0a0a', '#220e0e', '#2c1414', '#3a1c1c', '#4d2828', '#f5d0d0', '#c48a8a', '#e88a8a', '#e88a8a', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      light: P('#fff0f0', '#fff5f5', '#ffffff', '#ffe0e0', '#f0a8a8', '#3a1010', '#6b3030', '#b04040', '#c95454', '#1d6fd0', '#8a5a00', '#b3261e'),
+    },
+  pastelBlue: {
+      name: 'Pastelová modrá', tagline: 'Jemná modrá', radius: 12, font: '',
+      dark:  P('#0a0f1a', '#0e1422', '#141c2c', '#1c263a', '#28344d', '#d0e0f5', '#8aa0c4', '#8ab4e8', '#8ab4e8', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      light: P('#f0f5ff', '#f5f8ff', '#ffffff', '#e0eaff', '#a8bcf0', '#10183a', '#30406b', '#4060b0', '#5474c9', '#1d6fd0', '#8a5a00', '#b3261e'),
+    },
+  pastelOrange: {
+      name: 'Pastelová oranžová', tagline: 'Jemná oranžová', radius: 12, font: '',
+      dark:  P('#1a1008', '#22140e', '#2c1a14', '#3a241c', '#4d3028', '#f5e0d0', '#c49a8a', '#e8a87a', '#e8a87a', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      light: P('#fff5ee', '#fff8f2', '#ffffff', '#ffe8d6', '#f0c4a8', '#3a1a10', '#6b3a30', '#9e5639', '#c97454', '#1d6fd0', '#8a5a00', '#b3261e'),
+    },
+  pastelPurple: {
+      name: 'Pastelová fialová', tagline: 'Jemná fialová', radius: 12, font: '',
+      dark:  P('#140a1a', '#1a0e22', '#22142c', '#2c1c3a', '#3a284d', '#e8d0f5', '#a88ac4', '#b48ae8', '#b48ae8', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      light: P('#f5f0ff', '#f8f5ff', '#ffffff', '#e8e0ff', '#c4b0f0', '#1a103a', '#40306b', '#7050b0', '#8464c9', '#1d6fd0', '#8a5a00', '#b3261e'),
     },
   };
 const FONTS = [
