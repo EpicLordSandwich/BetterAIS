@@ -32,7 +32,7 @@
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
     minimal: {
-      name: 'Minimal', tagline: 'Čistá čiernobiela, bez farebného akcentu', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif',
+      name: 'Minimal (OLED)', tagline: 'Čistá čiernobiela, OLED čierna, bez farebného akcentu', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif',
       dark:  P('#000000', '#000000', '#0a0a0a', '#141414', '#2a2a2a', '#f5f5f5', '#9a9a9a', '#b0b0b0', '#ffffff', '#b0b0b0', '#d4a843', '#e83c43'),
       light: P('#ffffff', '#f7f7f7', '#ffffff', '#efefef', '#dcdcdc', '#111111', '#666666', '#444444', '#111111', '#444444', '#8a6a20', '#c93a3a'),
     },
@@ -81,7 +81,6 @@ const FONTS = [
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
-    grades: { on: true, requiredCredits: 0 }, // dashboard hodnotení na E-indexe; 0 = cieľ kreditov nie je nastavený
     experimental: false, // experimental mode: fetch latest from GitHub; stable otherwise
     rename: { uisToAis: false }, // premenovanie UIS → AIS v texte stránok (predvolene vypnuté)
   };
@@ -315,11 +314,6 @@ const FONTS = [
       source: mode === 'custom' && typeof av.source === 'string' && av.source.startsWith('data:image/') ? av.source : '',
       crop: mode === 'custom' ? crop : null,
     };
-    const gr = (s.grades && typeof s.grades === 'object') ? s.grades : {};
-    const grades = {
-      on: bool(gr.on, DEFAULTS.grades.on),
-      requiredCredits: clampInt(gr.requiredCredits, 0, 400, DEFAULTS.grades.requiredCredits),
-    };
     return {
       theme: s.theme && s.theme.startsWith('c-') ? s.theme : (THEMES[s.theme] ? s.theme : DEFAULTS.theme),
       mode: ['dark', 'light', 'auto'].includes(s.mode) ? s.mode : DEFAULTS.mode,
@@ -331,7 +325,6 @@ const FONTS = [
       ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule) },
       snippets, disabledPages,
       customThemes: customThemes,
-      grades,
       experimental: bool(s.experimental, DEFAULTS.experimental),
       rename: { uisToAis: bool(s.rename && s.rename.uisToAis, DEFAULTS.rename.uisToAis) },
     };

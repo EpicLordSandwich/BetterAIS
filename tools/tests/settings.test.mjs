@@ -14,15 +14,14 @@ test('predvolené rename zodpovedá DEFAULTS', () => {
 });
 
 test('idempotencia normalize', () => {
-  const x = { theme: 'softbrown', mode: 'light', nick: 'Miro', grades: { on: true, requiredCredits: 180 }, rename: { uisToAis: true } };
+  const x = { theme: 'softbrown', mode: 'light', nick: 'Miro', rename: { uisToAis: true } };
   assert.deepEqual(BU.normalize(BU.normalize(x)), BU.normalize(x));
 });
 
 test('vzdialená zmena nezmaže lokálne polia', () => {
-  const local = BU.normalize({ nick: 'Miro', grades: { on: true, requiredCredits: 180 } });
+  const local = BU.normalize({ nick: 'Miro' });
   const next = BU.normalize({ ...local, ...{ theme: 'softbrown' } });
   assert.equal(next.nick, 'Miro');
-  assert.equal(next.grades.requiredCredits, 180);
   assert.equal(next.theme, 'softbrown');
 });
 test('avatar url mode preserved', () => {

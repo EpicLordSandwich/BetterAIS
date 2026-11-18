@@ -1,8 +1,23 @@
 # betterAIS
 
-Browser extension (Chrome/Firefox, MV3) for [is.stuba.sk](https://is.stuba.sk): themes, dark/light mode, CSS snippets, command palette (Ctrl+K), table-tools, custom links, grades dashboard, optional mail preview.
+Browser extension (Chrome/Firefox, MV3) for [is.stuba.sk](https://is.stuba.sk): themes, dark/light mode, CSS snippets, command palette (Ctrl+K), table-tools, custom links, optional mail/schedule preview.
 
 Unofficial. Not affiliated with STU.
+
+## Features
+
+- Themes (10+), light/dark/auto mode, custom accent/link/radius/font
+- Custom nickname and profile picture (file/URL/original)
+- Custom links in header bar + presets
+- CSS snippets
+- Table-tools: sortable/filterable tables, CSV copy
+- Command palette (Ctrl+K)
+- Optional mail preview on home page (full width)
+- Optional schedule preview on home page (full width)
+- Kill-switch per page
+- Diagnostics (Ctrl+Shift+U dump, Alt+Shift+I picker)
+- Export/import settings, cross-device sync
+- Experimental auto-update from GitHub
 
 ## Install (sideload)
 

@@ -92,8 +92,6 @@
 
     $('nick').value = S.nick || '';
 
-    $('gradesOn').checked = S.grades.on;
-    $('gradesRequired').value = S.grades.requiredCredits || '';
     $('experimentalOn').checked = !!S.experimental;
 
     const pic = $('pic');
@@ -264,13 +262,6 @@
       });
     } catch (e) { $('updateStatus').textContent = 'Kontrola zlyhala.'; }
   };
-
-  $('gradesRequired').onchange = (e) => {
-    const n = Math.max(0, Math.min(400, Math.round(Number(e.target.value) || 0)));
-    e.target.value = n || '';
-    commit({ grades: Object.assign({}, S.grades, { requiredCredits: n }) });
-  };
-
 
   /* ================= diagnostika (kópia pre bug report) ================= */
   const copyDiagBtn = $('copyDiag');

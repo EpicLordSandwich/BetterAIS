@@ -87,10 +87,9 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
     const syncKeys = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'disabledPages', 'experimental', 'rename', 'snippets', 'customThemes'];
     const merged = BU.normalize({ ...local });
     for (const k of syncKeys) if (remote[k] !== undefined) merged[k] = remote[k];
-    // lokálne polia (nick, avatar, grades) ostanú z local
+    // lokálne polia (nick, avatar) ostanú z local
     merged.nick = local.nick;
     merged.avatar = local.avatar;
-    merged.grades = local.grades;
     await chrome.storage.local.set({ [BU.KEY]: merged });
   } catch (e) { swallow(e); }
 });

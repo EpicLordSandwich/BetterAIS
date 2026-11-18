@@ -410,90 +410,6 @@ html:not([data-bu-off]) .bu-tt-bar .bu-tt-filter { flex: 0 1 240px; min-width: 1
 html:not([data-bu-off]) .bu-tt-bar .bu-tt-csv { padding: 5px 14px; font: inherit; font-weight: 600; cursor: pointer; }
 html:not([data-bu-off]) .bu-tt-table tbody tr:nth-child(odd) td:not(.bu-keep) { background-color: color-mix(in srgb, var(--text) 4%, transparent) !important; }
 
-/* ===== Dashboard hodnotení (E-index) ===== */
-html[data-bu-off] #bu-grades { display: none !important; }
-html:not([data-bu-off]) #bu-grades {
-  margin: 16px 0; padding: 16px 18px; background: var(--bg-2) !important;
-  border: 1px solid var(--border) !important; border-radius: var(--radius);
-  box-shadow: var(--shadow-1); color: var(--text) !important;
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-html:not([data-bu-off]) #bu-grades h2 { margin: 0; font-size: 16px; font-weight: 650; color: var(--text) !important; background: transparent !important; border: 0 !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-badge {
-  font-size: 11px; padding: 2px 8px; border-radius: 999px;
-  background: var(--accent-soft) !important; color: var(--muted) !important;
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border)) !important;
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-stat {
-  display: flex; flex-direction: column; gap: 2px; padding: 10px 12px;
-  background: var(--bg-3) !important; border: 1px solid var(--border) !important;
-  border-radius: var(--radius-sm);
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-stat b { font-size: 20px; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--text) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-stat span { font-size: 12px; color: var(--muted) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-goal { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-progress {
-  flex: 1; height: 8px; border-radius: 999px; overflow: hidden;
-  background: var(--bg-3) !important; border: 1px solid var(--border) !important;
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-progress span { display: block; height: 100%; background: var(--accent) !important; border-radius: 999px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-goal small { font-size: 12px; color: var(--muted) !important; white-space: nowrap; }
-html:not([data-bu-off]) #bu-grades .bu-grades-dist { margin-top: 12px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-bar {
-  display: flex; height: 10px; border-radius: 999px; overflow: hidden;
-  background: var(--bg-3) !important; border: 1px solid var(--border) !important;
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-seg { display: block; height: 100%; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-a { background: var(--accent) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-b { background: color-mix(in srgb, var(--accent) 82%, var(--bg-2)) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-c { background: color-mix(in srgb, var(--accent) 66%, var(--bg-2)) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-d { background: color-mix(in srgb, var(--accent) 50%, var(--bg-2)) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-e { background: color-mix(in srgb, var(--accent) 36%, var(--bg-2)) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-z { background: var(--muted) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-seg.bu-g-fx { background: var(--crit) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-chip {
-  font-size: 12px; padding: 2px 8px; border-radius: 999px; font-variant-numeric: tabular-nums;
-  background: var(--bg-3) !important; color: var(--text) !important;
-  border: 1px solid var(--border) !important;
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-chip.bu-g-fx {
-  color: var(--crit) !important; border-color: color-mix(in srgb, var(--crit) 55%, var(--border)) !important;
-  background: color-mix(in srgb, var(--crit) 12%, transparent) !important;
-}
-html:not([data-bu-off]) #bu-grades .bu-grades-chip.bu-g-z { color: var(--muted) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-fails { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-fails b { color: var(--crit) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-fails ul { margin: 6px 0 0; padding-left: 18px; }
-html:not([data-bu-off]) #bu-grades .bu-grades-fails li { margin: 2px 0; color: var(--text) !important; }
-html:not([data-bu-off]) #bu-grades .bu-grades-note { margin: 10px 0 0; font-size: 12px; color: var(--muted) !important; }
-@media (max-width: 720px) {
-  html:not([data-bu-off]) #bu-grades .bu-grades-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-/* Nápověda (otazník) – vysoká špecificita, lebo UIS nastavuje transparentné pozadie */
-html:not([data-bu-off]) #uis-context-help-reader,
-html:not([data-bu-off]) div#uis-context-help-reader,
-html:not([data-bu-off]) .ui-resizable#uis-context-help-reader {
-  background-color: var(--bg-2) !important;
-  background-image: none !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: var(--shadow-3) !important;
-  color: var(--text) !important;
-}
-html:not([data-bu-off]) #uis-context-help-reader .ui-widget-content,
-html:not([data-bu-off]) #uis-context-help-reader .documentation,
-html:not([data-bu-off]) #uis-context-help-reader .documentation * { background: transparent !important; color: var(--text) !important; }
-html:not([data-bu-off]) #uis-context-help-reader .documentation a { color: var(--link) !important; }
-html:not([data-bu-off]) #uis-context-help-titlebar { background: var(--bg-3) !important; color: var(--text) !important; }
-html:not([data-bu-off]) #uis-context-help-reader .ui-resizable-handle { background: var(--border) !important; }
-
-/* Vyhľadávanie aplikácií (breadcrumb search) – dropdown/pop-up */
-html:not([data-bu-off]) .searchinbreadcrumbs { background: var(--bg-3) !important; border-radius: var(--radius-sm); padding: 2px 6px; cursor: pointer; }
-html:not([data-bu-off]) .searchinbreadcrumbs:hover { background: var(--accent-soft) !important; }
-
 /* ===== OG AIS – pôvodný AIS/UIS vzhľad (bordová hlavička, krémové boxy) =====
    Téma je farebná; tieto pravidlá doladujú iba charakteristické prvky starého UIS.
    Všetko visí na data-bu-theme="og", takže iné témy ostávajú nedotknuté. */
@@ -757,7 +673,7 @@ html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionclose { d
 /* ===== Badge nových dokumentov pri odkaze Dokumentový server ===== */
 li.bu-links a .bu-doc-badge {
   display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px;
-  border-radius: 999px; background: var(--crit); color: #fff; font-size: 11px; font-weight: 700; margin-left: 4px;
+  border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 11px; font-weight: 700; margin-left: 4px;
 }
 
 /* ===== Badge pošty (nové správy) ===== */
