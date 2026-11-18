@@ -99,7 +99,6 @@
   BU.features.register({
     name: 'avatar', frames: 'all', cost: 'light',
     run(state) {
-      console.log('[betterAIS] avatar run, mode=', state && state.avatar && state.avatar.mode, 'imgs=', (typeof document!=='undefined' && document.images?document.images.length:0));
       if (typeof document === 'undefined' || offNow(state)) return;
       S = state;
       // call the original avatar logic
