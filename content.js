@@ -1323,22 +1323,6 @@
   }
 
   /* ================= premenovanie UIS → AIS ================= */
-  const RENAME_SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, CODE: 1, PRE: 1, NOSCRIPT: 1 };
-  const RENAME_RE = /\bUIS\b/;              // test (bez /g = bez stavu)
-  const RENAME_RE_G = /\bUIS\b/g;           // replace
-  function renameUis() {
-    if (offNow() || !S.rename.uisToAis) return;
-    if (isTop && RENAME_RE.test(document.title)) document.title = document.title.replace(RENAME_RE_G, 'AIS');
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode: (n) => (n.nodeValue && RENAME_RE.test(n.nodeValue) && n.parentElement && !RENAME_SKIP[n.parentElement.tagName] && !n.parentElement.closest('#bu-palette')
-        ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
-    });
-    let n, count = 0;
-    while ((n = walker.nextNode()) && count < 4000) {
-      n.nodeValue = n.nodeValue.replace(RENAME_RE_G, 'AIS');
-      count++;
-    }
-  }
   function runHeavyDomScan() {
     if (!isTop) return;   // ťažké skeny (hlavička, boxy, logo, popupy, sémantika) len v hlavnom frame (P0-3)
     tagHeader(); applyLogo(); if (S.theme !== "og") tagBoxes(); scanPopups(); semanticScan();
