@@ -46,6 +46,11 @@
       dark:  P('#1a1410', '#221a14', '#2c221a', '#3a2e22', '#4d3e2e', '#f2e8dc', '#b8a892', '#d4a574', '#a0622a', '#8ec07c', '#e0a73e', '#e8756c'),
       light: P('#f2e8dc', '#faf3ea', '#ffffff', '#f0e4d4', '#e0d2be', '#2c241d', '#726350', '#8a5a2a', '#8b5a2b', '#407755', '#956111', '#9d0006'),
     },
+  highcontrast: {
+      name: 'Vysoký kontrast', tagline: 'Maximálny kontrast, prístupnosť', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      dark:  P('#000000', '#000000', '#0a0a0a', '#141414', '#ffffff', '#ffffff', '#ffffff', '#66ccff', '#66ccff', '#66ccff', '#ffcc00', '#ff6666'),
+      light: P('#ffffff', '#ffffff', '#f5f5f5', '#eaeaea', '#000000', '#000000', '#000000', '#0000cc', '#0000cc', '#0000cc', '#8a5a00', '#9d0006'),
+    },
   };
 const FONTS = [
     { label: 'Podľa témy', value: '' },
