@@ -32,7 +32,7 @@
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
     minimal: {
-      name: 'Minimal', tagline: 'Čistá čiernobiela, bez farebného akcentu', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+      name: 'Minimal', tagline: 'Čistá čiernobiela, bez farebného akcentu', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif',
       dark:  P('#000000', '#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#f5f5f5', '#9a9a9a', '#b0b0b0', '#ffffff', '#b0b0b0', '#d4a843', '#e83c43'),
       light: P('#ffffff', '#f7f7f7', '#ffffff', '#efefef', '#dcdcdc', '#111111', '#666666', '#444444', '#111111', '#444444', '#8a6a20', '#c93a3a'),
     },
@@ -54,9 +54,9 @@
   };
 const FONTS = [
     { label: 'Podľa témy', value: '' },
-    { label: 'Systémové', value: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' },
+    { label: 'Systémové', value: 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif' },
     { label: 'Serif', value: 'Georgia, "Times New Roman", serif' },
-    { label: 'Monospace', value: 'ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace' },
+    { label: 'Monospace', value: 'ui-monospace, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace' },
   ];
 
   const DEFAULTS = {

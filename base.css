@@ -599,7 +599,9 @@ html:not([data-bu-off])[data-bu-theme="og"] #header { background-color: #831135 
 html:not([data-bu-off])[data-bu-theme="og"] #header, html:not([data-bu-off])[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
 html:not([data-bu-off])[data-bu-theme="og"] #header .info,
 html:not([data-bu-off])[data-bu-theme="og"] #pfp,
-html:not([data-bu-off])[data-bu-theme="og"] img.bu-avatar { display: none !important; }
+html:not([data-bu-off])[data-bu-theme="og"] img.bu-avatar,
+html:not([data-bu-off])[data-bu-theme="og"] #header img[src*="foto.pl"],
+html:not([data-bu-off])[data-bu-theme="og"] #header img[src*="podobizn"] { display: none !important; }
 html:not([data-bu-off])[data-bu-theme="og"] #header .left, html:not([data-bu-off])[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
 
 
