@@ -9,7 +9,7 @@
   const fillThemes = () => {
     sel.innerHTML = '';
     Object.entries(BU.THEMES).forEach(([id, t]) => {
-      const o = document.createElement('option'); o.value = id; o.textContent = t.name + ' – ' + t.tagline; sel.appendChild(o);
+      const o = document.createElement('option'); o.value = id; o.textContent = t.name + ' - ' + t.tagline; sel.appendChild(o);
     });
     Object.entries(S.customThemes || {}).forEach(([id, t]) => {
       const o = document.createElement('option'); o.value = id; o.textContent = '★ ' + t.name; sel.appendChild(o);

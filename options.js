@@ -84,8 +84,7 @@
     $('fontCustom').value = known ? '' : S.custom.font;
 
     $('masterSwitch').checked = S.enabled;
-    $('logoSwap').checked = S.ui.logoSwap;
-  $('cardDensity').value = S.ui.cardDensity;
+    $('cardDensity').value = S.ui.cardDensity;
     $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
@@ -96,24 +95,19 @@
 
     const pic = $('pic');
     const avStatus = $('avStatus');
+    const urlInput = $('avUrlInput');
     let statusText = '';
     if (S.avatar.mode === 'custom') statusText = 'Vlastný obrázok' + (S.avatar.dataUrl ? '' : ' (ne nahraný)');
-    else if (S.avatar.mode === 'pedro') statusText = 'Pedro (lokálny súbor pedro.gif)';
-    else statusText = avatarShot ? 'Pôvodná fotka z ISIC (snímka z poslednej návštevy AIS).' : 'Pôvodná fotka z ISIC – navštív AIS, aby sa uložila snímka do náhľadu.';
-    pic.onerror = () => {
-      pic.onerror = null;
-      pic.src = 'logo.png';
-      if (S.avatar.mode === 'pedro' && avStatus) avStatus.textContent = 'Pedro: súbor pedro.gif chýba → použitá pôvodná fotka.';
-    };
-    pic.onload = () => {
-      if (S.avatar.mode === 'pedro' && avStatus) avStatus.textContent = 'Pedro: načítaný z lokálneho súboru.';
-    };
+    else if (S.avatar.mode === 'url') statusText = 'Obrázok z URL' + (S.avatar.url ? '' : ' (nezadaná)');
+    else statusText = avatarShot ? 'Pôvodná fotka z ISIC (snímka z poslednej návštevy AIS).' : 'Pôvodná fotka z ISIC, navštív AIS, aby sa uložila snímka do náhľadu.';
+    pic.onerror = () => { pic.onerror = null; pic.src = 'icon48.png'; if (avStatus) avStatus.textContent = 'Obrázok sa nepodarilo načítať.'; };
     pic.src = S.avatar.mode === 'custom' && S.avatar.dataUrl ? S.avatar.dataUrl
-      : S.avatar.mode === 'pedro' ? 'pedro.gif'
-        : avatarShot || 'logo.png';
-    if (avStatus && S.avatar.mode !== 'pedro') avStatus.textContent = statusText;
+      : S.avatar.mode === 'url' && S.avatar.url ? S.avatar.url
+        : avatarShot || 'icon48.png';
+    if (urlInput) { urlInput.hidden = S.avatar.mode !== 'url'; urlInput.value = S.avatar.url || ''; }
+    if (avStatus) avStatus.textContent = statusText;
     // zvýrazni aktívny mód
-    ['avPedro', 'avOrig', 'avUpload'].forEach((id) => { const b = $(id); if (b) b.classList.toggle('on', (id === 'avPedro' && S.avatar.mode === 'pedro') || (id === 'avOrig' && S.avatar.mode === 'original') || (id === 'avUpload' && S.avatar.mode === 'custom')); });
+    ['avUrl', 'avOrig', 'avUpload'].forEach((id) => { const b = $(id); if (b) b.classList.toggle('on', (id === 'avUrl' && S.avatar.mode === 'url') || (id === 'avOrig' && S.avatar.mode === 'original') || (id === 'avUpload' && S.avatar.mode === 'custom')); });
     renderLinks();
     renderSnippets();
   }
@@ -234,7 +228,7 @@
 
   /* ================= zapínanie ================= */
   $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
-  $('logoSwap').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { logoSwap: e.target.checked }) });
+
   $('renameUis').checked = !!S.rename.uisToAis;
   $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });
   $('cardDensity').value = S.ui.cardDensity;
@@ -269,41 +263,6 @@
     } catch (e) { $('updateStatus').textContent = 'Kontrola zlyhala.'; }
   };
 
-  /* ================= manuálna aktualizácia zipom ================= */
-  $('updateUpload').onclick = () => $('updateFile').click();
-  $('updateFile').onchange = async (e) => {
-    const f = e.target.files[0]; e.target.value = '';
-    if (!f) return;
-    $('updateStatus').textContent = 'Čítam zip…';
-    try {
-      const files = await BU.zip.read(await f.arrayBuffer());
-      const base = (n) => n.split('/').pop();
-      const manifest = files.find((x) => base(x.name) === 'manifest.json' && !x.name.includes('firefox'));
-      const remote = files.find((x) => base(x.name) === 'remote.json');
-      let version = null, applied = [];
-      if (manifest) { try { version = JSON.parse(await manifest.text()).version; } catch (e2) { swallow(e2); } }
-      if (remote) {
-        try {
-          const data = JSON.parse(await remote.text());
-          if (data && data.themes && Object.keys(data.themes).length) {
-            await commit({ customThemes: Object.assign({}, S.customThemes || {}, data.themes) });
-            applied.push(Object.keys(data.themes).length + ' tém');
-          }
-        } catch (e2) { swallow(e2); }
-      }
-      for (const x of files) {                              // voľne ložené theme.json súbory v zipe
-        if (/^theme(-[\w-]+)?\.json$/i.test(base(x.name)) || /\/themes?\/[\w-]+\.json$/i.test(x.name)) {
-          try {
-            const v = BU.validateTheme(JSON.parse(await x.text()));
-            if (v) { await commit({ customThemes: Object.assign({}, S.customThemes, { ['c-' + BU.uid()]: v }) }); applied.push('téma ' + v.name); }
-          } catch (e2) { swallow(e2); }
-        }
-      }
-      if (!applied.length && !version) { $('updateStatus').textContent = 'V zipe sa nenašlo nič aplikovateľné.'; return; }
-      $('updateStatus').textContent = 'Aplikované z verzie ' + (version || '?') + (applied.length ? ' (' + applied.join(', ') + ')' : '') +
-        '. Zmeny jadra (JS/CSS) sa prejavia až po preinštalovaní rozšírenia.';
-    } catch (err) { $('updateStatus').textContent = 'Neplatný ZIP súbor.'; }
-  };
   $('gradesRequired').onchange = (e) => {
     const n = Math.max(0, Math.min(400, Math.round(Number(e.target.value) || 0)));
     e.target.value = n || '';
@@ -324,7 +283,6 @@
         const s = S || {};
         return {
           theme: s.theme, mode: s.mode, enabled: s.enabled,
-          logoSwap: !!(s.ui && s.ui.logoSwap),
           linksCount: Array.isArray(s.links) ? s.links.length : 0,
           snippetsCount: Array.isArray(s.snippets) ? s.snippets.length : 0,
           disabledPagesCount: Array.isArray(s.disabledPages) ? s.disabledPages.length : 0,
@@ -337,7 +295,7 @@
     const text = '=== betterAIS diagnostika ===\n' + JSON.stringify(diag, null, 2) +
       '\n\nPozn.: vlož aj výpis z Ctrl+Shift+U (stránka UIS) pre presnú štruktúru.';
     const ok = await BU.copyText(text);
-    if ($('diagStatus')) $('diagStatus').textContent = ok ? 'Skopírované – vlož do chatu.' : 'Kopírovanie zlyhalo – skús Ctrl+C ručne.';
+    if ($('diagStatus')) $('diagStatus').textContent = ok ? 'Skopírované, vlož (Ctrl+V).' : 'Kopírovanie zlyhalo, skús Ctrl+C ručne.';
   };
 
   /* ================= zvyšné handlery ================= */
@@ -352,7 +310,9 @@
   document.querySelectorAll('[data-reset]').forEach((b) => (b.onclick = () => setCustom(b.dataset.reset, '')));
 
   // profilovka
-  $('avPedro').onclick = () => commit({ avatar: { mode: 'pedro', dataUrl: '' } });
+  $('avUrl').onclick = () => commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '' } });
+  const avUrlInput = $('avUrlInput');
+  if (avUrlInput) avUrlInput.addEventListener('change', () => commit({ avatar: { mode: 'url', dataUrl: '', url: avUrlInput.value.trim() } }));
   $('avOrig').onclick = () => commit({ avatar: { mode: 'original', dataUrl: '' } });
   $('avUpload').onclick = () => $('avFile').click();
   $('avFile').onchange = async (e) => {

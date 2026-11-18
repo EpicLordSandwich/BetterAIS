@@ -17,6 +17,11 @@
   --border-strong: color-mix(in srgb, var(--border) 55%, var(--text));
   --accent-color: var(--bg-0);
   --accent-color-text-contrast: var(--text);
+  /* stupnice (jediné povolené hodnoty pre padding/margin/font-size/border-radius) */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+  --fs-sm: 13px; --fs-md: 14px; --fs-lg: 16px; --fs-xl: 20px;
+  --lh-tight: 1.25; --lh-body: 1.5;
+  --surface-hover: color-mix(in srgb, var(--text) 6%, transparent);
 }
 
 /* ===== Základ stránky ===== */
@@ -43,7 +48,7 @@ form, fieldset, legend, section, header, footer, nav, center, font, b, i, strong
 }
 html:not([data-bu-off]) :is(th, thead td, caption):not(.bu-keep) {
   background-color: var(--bg-3) !important;
-  font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  font-size: 12px; font-weight: 600;
 }
 html:not([data-bu-off]) :is(td[bgcolor], tr[bgcolor], th[bgcolor]):not(.bu-keep) { background-color: var(--bg-2) !important; }
 
@@ -584,7 +589,7 @@ html:not([data-bu-off]) h1 { font-size: 1.45em; line-height: 1.25; }
 html:not([data-bu-off]) :is(h1, h2, h3, h4) { font-weight: 650; letter-spacing: -.01em; }
 html:not([data-bu-off]) :is(h2, h3) { line-height: 1.3; }
 html:not([data-bu-off]) legend {
-  font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  font-size: 12px; font-weight: 600; color: var(--muted);
 }
 html:not([data-bu-off]) input[type="submit"],
 html:not([data-bu-off]) input[type="button"],

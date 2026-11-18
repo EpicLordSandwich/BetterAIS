@@ -2,13 +2,12 @@
 <html lang="sk">
 <head>
   <meta charset="utf-8">
-  <title>betterAIS – nastavenia</title>
+  <title>betterAIS: nastavenia</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <img src="logo.png" alt="">
     <h1>betterAIS <small>nastavenia vzhľadu</small></h1>
     <span class="ver" id="verBadge"></span>
   </header>
@@ -18,7 +17,6 @@
     <p class="sub">Hlavný vypínač a drobné preferencie. Jednotlivé stránky sa dajú vypnúť aj v popup-e rozšírenia.</p>
     <div class="row">
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="masterSwitch"> Zapnúť betterAIS</label>
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="logoSwap"> Vymeniť logo UIS za FEI</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="renameUis"> Premenovať UIS na AIS v texte</label>
       <label class="f">Hustota kariet
         <select id="cardDensity">
@@ -76,13 +74,14 @@
       <img class="pic" id="pic" alt="">
       <div>
         <div class="row" style="gap:8px">
-          <button id="avPedro">Pedro</button>
+          <button id="avUrl">Zadaj URL obrázka…</button>
           <button id="avUpload" class="primary">Nahrať vlastnú…</button>
           <button id="avOrig" class="ghost">Pôvodná z ISIC</button>
           <input type="file" id="avFile" accept="image/*" hidden>
+          <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png)" style="flex:1;min-width:200px" hidden>
         </div>
         <p class="muted" id="avStatus" style="margin:8px 0 0"></p>
-      <p class="muted" style="margin:4px 0 0">GIF do 2,5 MB zostane animovaný, ostatné obrázky sa zmenšia na 256×256. Pedro je lokálny <code>pedro.gif</code> priamo v rozšírení (bez požiadavky na tretiu stranu). Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
+      <p class="muted" style="margin:4px 0 0">Obrázok sa načíta z odkazu (napr. Giphy/Tenor). GIF zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
       </div>
     </div>
   </section>
@@ -101,7 +100,7 @@
 
   <section>
     <h2>CSS snippety</h2>
-    <p class="sub">Vlastné CSS pre is.stuba.sk – prebijú tému, ale platia len vtedy, keď je snippet zapnutý. Ideálne na doladenie stránok, ktoré téma nezreactuje (rozvrh, termíny…).</p>
+    <p class="sub">Vlastné CSS pre is.stuba.sk, prebijú tému, ale platia len vtedy, keď je snippet zapnutý. Ideálne na doladenie stránok, ktoré téma nezreactuje (rozvrh, termíny…).</p>
     <div id="snippets"></div>
     <div class="row" style="margin-top:12px">
       <button id="addSnippet" class="primary">+ Pridať snippet</button>
@@ -131,11 +130,9 @@
 
   <section>
     <h2>Aktualizácie</h2>
-    <p class="sub">Experimentálny režim kontroluje dostupnosť novšej verzie na GitHube. Novú verziu vieš nahrať aj ručne ako zip – plugin z neho aplikuje témy a nastavenia, ktoré sa dajú meniť za behu.</p>
+    <p class="sub">Experimentálny režim kontroluje dostupnosť novšej verzie na GitHube. Novú verziu vieš nahrať aj ručne ako zip, plugin z neho aplikuje témy a nastavenia, ktoré sa dajú meniť za behu.</p>
     <div class="row" style="gap:8px">
       <button id="updateCheck">Skontrolovať aktualizácie</button>
-      <button id="updateUpload" class="ghost">Nahrať novú verziu (zip)…</button>
-      <input type="file" id="updateFile" accept=".zip,application/zip" hidden>
       <span class="muted" id="updateStatus">Ešte neskontrolované.</span>
     </div>
     <p class="muted" style="margin:10px 0 0"><a id="updateLink" href="#" hidden>Stiahnuť najnovšiu verziu</a></p>
@@ -151,17 +148,17 @@
       <input type="file" id="cfgFile" accept="application/json,.json" hidden>
       <input type="file" id="themeFile" accept="application/json,.json" hidden>
     </div>
-    <p class="muted" style="margin:10px 0 0">Nastavenia sa okrem profilovky zrkadlia aj cez <code>chrome.storage.sync</code> – ak si prihlásený rovnakým účtom v prehliadači, téma a odkazy putujú medzi počítačmi automaticky.</p>
+    <p class="muted" style="margin:10px 0 0">Nastavenia sa okrem profilovky zrkadlia aj cez <code>chrome.storage.sync</code>, ak si prihlásený rovnakým účtom v prehliadači, téma a odkazy putujú medzi počítačmi automaticky.</p>
   </section>
 
   <section>
     <h2>Diagnostika</h2>
-    <p class="sub">Ak niečo v UIS vyzerá zle, otvor to na stránke (napr. rozbaľ menu pri svojom mene) a stlač <b>Ctrl+Shift+U</b> (skratka sa dá premapovať v <code>chrome://extensions/shortcuts</code>). Skopíruje sa štruktúra stránky s utajenými osobnými údajmi, ktorú stačí vložiť do chatu. <b>Alt+Shift+I</b> ti dovolí kliknúť na konkrétny prvok a skopírovať len ten. Paleta príkazov (Ctrl+K) vyhľadáva vo všetkých položkách menu.</p>
+    <p class="sub">Ak niečo v UIS vyzerá zle, otvor to na stránke (napr. rozbaľ menu pri svojom mene) a stlač <b>Ctrl+Shift+U</b> (skratka sa dá premapovať v <code>chrome://extensions/shortcuts</code>). Skopíruje sa štruktúra stránky s utajenými osobnými údajmi, ktorú stačí vložiť do hlásenia chyby. <b>Alt+Shift+I</b> ti dovolí kliknúť na konkrétny prvok a skopírovať len ten. Paleta príkazov (Ctrl+K) vyhľadáva vo všetkých položkách menu.</p>
     <div class="row" style="margin-top:10px; gap:8px">
-      <button id="copyDiag" class="ghost">Skopírovať diagnostiku (verzia + nastavenia)</button>
+      <button id="copyDiag" class="ghost">Skopírovať údaje pre hlásenie chyby (verzia + nastavenia)</button>
       <span class="muted" id="diagStatus"></span>
     </div>
-    <p class="muted" style="margin:10px 0 0">Diagnostika obsahuje verziu rozšírenia, prehliadač, jazyk a sanitizované nastavenia (bez profilovky a snippetov). Vlož ju do chatu spolu s výpisom z Ctrl+Shift+U.</p>
+    <p class="muted" style="margin:10px 0 0">Diagnostika obsahuje verziu rozšírenia, prehliadač, jazyk a sanitizované nastavenia (bez profilovky a snippetov). Vlož ju spolu s výpisom z Ctrl+Shift+U.</p>
   </section>
 
   <section>
@@ -170,7 +167,6 @@
 </div>
 <div class="toast" id="toast">Uložené</div>
 <script src="themes.js"></script>
-<script src="zipcore.js"></script>
 <script src="options.js"></script>
 </body>
 </html>

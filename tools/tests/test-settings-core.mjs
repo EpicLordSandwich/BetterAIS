@@ -37,7 +37,7 @@ eq(BU.getTheme('c-abc', { 'c-abc': { name: 'X', tagline: '', radius: 5, font: ''
 eq(BU.getTheme('nope', null), null, 'getTheme: missing -> null');
 // globalThis.self je nastavené na začiatku súboru, aby themes.js (IIFE nad self) bežal v node.
 eq(BU.normalize(null).avatar.mode, 'original', 'default avatar mode = original (privacy)');
-eq(BU.normalize({ avatar: { mode: 'pedro' } }).avatar.mode, 'pedro', 'pedro stays a valid choice');
+eq(BU.normalize({ avatar: { mode: 'pedro' } }).avatar.mode, 'original', 'pedro migrates to original (pedro.gif removed)');
 eq(BU.normalize({ avatar: { mode: 'bogus' } }).avatar.mode, 'original', 'invalid mode falls back to original');
 eq(BU.normalize({ avatar: { mode: 'custom', dataUrl: 'data:image/png;base64,xx' } }).avatar.mode, 'custom', 'custom mode preserved');
 
