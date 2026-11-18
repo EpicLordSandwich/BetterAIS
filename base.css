@@ -162,9 +162,26 @@ html:not([data-bu-off]) .bu-hide { display: none !important; }
 }
 #bu-ctl .bu-btn:hover { border-color: var(--accent) !important; transform: translateY(-1px); filter: none; }
 #bu-ctl .bu-btn svg { width: 17px; height: 17px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Pravý blok hlavičky: jednoznačné zarovnanie tlačidiel, avatara a jazykov */
+html:not([data-bu-off]):not([data-bu-theme="og"]) #header .right { display: flex; align-items: center; gap: 8px; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #header .right .lang-switcher { display: inline-flex; align-items: center; gap: 6px; margin: 0; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #header #bu-ctl { margin: 0; }
 
 /* ===== Profilovka ===== */
-html:not([data-bu-off]) img.bu-avatar { object-fit: cover; object-position: center; border-radius: 50% !important; border: 0; box-shadow: var(--shadow-1); width: 40px !important; height: 40px !important; }
+img.bu-avatar {
+  --bu-av-size: 40px;
+  width: var(--bu-av-size) !important; height: var(--bu-av-size) !important;
+  aspect-ratio: 1; object-fit: cover; object-position: 50% 25%;
+  border-radius: 50% !important;
+  border: 1px solid var(--border-strong, var(--border)) !important;
+  box-shadow: 0 0 0 2px var(--bg-0, transparent);
+  background: var(--bg-2, var(--bg-3));
+  display: block;
+  transition: border-color .12s, box-shadow .12s;
+}
+img.bu-avatar:hover { border-color: var(--accent) !important; }
+img.bu-avatar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#header #pfp { line-height: 0; display: inline-flex; align-items: center; justify-content: center; border: 0 !important; padding: 0 !important; background: transparent !important; }
 
 /* ===== Zásadky ===== */
 html:not([data-bu-off]) .zasadky-info,
@@ -480,14 +497,13 @@ html:not([data-bu-off]) .searchinbreadcrumbs:hover { background: var(--accent-so
 /* ===== OG AIS – pôvodný AIS/UIS vzhľad (bordová hlavička, krémové boxy) =====
    Téma je farebná; tieto pravidlá doladujú iba charakteristické prvky starého UIS.
    Všetko visí na data-bu-theme="og", takže iné témy ostávajú nedotknuté. */
-html[data-bu-theme="og"] #header,
 html[data-bu-theme="og"] .sd-header {
-  background: #831135 !important;
+  background: var(--accent-color, #831135) !important;
   border-radius: 0 !important;
 }
 html[data-bu-theme="og"] #header :is(a, span, div, p, b, strong, small, li, td),
 html[data-bu-theme="og"] .sd-header :is(a, span, div, p, b, strong, small, li, td) {
-  color: #ffffff !important;
+  color: var(--accent-color-text-contrast, #ffffff) !important;
 }
 html[data-bu-theme="og"] #header .lang-switcher img { filter: none !important; }
 html[data-bu-theme="og"][data-bu-mode="light"] .zasadky-warning[class] {
@@ -592,18 +608,18 @@ html:not([data-bu-off]) :focus-visible { outline: 2px solid var(--accent); outli
 
 /* ===== OG AIS – bordová hlavička (pôvodný AIS bar) ===== */
 html[data-bu-theme="og"] #header {
-  background: #831135 !important;
+  background: var(--accent-color, #831135) !important;
   border-radius: 0 !important;
   padding: 10px 16px !important;
   position: relative;
   box-sizing: border-box;
-  font-family: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", monospace !important;
+  font-family: var(--font, Tahoma, Verdana, Arial, sans-serif) !important;
 }
-html[data-bu-theme="og"] #header :is(a, span, p, div, b, strong, small, li, td, h1, h2, h3, h4) { color: #ffffff !important; }
-html[data-bu-theme="og"] #pfp,
-html[data-bu-theme="og"] img.bu-avatar,
-html[data-bu-theme="og"] #header img[src*="foto.pl"],
-html[data-bu-theme="og"] #header img[src*="podobizn"] { display: none !important; }
+/* Profilovka v bordovej hlavičke – biely prstenec, aby sa oddelila od pozadia */
+html[data-bu-theme="og"] #header img.bu-avatar {
+  border: 1px solid rgba(255, 255, 255, .7) !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .25);
+}
 /* Meno/čas/uvítanie vpravo, v jednom riadku vedľa seba */
 html[data-bu-theme="og"] #header .info {
   display: flex !important; flex-wrap: wrap; align-items: center; justify-content: flex-end;

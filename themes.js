@@ -41,6 +41,16 @@
       dark:  P('#151c24', '#1b2430', '#232e3d', '#2d3a4d', '#3a4a60', '#e6edf5', '#9fb0c8', '#7fb2ff', '#4a90d9', '#7fb8ff', '#e0a73e', '#ff8a7a'),
       light: P('#e6edf5', '#f0f4fa', '#ffffff', '#e2eaf4', '#c8d4e4', '#1b2430', '#4d5f78', '#2a6bb0', '#2f6fe0', '#2769df', '#98641a', '#c93a3a'),
     },
+    lime: {
+      name: 'Zelenkastý', tagline: 'Tmavý s limetkovým akcentom', radius: 10, font: '',
+      dark:  P('#121212', '#121212', '#181818', '#282828', '#333333', '#ffffff', '#b3b3b3', '#1db954', '#1db954', '#4aa8ff', '#e0a73e', '#ff6b6b'),
+      light: P('#eef5ee', '#f6faf6', '#ffffff', '#eaf2ea', '#d3e0d5', '#17211a', '#56655a', '#147c3b', '#15803d', '#1d6fd0', '#8a5a00', '#b3261e'),
+    },
+    pink: {
+      name: 'Ružová', tagline: 'Jemná ružová v tmavom aj svetlom', radius: 12, font: '',
+      dark:  P('#1a0f14', '#21151a', '#2a1b21', '#35222a', '#4a2f3a', '#fbeaf0', '#c9a8b6', '#f472b6', '#f472b6', '#7fb8ff', '#e8b45a', '#ff8a7a'),
+      light: P('#fbeef4', '#fdf6f9', '#ffffff', '#f7e8ef', '#ecd3de', '#2a1620', '#6d5560', '#be185d', '#be185d', '#1d6fd0', '#8a5a00', '#b3261e'),
+    },
   softbrown: {
       name: 'Soft Brown', tagline: 'Tmavohnedý, mäkký a teplý', radius: 10, font: '',
       dark:  P('#1a1410', '#221a14', '#2c221a', '#3a2e22', '#4d3e2e', '#f2e8dc', '#b8a892', '#d4a574', '#a0622a', '#8ec07c', '#e0a73e', '#e8756c'),
@@ -67,7 +77,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false, aisLogo: true }, // skryť .operinfo.sd-box; zobraziť AIS logo v hlavičke
+    ui: { hideOperinfo: false, aisLogo: true, oled: false }, // skryť .operinfo.sd-box; zobraziť AIS logo; OLED čierna v tmavom režime
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -294,10 +304,16 @@ const FONTS = [
     const avMode = ['custom', 'url', 'original'].includes(av.mode) ? av.mode : DEFAULTS.avatar.mode;
     // migrácia: starý 'pedro' režim už neexistuje (pedro.gif odstránený) -> original
     const mode = av.mode === 'pedro' ? 'original' : avMode;
+    const cropNum = (v, lo, hi) => { const n = Number(v); return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : (lo < 0 ? 0 : lo); };
+    const crop = av.crop && typeof av.crop === 'object'
+      ? { zoom: cropNum(av.crop.zoom, 1, 3), x: cropNum(av.crop.x, -1, 1), y: cropNum(av.crop.y, -1, 1) } : null;
     const avatar = {
       mode,
       dataUrl: mode === 'custom' && typeof av.dataUrl === 'string' && av.dataUrl.startsWith('data:image/') ? av.dataUrl : '',
       url: mode === 'url' && typeof av.url === 'string' && /^https?:\/\//i.test(av.url) ? av.url : '',
+      // pôvodný (neorezaný) obrázok pre opätovné orezanie; len lokálne
+      source: mode === 'custom' && typeof av.source === 'string' && av.source.startsWith('data:image/') ? av.source : '',
+      crop: mode === 'custom' ? crop : null,
     };
     const gr = (s.grades && typeof s.grades === 'object') ? s.grades : {};
     const grades = {
@@ -312,7 +328,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo) },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), oled: bool(s.ui && s.ui.oled, DEFAULTS.ui.oled) },
       snippets, disabledPages,
       customThemes: customThemes,
       grades,
@@ -391,6 +407,7 @@ const FONTS = [
     const mode = resolveMode(s.mode);
     const dark = mode === 'dark';
     const p = Object.assign({}, t[mode]);
+    if (dark && s.ui && s.ui.oled && s.theme !== 'minimal' && s.theme !== 'highcontrast') { p.bg0 = '#000000'; p.bg = '#000000'; p.bg2 = '#0a0a0a'; p.bg3 = '#141414'; }
     if (s.custom.accent && HEX.test(s.custom.accent)) p.accent = s.custom.accent.toLowerCase();
     if (s.custom.link && HEX.test(s.custom.link)) p.link = s.custom.link.toLowerCase();
     p.onAccent = contrast(p.accent) || '#ffffff';

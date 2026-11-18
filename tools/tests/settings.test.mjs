@@ -32,3 +32,23 @@ test('avatar url mode preserved', () => {
   assert.equal(BU.normalize({ avatar: { mode: 'url', url: 'not-a-url' } }).avatar.mode, 'url');
   assert.equal(BU.normalize({ avatar: { mode: 'url', url: 'not-a-url' } }).avatar.url, '');
 });
+
+test('avatar crop a source sa validujú', () => {
+  const a = BU.normalize({ avatar: { mode: 'custom', dataUrl: 'data:image/webp;base64,AAAA', source: 'data:image/webp;base64,BBBB', crop: { zoom: 99, x: -5, y: 0.5 } } }).avatar;
+  assert.equal(a.source, 'data:image/webp;base64,BBBB');
+  assert.deepEqual(a.crop, { zoom: 3, x: -1, y: 0.5 });
+  const b = BU.normalize({ avatar: { mode: 'url', url: 'https://x.test/a.png', source: 'data:image/webp;base64,BBBB' } }).avatar;
+  assert.equal(b.source, '');
+  assert.equal(b.crop, null);
+  assert.equal(BU.normalize({ avatar: { mode: 'custom', dataUrl: 'data:image/webp;base64,AAAA', crop: 'nope' } }).avatar.crop, null);
+});
+
+test('OLED prepne tmavé pozadie na čiernu', () => {
+  const on = BU.compute({ theme: 'classic', mode: 'dark', ui: { oled: true } });
+  assert.equal(on.vars['--bg'], '#000000');
+  assert.equal(on.vars['--bg-2'], '#0a0a0a');
+  const off = BU.compute({ theme: 'classic', mode: 'dark', ui: { oled: false } });
+  assert.notEqual(off.vars['--bg'], '#000000');
+  const light = BU.compute({ theme: 'classic', mode: 'light', ui: { oled: true } });
+  assert.notEqual(light.vars['--bg'], '#000000');
+});

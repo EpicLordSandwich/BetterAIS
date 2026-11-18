@@ -21,6 +21,7 @@
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="renameUis"> Premenovať UIS na AIS v texte</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="hideOperinfo"> Skryť štatistiky akcií AIS</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="aisLogo"> Zobrazovať AIS logo v hlavičke</label>
+      <label class="switch" style="flex-direction:row"><input type="checkbox" id="oled"> OLED čierna (len tmavý režim)</label>
       <button class="ghost" id="clearOff">Vymazať zoznam vypnutých stránok <span id="offCount" class="muted"></span></button>
     </div>
   </section>
@@ -67,19 +68,31 @@
 
   <section>
     <h2>Profilová fotka</h2>
-    <p class="sub">Zmení sa len u teba v prehliadači, nikto iný ju neuvidí a nič sa neposiela na server.</p>
+    <p class="sub">Nahraný obrázok sa uloží len u teba v prehliadači — nikam sa neposiela. Pri obrázku z URL sa prehliadač pri načítaní spojí so serverom, odkiaľ obrázok pochádza.</p>
     <div class="avatar">
       <img class="pic" id="pic" alt="">
       <div>
         <div class="row" style="gap:8px">
           <button id="avUrl">Zadaj URL obrázka…</button>
           <button id="avUpload" class="primary">Nahrať vlastnú…</button>
+          <button id="avRecrop" hidden>Upraviť orezanie…</button>
           <button id="avOrig" class="ghost">Pôvodná z ISIC</button>
           <input type="file" id="avFile" accept="image/*" hidden>
           <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png)" style="flex:1;min-width:200px" hidden>
         </div>
         <p class="muted" id="avStatus" style="margin:8px 0 0"></p>
-      <p class="muted" style="margin:4px 0 0">Obrázok sa načíta z odkazu (napr. Giphy/Tenor). GIF zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
+      <p class="muted" style="margin:4px 0 0">GIF z URL zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
+      </div>
+    </div>
+    <div id="avEditor" class="crop-editor" hidden>
+      <div class="crop-stage" id="cropStage"><img id="cropImg" alt=""></div>
+      <div class="crop-side">
+        <label class="crop-zoom">Priblíženie <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1"></label>
+        <p class="muted">Potiahni obrázkom a nastav priblíženie. Uloží sa štvorec 256×256.</p>
+        <div class="row" style="gap:8px">
+          <button id="cropSave" class="primary">Uložiť</button>
+          <button id="cropCancel" class="ghost">Zrušiť</button>
+        </div>
       </div>
     </div>
   </section>

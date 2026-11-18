@@ -41,7 +41,14 @@ input[type=range] { accent-color: var(--accent); width: 180px; }
 .theme .meta { padding: 10px 12px 12px; } .theme .meta strong { display: block; } .theme .meta small { color: var(--muted); }
 
 .avatar { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-.avatar .pic { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); background: var(--bg-3); }
+.avatar .pic { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 25%; border: 3px solid var(--border); background: var(--bg-3); }
+.crop-editor { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin-top: 16px; }
+.crop-stage { position: relative; width: 240px; height: 240px; border-radius: 50%; overflow: hidden; background: var(--bg-3); border: 1px solid var(--border); cursor: grab; touch-action: none; flex: none; }
+.crop-stage.drag { cursor: grabbing; }
+.crop-stage img { position: absolute; transform-origin: 0 0; user-select: none; pointer-events: none; max-width: none; }
+.crop-side { min-width: 220px; flex: 1; }
+.crop-zoom { display: flex; align-items: center; gap: 10px; font-size: .9em; }
+.crop-zoom input { flex: 1; }
 .muted { color: var(--muted); font-size: .85em; }
 .toast { position: fixed; right: 18px; bottom: 18px; background: var(--accent); color: var(--on-accent); padding: 8px 14px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; }
 .toast.show { opacity: 1; }

@@ -440,14 +440,45 @@
       return false;
     });
   }
+  // Vráti obrázok do pôvodného stavu. Nikdy nesiaha na štýly, ktoré sme nenastavili my —
+  // staršie verzie ukladali `data-bu-orig-style` už po pridaní vlastných !important rozmerov,
+  // takže ten snapshot sa nesmie použiť (inak sa rozmery „zaseknú“).
   function restoreAvatar(img) {
-    if (!img.dataset.buAv) return;
     img.onerror = null;
-    img.src = img.dataset.buOrigSrc;
-    if (img.dataset.buOrigSrcset) img.srcset = img.dataset.buOrigSrcset;
-    if (img.dataset.buOrigStyle) img.setAttribute('style', img.dataset.buOrigStyle); else img.removeAttribute('style');
+    if (img.dataset.buAv) {
+      if (img.dataset.buOrigSrc != null) img.src = img.dataset.buOrigSrc;
+      if (img.dataset.buOrigSrcset) img.srcset = img.dataset.buOrigSrcset; else img.removeAttribute('srcset');
+      if (img.dataset.buOrigAlt != null) img.alt = img.dataset.buOrigAlt;
+    }
+    img.removeAttribute('referrerpolicy');
     img.classList.remove('bu-avatar');
     delete img.dataset.buAv; delete img.dataset.buKey;
+    delete img.dataset.buOrigSrc; delete img.dataset.buOrigSrcset; delete img.dataset.buOrigAlt;
+  }
+  function avatarName() {
+    if (S.nick) return S.nick;
+    const info = document.querySelector('#header .info');
+    if (info) {
+      const divs = Array.from(info.querySelectorAll('div'))
+        .filter((d) => d.textContent.trim() && !d.classList.contains('dvdr'));
+      if (divs.length) return divs[divs.length - 1].textContent.trim();
+    }
+    return 'A';
+  }
+  function initialAvatarUrl() {
+    const ch = ((avatarName().match(/[\p{L}\p{N}]/u) || ['A'])[0]).toUpperCase();
+    let bg = '#831135', fg = '#ffffff';
+    try {
+      const cs = getComputedStyle(document.documentElement);
+      bg = cs.getPropertyValue('--accent').trim() || bg;
+      fg = cs.getPropertyValue('--on-accent').trim() || fg;
+    } catch (e) { swallow(e); }
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">'
+      + '<circle cx="40" cy="40" r="40" fill="' + bg + '"/>'
+      + '<text x="40" y="41" text-anchor="middle" dominant-baseline="central" '
+      + 'font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="40" font-weight="600" fill="' + fg + '">'
+      + ch + '</text></svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   }
   // Náhľad pôvodnej fotky v nastaveniach: content script ju raz stiahne (same-origin,
   // takže prejde aj s prihlásením) a uloží ako data URL len lokálne. Options stránka
@@ -481,37 +512,28 @@
     } catch (e) { swallow(e); }
   }
   function avatar() {
-    if (offNow()) return;
+    if (offNow()) { avatarCandidates().forEach(restoreAvatar); return; }
     const mode = S.avatar.mode;
-    const key = mode + ':' + (mode === 'custom' ? S.avatar.dataUrl.length : (mode === 'url' ? S.avatar.url.length : 0));
+    const src = mode === 'custom' ? S.avatar.dataUrl : (mode === 'url' ? S.avatar.url : '');
+    const key = mode + ':' + (src ? src.length + ':' + src.slice(-24) : '0');
     const imgs = avatarCandidates();
     rememberIsicPhoto(imgs);
     imgs.forEach((img) => {
-      if (mode === 'original' || (mode === 'custom' && !S.avatar.dataUrl) || (mode === 'url' && !S.avatar.url)) { restoreAvatar(img); return; }
-      if (img.dataset.buKey === key) return;
+      if (!src) { restoreAvatar(img); return; }
       if (!img.dataset.buAv) {
-        const r = img.getBoundingClientRect();
         img.dataset.buAv = '1';
         img.dataset.buOrigSrc = img.getAttribute('src') || '';
         img.dataset.buOrigSrcset = img.getAttribute('srcset') || '';
-        img.dataset.buOrigStyle = img.getAttribute('style') || '';
-        const size = Math.min(40, Math.round(Math.min(r.width || 40, r.height || 40))) || 40;
-        img.style.setProperty('width', size + 'px', 'important');
-        img.style.setProperty('height', size + 'px', 'important');
+        img.dataset.buOrigAlt = img.getAttribute('alt') || '';
         img.classList.add('bu-avatar');
       }
+      if (img.dataset.buKey === key) return;
       img.dataset.buKey = key;
       img.removeAttribute('srcset');
-      // len lokálny pedro.gif (žiadna požiadavka na tretiu stranu, P0-4); keď chýba, onerror vráti pôvodnú fotku
-      const chain = mode === 'custom' ? [S.avatar.dataUrl] : (mode === 'url' ? [S.avatar.url] : []);
-      let i = 0;
-      img.onerror = () => {
-        i++;
-        if (i < chain.length) img.src = chain[i];
-        else { img.onerror = null; img.src = img.dataset.buOrigSrc; }
-      };
-      if (!chain.length) { restoreAvatar(img); return; }
-      img.src = chain[0];
+      img.setAttribute('referrerpolicy', 'no-referrer');
+      img.alt = avatarName() + ' – profilová fotka';
+      img.onerror = () => { img.onerror = null; img.src = initialAvatarUrl(); };
+      img.src = src;
     });
   }
 
@@ -731,11 +753,23 @@
     span.append(m, document.createTextNode(cps.slice(end).join('')));
     return span;
   }
+  const RECENT_KEY = 'bu:recent';
+  function recentLinks() {
+    try { const v = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+  }
+  function rememberRecent(href) {
+    try {
+      const list = recentLinks().filter((h) => h !== href);
+      list.unshift(href);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, 8)));
+    } catch (e) { swallow(e); }
+  }
   function navigateTo(href) {
     try {
       const u = new URL(href, location.href);
       if (u.origin === location.origin) location.href = u.href;
       else window.open(u.href, '_blank', 'noopener');
+      rememberRecent(u.href);
     } catch (e) { swallow(e); }
   }
   function palette() {
@@ -756,7 +790,11 @@
     const outside = (e) => { if (!w.contains(e.target)) close(); };
     const render = () => {
       const q = input.value;
-      shown = items.map((it) => ({ it, sc: Math.max(BU.notif.fuzzyScore(q, it.label), BU.notif.fuzzyScore(q, it.grp) * 0.5) }))
+      const rec = recentLinks();
+      const recScore = (href) => {
+        try { const i = rec.indexOf(new URL(href, location.href).href); return i >= 0 ? (rec.length - i) * 0.6 : 0; } catch (e) { return 0; }
+      };
+      shown = items.map((it) => ({ it, sc: Math.max(BU.notif.fuzzyScore(q, it.label), BU.notif.fuzzyScore(q, it.grp) * 0.5) + recScore(it.href) }))
         .filter((x) => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 12).map((x) => x.it);
       ul.textContent = '';
       if (!shown.length) {
