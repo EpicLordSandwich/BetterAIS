@@ -68,8 +68,6 @@
     setOff(false);
     applyTheme();
     applySnippets();
-    // hustota kariet
-    document.documentElement.dataset.buDensity = S.ui.cardDensity || 'compact';
     if (ready) runLightContentPass();
   }
   BU.load().then((s) => { BU.store.set(s); cacheOff(); applyAll(); });

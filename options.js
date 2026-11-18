@@ -84,8 +84,7 @@
     $('fontCustom').value = known ? '' : S.custom.font;
 
     $('masterSwitch').checked = S.enabled;
-    $('cardDensity').value = S.ui.cardDensity;
-    $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
+     $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
 
@@ -231,8 +230,6 @@
 
   $('renameUis').checked = !!S.rename.uisToAis;
   $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });
-  $('cardDensity').value = S.ui.cardDensity;
-  $('cardDensity').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { cardDensity: e.target.value }) });
   $('clearOff').onclick = () => commit({ disabledPages: [] });
 
   /* ================= dashboard hodnotení ================= */

@@ -611,18 +611,16 @@ html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .sekce-drive { displa
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionsetup,
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionclose { display: none !important; }
 
-/* ===== Hustota kariet ===== */
-html:not([data-bu-off]):not([data-bu-theme="og"])[data-bu-density="comfortable"] .bu-card-head { padding: 14px 16px 10px !important; font-size: 15px !important; }
-html:not([data-bu-off]):not([data-bu-theme="og"])[data-bu-density="comfortable"] .bu-card img.bu-icon { width: 24px !important; height: 24px !important; }
-html:not([data-bu-off]):not([data-bu-theme="og"])[data-bu-density="comfortable"] .bu-card ul,
-html:not([data-bu-off]):not([data-bu-theme="og"])[data-bu-density="comfortable"] .bu-card ol { padding: 6px 10px 12px !important; gap: 2px; }
-html:not([data-bu-off]):not([data-bu-theme="og"])[data-bu-density="comfortable"] .bu-card li > a,
-html:not([data-bu-off]):not([data-bu-theme="og"])[data-bu-density="comfortable"] .bu-card li a { min-height: 32px; padding: 5px 12px; font-size: 14.5px; }
-
 /* ===== Badge nových dokumentov pri odkaze Dokumentový server ===== */
 html:not([data-bu-off]) li.bu-links a .bu-doc-badge {
   display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px;
-  border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 11px; font-weight: 700; margin-left: 4px;
+  border-radius: 999px; background: var(--crit); color: #fff; font-size: 11px; font-weight: 700; margin-left: 4px;
+}
+
+/* ===== Badge pošty (nové správy) ===== */
+html:not([data-bu-off]) li.bu-links a .bu-mail-badge {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 999px; background: var(--warn); color: #fff; font-size: 11px; font-weight: 700; margin-left: 4px;
 }
 
 /* Pôvodné STU logo – v tmavom režime invertuj, aby bolo viditeľné */
