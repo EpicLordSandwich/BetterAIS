@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* ===== betterUIS – základ (všetky farby idú cez premenné z themes.js) =====
    Celý restyle visí na html[data-bu-off]: keď content script attribute nastaví,
    všetky pravidlá nižšie sa vypnú a UIS ostane v pôvodnom vzhľade (kill-switch).
@@ -596,6 +597,9 @@ html:not([data-bu-off])[data-bu-theme="og"] #svatek { color: #c8c8db !important;
 /* ===== OG AIS – nový header (#header) v štýle archívu ===== */
 html:not([data-bu-off])[data-bu-theme="og"] #header { background-color: #831135 !important; min-height: 200px !important; }
 html:not([data-bu-off])[data-bu-theme="og"] #header, html:not([data-bu-off])[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
+html:not([data-bu-off])[data-bu-theme="og"] #header .info,
+html:not([data-bu-off])[data-bu-theme="og"] #pfp,
+html:not([data-bu-off])[data-bu-theme="og"] img.bu-avatar { display: none !important; }
 html:not([data-bu-off])[data-bu-theme="og"] #header .left, html:not([data-bu-off])[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
 
 
