@@ -407,7 +407,7 @@
      UIS nechávame nedotknuté; panel je doplnok s viditeľnou značkou
      „neoficiálny prepočet“. Beží len v hlavnom frame a len na E-indexe. */
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { if (BU.features) BU.features.runAll("light"); }
+  function runLightContentPass() { if (BU.features) { console.log("[betterAIS] runLight, features:", BU.features.list().map(f=>f.name).join(",")); BU.features.runAll("light"); } else console.log("[betterAIS] NO FEATURES"); }
 
   /* ================= prezývka v hlavičke ================= */
   /* ================= premenovanie UIS → AIS ================= */
