@@ -67,7 +67,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false }, // skryť .operinfo.sd-box (štatistiky)
+    ui: { hideOperinfo: false, aisLogo: true }, // skryť .operinfo.sd-box; zobraziť AIS logo v hlavičke
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -312,7 +312,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo) },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo) },
       snippets, disabledPages,
       customThemes: customThemes,
       grades,

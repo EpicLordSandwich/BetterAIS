@@ -100,10 +100,13 @@ html:not([data-bu-off]) .sd-header,
 html:not([data-bu-off]) .sd-header * { color: var(--text) !important; }
 html:not([data-bu-off]) .sd-header img { filter: none !important; }
 html:not([data-bu-off]) #header .left { font-size: 0 !important; display: flex; align-items: center; }
-html:not([data-bu-off]) #header .left img#uis-logo {
-  height: 56px !important; width: auto !important; max-width: none !important;
-  object-fit: contain; border-radius: var(--radius-sm);
-}
+/* Pôvodné UIS logo je skryté vo všetkých témach; nahrádza ho voliteľné AIS logo. */
+#header .left img#uis-logo,
+#header img[src*="uis_color"] { display: none !important; }
+img.bu-logo-ais { height: 40px; width: auto; max-width: 100%; object-fit: contain; display: block; }
+html[data-bu-mode="dark"] img.bu-logo-ais { filter: invert(1) brightness(1.15); }
+/* OG má bordovú hlavičku v oboch režimoch → logo musí byť biele */
+html[data-bu-theme="og"] img.bu-logo-ais { filter: invert(1) brightness(1.15); }
 html:not([data-bu-off]) #header .dvdr { background: var(--border) !important; }
 html:not([data-bu-off]) #header .lang-switcher img { border-radius: 3px; opacity: .85; }
 html:not([data-bu-off]) #header .lang-switcher a:hover img { opacity: 1; }
@@ -587,26 +590,26 @@ html:not([data-bu-off]) :focus-visible { outline: 2px solid var(--accent); outli
   }
 }
 
-/* ===== OG AIS – hlavička presne podľa archivovaného UIS ===== */
-html[data-bu-theme="og"] #hlavicka { background-color: #831135 !important; height: 170px; min-width: 940px; }
-html[data-bu-theme="og"] #univerzita { color: #ffffff !important; font: 3em "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", monospace !important; text-transform: uppercase !important; text-align: right !important; padding: 3px 20px 7px 0 !important; }
-html[data-bu-theme="og"] #menu { color: #c8c8db !important; font-size: 11px !important; border-top: 1px solid #ffffff !important; height: 25px; }
-html[data-bu-theme="og"] #odkazy_fakult a { color: #c8c8db !important; }
-html[data-bu-theme="og"] #svatek { color: #c8c8db !important; }
-
-/* ===== OG AIS – nový header (#header) v štýle archívu ===== */
-html[data-bu-theme="og"] #header { background-color: #831135 !important; min-height: 200px !important; position: relative; }
-html[data-bu-theme="og"] #header, html[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", monospace !important; }
+/* ===== OG AIS – bordová hlavička (pôvodný AIS bar) ===== */
+html[data-bu-theme="og"] #header {
+  background: #831135 !important;
+  border-radius: 0 !important;
+  padding: 10px 16px !important;
+  position: relative;
+  box-sizing: border-box;
+  font-family: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", monospace !important;
+}
+html[data-bu-theme="og"] #header :is(a, span, p, div, b, strong, small, li, td, h1, h2, h3, h4) { color: #ffffff !important; }
 html[data-bu-theme="og"] #pfp,
 html[data-bu-theme="og"] img.bu-avatar,
 html[data-bu-theme="og"] #header img[src*="foto.pl"],
-html[data-bu-theme="og"] #header img[src*="podobizn"],
-html[data-bu-theme="og"] #header img#uis-logo,
-html[data-bu-theme="og"] #header img[src*="uis_color"] { display: none !important; }
-/* Meno/čas/uvítanie vpravo hore, v jednom riadku vedľa seba */
-html[data-bu-theme="og"] #header .info { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px 16px; position: absolute; top: 12px; right: 16px; margin: 0 !important; white-space: nowrap; }
-html[data-bu-theme="og"] #header .info > * { display: inline-flex !important; margin: 0 !important; white-space: nowrap; }
-html[data-bu-theme="og"] #header .left, html[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
+html[data-bu-theme="og"] #header img[src*="podobizn"] { display: none !important; }
+/* Meno/čas/uvítanie vpravo, v jednom riadku vedľa seba */
+html[data-bu-theme="og"] #header .info {
+  display: flex !important; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+  gap: 4px 16px; margin: 0 !important; white-space: nowrap;
+}
+html[data-bu-theme="og"] #header .info > * { display: inline-flex !important; margin: 0 !important; }
 
 
 /* Logo – nový AIS logo (červený kruh, biele písmo) – bez invertovania, viditeľné v oboch režimoch */

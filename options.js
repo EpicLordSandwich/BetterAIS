@@ -85,6 +85,7 @@
 
     $('masterSwitch').checked = S.enabled;
     if ($('hideOperinfo')) $('hideOperinfo').checked = !!(S.ui && S.ui.hideOperinfo);
+    if ($('aisLogo')) $('aisLogo').checked = !!(S.ui && S.ui.aisLogo);
      $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
@@ -229,6 +230,7 @@
   /* ================= zapínanie ================= */
   $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
   if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) });
+  if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) });
 
   $('renameUis').checked = !!S.rename.uisToAis;
   $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });

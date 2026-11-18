@@ -409,6 +409,26 @@
     modeBtn.setAttribute('aria-label', modeBtn.title);
   }
 
+  /* ================= 4b) AIS logo v hlavičke =================
+     Pôvodné UIS logo skrýva base.css vo všetkých témach. Sem vložíme AIS logo,
+     ak je zapnuté v nastaveniach (ui.aisLogo). Invert podľa režimu rieši CSS. */
+  function applyLogo() {
+    if (!isTop) return;
+    const left = document.querySelector('#header .left');
+    if (!left) return;
+    const on = !!(S.ui && S.ui.aisLogo);
+    let img = left.querySelector('img.bu-logo-ais');
+    if (!on) { if (img) img.remove(); return; }
+    if (img) return;
+    img = document.createElement('img');
+    img.className = 'bu-logo-ais';
+    img.alt = 'AIS';
+    img.addEventListener('error', () => img.remove(), { once: true });
+    img.src = (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL)
+      ? chrome.runtime.getURL('ais-logo.png') : 'ais-logo.png';
+    left.appendChild(img);
+  }
+
   /* ================= 5) Profilovka (len lokálne) ================= */
   function avatarCandidates() {
     return [...document.images].filter((img) => {
@@ -1055,7 +1075,7 @@
   }
 
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); }
+  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {
@@ -1090,7 +1110,7 @@
   }
   function runHeavyDomScan() {
     if (!isTop) return;   // ťažké skeny (hlavička, boxy, logo, popupy, sémantika) len v hlavnom frame (P0-3)
-    tagHeader(); if (S.theme !== "og") tagBoxes(); scanPopups(); semanticScan();
+    tagHeader(); applyLogo(); if (S.theme !== "og") tagBoxes(); scanPopups(); semanticScan();
   }
 
   let timer;
