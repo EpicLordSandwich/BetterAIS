@@ -87,6 +87,7 @@
     if ($('hideOperinfo')) $('hideOperinfo').checked = !!(S.ui && S.ui.hideOperinfo);
     if ($('aisLogo')) $('aisLogo').checked = !!(S.ui && S.ui.aisLogo);
     if ($('mailPreview')) $('mailPreview').checked = !!(S.ui && S.ui.mail);
+    if ($('schedulePreview')) $('schedulePreview').checked = !!(S.ui && S.ui.schedule);
      $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
@@ -234,6 +235,7 @@
   if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) });
   if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) });
   if ($('mailPreview')) $('mailPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { mail: e.target.checked }) });
+  if ($('schedulePreview')) $('schedulePreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedule: e.target.checked }) });
 
   /* ================= dashboard hodnotení ================= */
   $('nick').value = S.nick || '';

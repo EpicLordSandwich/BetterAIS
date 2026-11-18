@@ -48,3 +48,8 @@ test('náhľad pošty je opt-in a zachová sa', () => {
   assert.equal(BU.normalize({ ui: { mail: true } }).ui.mail, true);
   assert.equal(BU.normalize({ ui: { mail: false } }).ui.mail, false);
 });
+
+test('náhľad rozvrhu je opt-in', () => {
+  assert.equal(BU.normalize(null).ui.schedule, false);
+  assert.equal(BU.normalize({ ui: { schedule: true } }).ui.schedule, true);
+});
