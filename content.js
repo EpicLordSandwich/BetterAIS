@@ -408,7 +408,185 @@
      UIS nechávame nedotknuté; panel je doplnok s viditeľnou značkou
      „neoficiálny prepočet“. Beží len v hlavnom frame a len na E-indexe. */
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { if (BU.features) BU.features.runAll("light"); }
+  function linksBar() {
+    if (!isTop || offNow()) return;
+    const ol = document.querySelector('nav[aria-label="breadcrumb"] ol.breadcrumb');
+    if (!ol) return;
+    const loggedIn = !!document.querySelector('#header .info') || !!document.querySelector('#header img[src*="foto.pl"]');
+    let li = ol.querySelector('li.bu-links');
+    if (!loggedIn) { if (li) li.remove(); return; }
+    if (!S.links.length) { if (li) li.remove(); return; }
+    if (!li) {
+      const items = [...ol.children].filter((c) => c.tagName === 'LI' && !c.classList.contains('bu-links'));
+      const anchor = items.find((x) => /Osobn[áa]\s+administrat[íi]va/i.test(x.textContent))
+        || items[items.length - 1]
+        || items[0];
+      li = document.createElement('li');
+      li.className = 'breadcrumb-item bu-links';
+      if (anchor) anchor.after(li); else ol.appendChild(li);
+    }
+    const sig = JSON.stringify(S.links.map((l) => [l.id, l.name, l.url, l.icon])) + '|' + location.pathname;
+    if (li.dataset.sig === sig) return;
+    li.dataset.sig = sig;
+    li.textContent = '';
+    S.links.forEach((l) => {
+      const a = document.createElement('a');
+      a.href = l.url;
+      a.title = l.name;
+      let isOn = false;
+      try { isOn = new URL(l.url, location.origin).pathname === location.pathname; } catch (e) { swallow(e); }
+      a.className = 'bu-link' + (isOn ? ' on' : '');
+      if (!sameOrigin(l.url)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+      const ic = document.createElement('span');
+      ic.className = 'bu-link-ic';
+      ic.innerHTML = svgIcon(l.icon);              // dôveryhodná konštanta z ICONS
+      const tx = document.createElement('span');
+      tx.textContent = l.name;                     // text používateľa vždy cez textContent
+      a.append(ic, tx);
+      // badge nových dokumentov (len pre Dokumentový server)
+      if (/dok_server/i.test(l.url)) {
+        const badge = findDocBadge();
+        if (badge) {
+          const b = document.createElement('span');
+          b.className = 'bu-doc-badge';
+          b.textContent = badge;
+          a.appendChild(b);
+        }
+      }
+      li.appendChild(a);
+    });
+  }
+
+  function findDocBadge() {
+    // Hľadá badge s počtom nových dokumentov v pôvodnom UIS (class="badge" pri odkaze na dok_server).
+    try {
+      const candidates = [...document.querySelectorAll('.badge')];
+      for (const b of candidates) {
+        const txt = (b.textContent || '').trim();
+        if (!/^\d+$/.test(txt)) continue;
+        const link = b.closest('a') || b.parentElement && b.parentElement.closest('a');
+        const ctx = (link ? link.getAttribute('href') : '') + ' ' + (link ? link.textContent : '') + ' ' + (b.parentElement ? b.parentElement.textContent : '');
+        if (/dok_server|dokument/i.test(ctx)) return txt;
+      }
+      // fallback: prvý badge s číslom, ktorý je v hornom menu (nie v karte)
+      for (const b of candidates) {
+        const txt = (b.textContent || '').trim();
+        if (/^\d+$/.test(txt) && b.closest('#header, .sd-header, nav, .info')) return txt;
+      }
+    } catch (e) { swallow(e); }
+    return null;
+  }
+
+  function hideOriginals() {
+    let rules;
+    try {
+      rules = S.links.filter((l) => l.hideOriginal).map((l) => { try { return new URL(l.url, location.origin); } catch (e) { swallow(e); return null; } }).filter(Boolean);
+    } catch (e) { swallow(e); rules = []; }
+    if (!rules.length) {
+      document.querySelectorAll('.bu-hide').forEach((el) => el.classList.remove('bu-hide'));
+      return;
+    }
+    document.querySelectorAll('.bu-card a[href], .mainpage a[href], #stranka a[href]').forEach((a) => {
+      if (a.closest('.bu-links, #header, nav')) return;
+      let u; try { u = new URL(a.getAttribute('href'), location.origin); } catch (e) { return; }
+      // plná zhoda cesty; ak má pravidlo aj query, musí sedieť aj query
+      const hit = rules.some((r) => r.pathname === u.pathname && (!r.search || r.search === u.search));
+      (a.closest('li') || a).classList.toggle('bu-hide', hit);
+    });
+  }
+
+  async function addCurrentPage() {
+    const crumbs = [...document.querySelectorAll('nav[aria-label="breadcrumb"] li')].map((x) => x.textContent.trim()).filter(Boolean);
+    const suggested = (crumbs[crumbs.length - 1] || document.title || 'Odkaz').replace(/\s+/g, ' ').slice(0, 30);
+    const name = await buPrompt(BU.t('linkName'), suggested);
+    if (!name) return;
+    const url = location.pathname + location.search;
+    const l = BU.cleanLink({ name, url, icon: 'link' });
+    if (!l) return;
+    const st = await BU.load();
+    if (st.links.some((x) => x.url === url)) { BU.toast(BU.t('alreadyThere')); return; }
+    st.links.push(l);
+    await BU.save(st);
+    BU.toast(BU.t('added') + name);
+  }
+
+  /* Nájde kotvu v hlavičke, pred ktorú sa vložia tlačidlá rozšírenia (účet/jazyk),
+     aby sa neprekrývali s účtom. */
+  function findAccountAnchor(header) {
+    const right = header.querySelector('.right');
+    // Tlačidlá vľavo od bloku účtu (meno + pfp): kotva = .info (meno/čas)
+    const info = (right || header).querySelector('.info');
+    if (info) return info;
+    const imgs = [...header.querySelectorAll('img')];
+    const accImg = imgs.find((i) => /foto\.pl|lide\/foto|podobizn|isic/i.test(i.getAttribute('src') || ''));
+    if (accImg) {
+      const container = accImg.parentElement;
+      if (container && container !== header) return container;
+      return accImg;
+    }
+    const logout = [...header.querySelectorAll('a')].find((a) => /odhl[aá]si[tť]|logout|sign\s*out/i.test(a.textContent || ''));
+    if (logout) {
+      const container = logout.parentElement;
+      if (container && container !== header) return container;
+      return logout;
+    }
+    return (right || header).querySelector('.lang-switcher') || (right || header).querySelector('[class*="lang"]');
+  }
+
+  /* ================= 4) Ovládacie tlačidlá ================= */
+  const ICON_SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  const ICON_MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+  const ICON_PLUS = '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+  const ICON_FIND = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+  const ICON_SET = '<svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
+
+  function controls() {
+    if (!isTop || offNow()) return;
+    const eff = BU.resolveMode(S.mode);
+    let box = document.getElementById('bu-ctl');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'bu-ctl';
+      box.innerHTML =
+        '<button type="button" class="bu-btn" data-a="mode"></button>' +
+        '<button type="button" class="bu-btn" data-a="find" title="' + BU.t('findTitle') + '" aria-label="' + BU.t('findTitle') + '">' + ICON_FIND + '</button>' +
+        '<button type="button" class="bu-btn" data-a="add" title="' + BU.t('addTitle') + '" aria-label="' + BU.t('addTitle') + '">' + ICON_PLUS + '</button>' +
+        '<button type="button" class="bu-btn" data-a="settings" title="' + BU.t('setTitle') + '" aria-label="' + BU.t('setTitle') + '">' + ICON_SET + '</button>';
+      box.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-a]');
+        if (!b) return;
+        if (b.dataset.a === 'mode') {
+          const next = BU.resolveMode(S.mode) === 'dark' ? 'light' : 'dark';
+          S = BU.normalize(Object.assign({}, S, { mode: next }));
+          applyAll(); BU.save(S);
+        } else if (b.dataset.a === 'find') palette();
+        else if (b.dataset.a === 'add') addCurrentPage();
+        else {
+          try { chrome.runtime.sendMessage({ type: 'open-options' }, () => { if (chrome.runtime.lastError) chrome.runtime.openOptionsPage(); }); }
+          catch (e) { try { chrome.runtime.openOptionsPage(); } catch (e2) { swallow(e2); } }
+        }
+      });
+      // Vpravo v hlavičke, tesne pred účtom/jazykom (aby sa neprekrývalo)
+      const header = document.getElementById('header');
+      if (header) {
+        if (getComputedStyle(header).position === 'static') header.style.position = 'relative';
+        const anchor = findAccountAnchor(header);
+        if (anchor && anchor.parentNode === header) header.insertBefore(box, anchor);
+        else if (anchor) anchor.parentNode.insertBefore(box, anchor);
+        else header.appendChild(box);
+      } else { box.classList.add('bu-float'); document.body.appendChild(box); }
+    }
+    const modeBtn = box.querySelector('[data-a="mode"]');
+    if (modeBtn.dataset.m !== eff) {
+      modeBtn.dataset.m = eff;
+      modeBtn.innerHTML = eff === 'dark' ? ICON_SUN : ICON_MOON;
+    }
+    modeBtn.title = eff === 'dark' ? BU.t('modeLight') : BU.t('modeDark');
+    modeBtn.setAttribute('aria-label', modeBtn.title);
+  }
+
+
+  function runLightContentPass() { linksBar(); controls(); if (BU.features) BU.features.runAll("light"); }
 
   /* ================= prezývka v hlavičke ================= */
   /* ================= premenovanie UIS → AIS ================= */
