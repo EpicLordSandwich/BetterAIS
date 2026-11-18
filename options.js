@@ -102,13 +102,13 @@
     if (S.avatar.mode === 'custom') statusText = 'Vlastný obrázok' + (S.avatar.dataUrl ? '' : ' (ne nahraný)');
     else if (S.avatar.mode === 'url') statusText = 'Obrázok z URL' + (S.avatar.url ? '' : ' (nezadaná)');
     else statusText = avatarShot ? 'Pôvodná fotka z ISIC (snímka z poslednej návštevy AIS).' : 'Pôvodná fotka z ISIC, navštív AIS, aby sa uložila snímka do náhľadu.';
+    pic.referrerPolicy = 'no-referrer';
     pic.onerror = () => { pic.onerror = null; pic.src = 'icon48.png'; if (avStatus) avStatus.textContent = 'Obrázok sa nepodarilo načítať.'; };
     pic.src = S.avatar.mode === 'custom' && S.avatar.dataUrl ? S.avatar.dataUrl
       : S.avatar.mode === 'url' && S.avatar.url ? S.avatar.url
         : avatarShot || 'icon48.png';
     pic.referrerPolicy = 'no-referrer';
     if (urlInput) { urlInput.hidden = S.avatar.mode !== 'url'; urlInput.value = S.avatar.url || ''; }
-    if ($('avRecrop')) $('avRecrop').hidden = !(S.avatar.mode === 'custom' && S.avatar.source);
     if (avStatus) avStatus.textContent = statusText;
     // zvýrazni aktívny mód
     ['avUrl', 'avOrig', 'avUpload'].forEach((id) => { const b = $(id); if (b) b.classList.toggle('on', (id === 'avUrl' && S.avatar.mode === 'url') || (id === 'avOrig' && S.avatar.mode === 'original') || (id === 'avUpload' && S.avatar.mode === 'custom')); });
@@ -311,98 +311,58 @@
   document.querySelectorAll('[data-reset]').forEach((b) => (b.onclick = () => setCustom(b.dataset.reset, '')));
 
   // profilovka
-  $('avUrl').onclick = () => commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '', source: '', crop: null } });
+  $('avUrl').onclick = () => {
+    const inp = $('avUrlInput');
+    if (inp) { inp.hidden = false; inp.focus(); inp.select(); }
+    commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '', source: '', crop: null } });
+  };
   const avUrlInput = $('avUrlInput');
-  if (avUrlInput) avUrlInput.addEventListener('change', () => commit({ avatar: { mode: 'url', dataUrl: '', url: avUrlInput.value.trim(), source: '', crop: null } }));
+  if (avUrlInput) {
+    const saveUrl = () => { const v = avUrlInput.value.trim(); if (v) commit({ avatar: { mode: 'url', dataUrl: '', url: v, source: '', crop: null } }); };
+    avUrlInput.addEventListener('change', saveUrl);
+    avUrlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); saveUrl(); avUrlInput.blur(); } });
+  }
   $('avOrig').onclick = () => commit({ avatar: { mode: 'original', dataUrl: '', url: '', source: '', crop: null } });
   $('avUpload').onclick = () => $('avFile').click();
   $('avFile').onchange = async (e) => {
     const f = e.target.files[0];
     e.target.value = '';
     if (!f) return;
-    if (f.type === 'image/gif' && f.size <= 2.5 * 1024 * 1024) {
-      commit({ avatar: { mode: 'custom', dataUrl: await readAsDataURL(f), url: '', source: '', crop: null } });
-      return;
+    try {
+      const dataUrl = await fileToDataUrl(f);
+      commit({ avatar: { mode: 'custom', dataUrl, url: '', source: '', crop: null } });
+    } catch (err) {
+      console.debug('betterAIS avatar upload failed', err);
+      toast('Obrázok sa nepodarilo načítať.');
     }
-    try { openCropEditor(await sourceDataUrl(f), null); } catch (err) { toast('Obrázok sa nepodarilo načítať.'); }
   };
-  $('avRecrop').onclick = () => { if (S.avatar.source) openCropEditor(S.avatar.source, S.avatar.crop); };
-
-  function readAsDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
-  async function sourceDataUrl(f) {
-    const bmp = await createImageBitmap(f);
-    const s = Math.min(1, 1024 / Math.max(bmp.width, bmp.height));
+  async function fileToDataUrl(f) {
+    if (f.type === 'image/gif' && f.size <= 4 * 1024 * 1024) return readAsDataURL(f);
+    let bmp;
+    try { bmp = await createImageBitmap(f); }
+    catch (_) {
+      // fallback pre prehliadače bez createImageBitmap
+      bmp = await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => res(img);
+        img.onerror = rej;
+        const r = new FileReader();
+        r.onload = () => { img.src = r.result; };
+        r.onerror = rej;
+        r.readAsDataURL(f);
+      });
+    }
+    const size = 256;
     const c = document.createElement('canvas');
-    c.width = Math.max(1, Math.round(bmp.width * s));
-    c.height = Math.max(1, Math.round(bmp.height * s));
-    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-    return c.toDataURL('image/webp', 0.85);
+    c.width = c.height = size;
+    const s = Math.min(bmp.width, bmp.height);
+    const ctx = c.getContext('2d');
+    ctx.drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
+    // gif animovaný necháme ako data URL originálu
+    if (f.type === 'image/gif') return readAsDataURL(f);
+    return c.toDataURL('image/webp', 0.9);
   }
-
-  const crop = { img: null, source: '', zoom: 1, x: 0, y: 0 };
-  const stage = $('cropStage'), cropImg = $('cropImg'), zoomInput = $('cropZoom');
-  function openCropEditor(source, settings) {
-    const im = new Image();
-    im.onload = () => {
-      crop.img = im; crop.source = source;
-      crop.zoom = settings ? settings.zoom : 1;
-      crop.x = settings ? settings.x : 0;
-      crop.y = settings ? settings.y : 0;
-      zoomInput.value = crop.zoom;
-      cropImg.src = source;
-      $('avEditor').hidden = false;
-      requestAnimationFrame(() => { requestAnimationFrame(layoutCrop); });
-    };
-    im.onerror = () => toast('Obrázok sa nepodarilo načítať.');
-    im.src = source;
-  }
-  function cropMetrics() {
-    const P = stage.clientWidth || 240;
-    const iw = crop.img.naturalWidth, ih = crop.img.naturalHeight;
-    const scale = Math.max(P / iw, P / ih) * crop.zoom;
-    const dw = iw * scale, dh = ih * scale;
-    return { P, dw, dh, maxX: Math.max(0, (dw - P) / 2), maxY: Math.max(0, (dh - P) / 2) };
-  }
-  function layoutCrop() {
-    if (!crop.img) return;
-    const m = cropMetrics();
-    crop.x = Math.max(-1, Math.min(1, crop.x));
-    crop.y = Math.max(-1, Math.min(1, crop.y));
-    cropImg.style.width = m.dw + 'px';
-    cropImg.style.height = m.dh + 'px';
-    cropImg.style.left = ((m.P - m.dw) / 2 + crop.x * m.maxX) + 'px';
-    cropImg.style.top = ((m.P - m.dh) / 2 + crop.y * m.maxY) + 'px';
-  }
-  zoomInput.oninput = () => { crop.zoom = Number(zoomInput.value); layoutCrop(); };
-  let cropDrag = null;
-  stage.addEventListener('pointerdown', (e) => {
-    if (!crop.img) return;
-    cropDrag = { x: e.clientX, y: e.clientY, cx: crop.x, cy: crop.y };
-    stage.classList.add('drag');
-    stage.setPointerCapture(e.pointerId);
-  });
-  stage.addEventListener('pointermove', (e) => {
-    if (!cropDrag) return;
-    const m = cropMetrics();
-    if (m.maxX) crop.x = cropDrag.cx + (e.clientX - cropDrag.x) / m.maxX;
-    if (m.maxY) crop.y = cropDrag.cy + (e.clientY - cropDrag.y) / m.maxY;
-    layoutCrop();
-  });
-  const endCropDrag = () => { cropDrag = null; stage.classList.remove('drag'); };
-  stage.addEventListener('pointerup', endCropDrag);
-  stage.addEventListener('pointercancel', endCropDrag);
-  $('cropCancel').onclick = () => { $('avEditor').hidden = true; crop.img = null; };
-  $('cropSave').onclick = () => {
-    if (!crop.img) return;
-    const P = 256, iw = crop.img.naturalWidth, ih = crop.img.naturalHeight;
-    const scale = Math.max(P / iw, P / ih) * crop.zoom;
-    const dw = iw * scale, dh = ih * scale;
-    const maxX = Math.max(0, (dw - P) / 2), maxY = Math.max(0, (dh - P) / 2);
-    const c = document.createElement('canvas'); c.width = c.height = P;
-    c.getContext('2d').drawImage(crop.img, (P - dw) / 2 + crop.x * maxX, (P - dh) / 2 + crop.y * maxY, dw, dh);
-    commit({ avatar: { mode: 'custom', dataUrl: c.toDataURL('image/webp', 0.9), url: '', source: crop.source, crop: { zoom: crop.zoom, x: crop.x, y: crop.y } } });
-    $('avEditor').hidden = true; crop.img = null;
-  };
+  function readAsDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
 
   $('reset').onclick = () => { if (confirm('Obnoviť všetky nastavenia betterAIS?')) { S = BU.normalize(null); BU.save(S); render(); toast(); } };
 

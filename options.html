@@ -73,24 +73,12 @@
         <div class="row" style="gap:8px">
           <button id="avUrl">Zadaj URL obrázka…</button>
           <button id="avUpload" class="primary">Nahrať vlastnú…</button>
-          <button id="avRecrop" hidden>Upraviť orezanie…</button>
           <button id="avOrig" class="ghost">Pôvodná z ISIC</button>
           <input type="file" id="avFile" accept="image/*" hidden>
-          <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png)" style="flex:1;min-width:200px" hidden>
         </div>
+        <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png/webp)" style="width:100%;margin-top:8px" hidden>
         <p class="muted" id="avStatus" style="margin:8px 0 0"></p>
-      <p class="muted" style="margin:4px 0 0">GIF z URL zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
-      </div>
-    </div>
-    <div id="avEditor" class="crop-editor" hidden>
-      <div class="crop-stage" id="cropStage"><img id="cropImg" alt=""></div>
-      <div class="crop-side">
-        <label class="crop-zoom">Priblíženie <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1"></label>
-        <p class="muted">Potiahni obrázkom a nastav priblíženie. Uloží sa štvorec 256×256.</p>
-        <div class="row" style="gap:8px">
-          <button id="cropSave" class="primary">Uložiť</button>
-          <button id="cropCancel" class="ghost">Zrušiť</button>
-        </div>
+      <p class="muted" style="margin:4px 0 0">GIF zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
       </div>
     </div>
   </section>
