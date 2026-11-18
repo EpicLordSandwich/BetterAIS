@@ -801,34 +801,6 @@
       el.classList.add('sd-box');
     }
   }
-  function swapLogo() {
-    if (!isTop || offNow()) return;
-    const img = document.getElementById('uis-logo') || [...document.images].find((i) => { const r = i.getBoundingClientRect(); return r.top < 150 && r.left < 400; });
-    if (!img) return;
-    if (!S.ui.logoSwap) {
-      if (!img.dataset.sdLogo) {
-        // pôvodné UIS logo – v tmavom režime invertuj, aby bolo viditeľné
-        img.classList.add('bu-logo-orig');
-        return;
-      }
-      img.onerror = null;
-      img.src = img.dataset.sdOrigSrc;
-      img.classList.remove('bu-logo');
-      img.classList.add('bu-logo-orig');
-      if (img.dataset.sdOrigTitle !== undefined) img.title = img.dataset.sdOrigTitle;
-      delete img.dataset.sdLogo;
-      return;
-    }
-    if (img.dataset.sdLogo) return;
-    img.dataset.sdLogo = '1';
-    img.dataset.sdOrigSrc = img.getAttribute('src') || '';
-    img.dataset.sdOrigTitle = img.title || '';
-    img.removeAttribute('srcset'); img.removeAttribute('width'); img.removeAttribute('height');
-    img.src = chrome.runtime.getURL('logo.png');
-    img.classList.add('bu-logo');
-    img.title = 'FEI STU – informácie o UIS';
-  }
-
   /* ================= 11) Table-tools (zoradenie, filter, CSV) =================
      Len generické tabuľky: aspoň 2 dátové riadky a <th>. Tabuľky s formulárovými
      prvkami (prihlásenie na skúšky…) sa NESMÚ triediť – poradie riadkov je súčasť
@@ -1078,7 +1050,7 @@
   }
 
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); swapLogo(); }
+  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {
@@ -1113,7 +1085,7 @@
   }
   function runHeavyDomScan() {
     if (!isTop) return;   // ťažké skeny (hlavička, boxy, logo, popupy, sémantika) len v hlavnom frame (P0-3)
-    tagHeader(); tagBoxes(); swapLogo(); scanPopups(); semanticScan();
+    tagHeader(); if (S.theme !== "og") tagBoxes(); scanPopups(); semanticScan();
   }
 
   let timer;
