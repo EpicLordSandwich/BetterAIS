@@ -428,8 +428,9 @@ const FONTS = [
     root.style.colorScheme = out.mode;
     root.dataset.buMode = out.mode;
     if (out.theme) root.dataset.buTheme = out.theme;
-    if (out.font) { root.style.setProperty('--font', out.font); root.dataset.buFont = '1'; }
-    else { root.style.removeProperty('--font'); delete root.dataset.buFont; }
+    const safeFont = out.font || 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif';
+    root.style.setProperty('--font', safeFont);
+    root.dataset.buFont = '1';
   }
 
   const varKeys = () => Object.keys(compute(DEFAULTS).vars);
