@@ -14,11 +14,11 @@ function eq(actual, expected, name) {
 }
 
 // settings round-trip
-const raw = { theme: 'warm', mode: 'light', links: [{ name: 'x', url: '/auth/x.pl', icon: 'mail' }], snippets: [{ id: 's', name: 'n', css: '.x{}', on: true }] };
+const raw = { theme: 'softbrown', mode: 'light', links: [{ name: 'x', url: '/auth/x.pl', icon: 'mail' }], snippets: [{ id: 's', name: 'n', css: '.x{}', on: true }] };
 const n1 = BU.normalize(raw);
 const n2 = BU.normalize(n1);
 eq(JSON.stringify(n1), JSON.stringify(n2), 'integration: normalize idempotent');
-eq(n1.theme, 'warm', 'integration: theme preserved');
+eq(n1.theme, 'softbrown', 'integration: theme preserved');
 eq(n1.links.length, 1, 'integration: links preserved');
 eq(n1.snippets.length, 1, 'integration: snippets preserved');
 

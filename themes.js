@@ -36,11 +36,6 @@
       dark:  P('#000000', '#0a0a0a', '#141414', '#1f1f1f', '#2a2a2a', '#f5f5f5', '#9a9a9a', '#b0b0b0', '#ffffff', '#b0b0b0', '#d4a843', '#e83c43'),
       light: P('#ffffff', '#f7f7f7', '#ffffff', '#efefef', '#dcdcdc', '#111111', '#666666', '#444444', '#111111', '#444444', '#8a6a20', '#c93a3a'),
     },
-    warm: {
-      name: 'Teplá', tagline: 'Teplé zemité tóny, béžová a tehlová', radius: 10, font: '',
-      dark:  P('#1c1713', '#231d18', '#2c241d', '#3a3026', '#4d4033', '#f2e8dc', '#b8a892', '#d4a574', '#c97b3a', '#8ec07c', '#e0a73e', '#e8756c'),
-      light: P('#f2e8dc', '#faf3ea', '#ffffff', '#f0e4d4', '#e0d2be', '#2c241d', '#726350', '#8a5a2a', '#b5651e', '#407755', '#956111', '#9d0006'),
-    },
     cool: {
       name: 'Chladná', tagline: 'Chladné modrosivé, oceánske tóny', radius: 10, font: '',
       dark:  P('#151c24', '#1b2430', '#232e3d', '#2d3a4d', '#3a4a60', '#e6edf5', '#9fb0c8', '#7fb2ff', '#4a90d9', '#7fb8ff', '#e0a73e', '#ff8a7a'),
