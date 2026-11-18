@@ -497,7 +497,8 @@
       chrome.storage.local.get(AVATAR_SHOT_KEY).then((r) => {
         const prev = r && r[AVATAR_SHOT_KEY];
         if (prev && prev.url === abs && prev.data) return;   // snímku pre túto fotku už máme
-        return fetch(abs, { credentials: 'include' }).then((res) => {
+        const avCtrl = new AbortController(); const avTimer = setTimeout(() => avCtrl.abort(), 8000);
+        return fetch(abs, { credentials: 'include', signal: avCtrl.signal }).then((res) => {
           if (!res.ok) return null;
           const ct = (res.headers.get('content-type') || '').toLowerCase();
           if (!ct.startsWith('image/')) return null;   // prihlásenie vypršalo → HTML, neukladať
@@ -507,7 +508,7 @@
             fr.onload = () => { try { chrome.storage.local.set({ [AVATAR_SHOT_KEY]: { url: abs, data: String(fr.result) } }); } catch (e) { swallow(e); } };
             fr.readAsDataURL(b);
           });
-        });
+        }).finally(() => clearTimeout(avTimer));
       }).catch((e) => swallow(e));
     } catch (e) { swallow(e); }
   }
@@ -1124,6 +1125,7 @@
   let mailTimer = null;
   let mailFetching = false;
   let mailCollapsed = false;
+  let mailFailures = 0;
 
   function mailOn() {
     return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.mail);
@@ -1241,7 +1243,10 @@
     mailState = Object.assign({}, mailState, { status: 'obnovujem…', error: '' });
     mailRender();
     try {
-      const res = await fetch(MAIL_URL, { credentials: 'include', cache: 'no-store' });
+      const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 10000);
+      let res;
+      try { res = await fetch(MAIL_URL, { credentials: 'include', cache: 'no-store', signal: ctrl.signal }); }
+      finally { clearTimeout(t); }
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const html = await mailRead(res);
       const parsed = mailParse(html, res.url);
@@ -1254,8 +1259,10 @@
         status: 'obnovené ' + time.toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' }),
         error: '',
       };
+      mailFailures = 0;
       try { await chrome.storage.local.set({ [MAIL_CACHE]: mailState }); } catch (e) { swallow(e); }
     } catch (e) {
+      mailFailures++;
       mailState = Object.assign({}, mailState, { status: '', error: 'Poštu sa nepodarilo načítať.' });
     } finally {
       mailFetching = false;
