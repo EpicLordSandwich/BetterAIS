@@ -62,7 +62,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: {}, // (hustota kariet odstránená)
+    ui: { hideOperinfo: false }, // skryť .operinfo.sd-box (štatistiky)
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -307,7 +307,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: {},
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo) },
       snippets, disabledPages,
       customThemes: customThemes,
       grades,
@@ -408,7 +408,7 @@ const FONTS = [
         '--hover': dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.06)',
         '--accent-soft': 'color-mix(in srgb, ' + p.accent + ' 16%, transparent)',
         '--border-strong': 'color-mix(in srgb, ' + p.border + ' 55%, ' + p.text + ')',
-        '--font-mono': 'Space Mono, "SF Mono", "JetBrains Mono", ui-monospace, monospace',
+        '--font-mono': 'ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace',
         '--accent-color': bar.color || p.bg0, '--accent-color-text-contrast': bar.text || p.text, // prebije bordovú lištu UIS
       },
     };

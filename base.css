@@ -195,6 +195,8 @@ html:not([data-bu-off]) .zasadky-crit td { background: transparent !important; b
 
 /* ===== Skryť vyhľadávanie v breadcrumbs ===== */
 html:not([data-bu-off]) .searchinbreadcrumbs { display: none !important; }
+html:not([data-bu-off])[data-bu-hide-operinfo="1"] .operinfo,
+html:not([data-bu-off])[data-bu-hide-operinfo="1"] .operinfo.sd-box { display: none !important; }
 
 /* ===== Vyskakovacie okná ===== */
 html:not([data-bu-off]) #uisFixedBox { background: rgba(15, 14, 13, .72) !important; backdrop-filter: blur(4px); }

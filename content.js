@@ -67,6 +67,7 @@
     setOff(false);
     applyTheme();
     applySnippets();
+    document.documentElement.dataset.buHideOperinfo = (S.ui && S.ui.hideOperinfo) ? '1' : '0';
     if (ready) runLightContentPass();
   }
   BU.load().then((s) => { S = s; cacheOff(); applyAll(); });

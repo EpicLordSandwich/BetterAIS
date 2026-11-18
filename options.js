@@ -84,6 +84,7 @@
     $('fontCustom').value = known ? '' : S.custom.font;
 
     $('masterSwitch').checked = S.enabled;
+    if ($('hideOperinfo')) $('hideOperinfo').checked = !!(S.ui && S.ui.hideOperinfo);
      $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
@@ -227,6 +228,7 @@
 
   /* ================= zapínanie ================= */
   $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
+  if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) });
 
   $('renameUis').checked = !!S.rename.uisToAis;
   $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });
