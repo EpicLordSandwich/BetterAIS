@@ -5,7 +5,7 @@
   "description": "Vlastný vzhľad pre is.stuba.sk – témy, tmavý režim, CSS snippety, paleta príkazov Ctrl+K, table-tools, vlastná profilovka a odkazy v lište.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "betteruis@is.stuba.sk",
+      "id": "betterais-extension@github.com",
       "strict_min_version": "128.0"
     }
   },
@@ -16,7 +16,7 @@
   "background": {
     "scripts": [
       "themes.js",
-      "notifcore.js",
+      "text-utils.js",
       "background.js"
     ]
   },
@@ -24,9 +24,9 @@
     "default_popup": "popup.html",
     "default_title": "betterAIS",
     "default_icon": {
-      "16": "icon16.png",
-      "32": "icon32.png",
-      "48": "icon48.png",
+      "16": "icon128.png",
+      "32": "icon128.png",
+      "48": "icon128.png",
       "128": "icon128.png"
     }
   },
@@ -35,9 +35,9 @@
     "open_in_tab": true
   },
   "icons": {
-    "16": "icon16.png",
-    "32": "icon32.png",
-    "48": "icon48.png",
+    "16": "icon128.png",
+    "32": "icon128.png",
+    "48": "icon128.png",
     "128": "icon128.png"
   },
   "commands": {
@@ -73,8 +73,20 @@
       ],
       "js": [
         "themes.js",
-        "notifcore.js",
+        "text-utils.js",
         "grades.js",
+        "features/hide-originals.js",
+        "features/swap-nick.js",
+        "features/avatar.js",
+        "features/controls.js",
+        "features/table-tools.js",
+        "features/grades-dashboard.js",
+        "features/tag-cards.js",
+        "features/links-bar.js",
+        "features/tag-header.js",
+        "features/tag-boxes.js",
+        "features/semantic-scan.js",
+        "features/rename-uis.js",
         "content.js"
       ],
       "run_at": "document_start",
@@ -83,10 +95,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [
-        "logo.png",
-        "pedro.gif"
-      ],
+      "resources": [],
       "matches": [
         "https://is.stuba.sk/*"
       ]
