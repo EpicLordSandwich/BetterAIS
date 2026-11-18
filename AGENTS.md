@@ -32,6 +32,7 @@ Browser extension (Chrome/Firefox, MV3) for `is.stuba.sk`. Themes, dark/light mo
 
 ## Work style
 - One problem = one commit. Messages in Slovak, English prefix: `fix:`, `refactor:`, `docs:`, `test:`, `chore:`.
+- Commit messages must be professional and concise: no slang, no emojis, no filler. Subject ≤ 72 chars; body only when necessary.
 - Test first, then fix. `npm test` must be green before commit.
 - Stage only your files, never `git add -A`.
 - `git pull --ff-only` before work/push.
