@@ -317,8 +317,8 @@ html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card li a:hover strong { c
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .ui-resizable-handle { opacity: .25; }
 
 /* ---- Starý tabuľkový tvar hlavného menu (ak ho UIS ešte niekde používa) ---- */
-html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table { border-collapse: separate !important; border-spacing: 0 10px !important; width: 100% !important; max-width: 1000px; }
-html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:not(:has(.polozky-obr)) { display: none; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table:has(.polozky-obr) { border-collapse: separate !important; border-spacing: 0 10px !important; width: 100% !important; max-width: 1000px; }
+html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table:has(.polozky-obr) > tbody > tr:not(:has(.polozky-obr)) { display: none; }
 html:not([data-bu-off]):not([data-bu-theme="og"]) #stranka .mainpage > table > tbody > tr:has(.polozky-obr) > td {
   background: var(--bg-2) !important; border-top: 1px solid var(--border) !important; border-bottom: 1px solid var(--border) !important;
   padding-top: 12px !important; padding-bottom: 12px !important; transition: background .15s, border-color .15s;
