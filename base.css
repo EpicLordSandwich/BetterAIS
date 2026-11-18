@@ -131,34 +131,34 @@ html:not([data-bu-off]) nav[aria-label="breadcrumb"] .dropdown-divider { border-
 html:not([data-bu-off]) nav[aria-label="breadcrumb"] .dropdown-menu > a:hover { background: var(--bg-3) !important; }
 
 /* Vlastné odkazy v breadcrumb lište */
-html:not([data-bu-off]) nav[aria-label="breadcrumb"] li.bu-links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: 14px; padding: 0; }
-html:not([data-bu-off]) nav[aria-label="breadcrumb"] li.bu-links::before { content: none !important; display: none !important; }
-html:not([data-bu-off]) li.bu-links a.bu-link {
+nav[aria-label="breadcrumb"] li.bu-links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: 14px; padding: 0; }
+nav[aria-label="breadcrumb"] li.bu-links::before { content: none !important; display: none !important; }
+li.bu-links a.bu-link {
   display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px 0 9px; box-sizing: border-box;
   border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 999px;
   background: var(--accent-soft) !important;
   font-size: 13px; line-height: 1; white-space: nowrap; text-decoration: none !important;
   color: var(--link) !important; transition: border-color .15s, background .15s, color .15s;
 }
-html:not([data-bu-off]) li.bu-links a.bu-link * { color: inherit !important; }
-html:not([data-bu-off]) li.bu-links a.bu-link:hover,
-html:not([data-bu-off]) li.bu-links a.bu-link.on { background: var(--accent) !important; color: var(--on-accent) !important; border-color: var(--accent); }
-html:not([data-bu-off]) li.bu-links a.bu-link:hover * { color: inherit !important; }
-html:not([data-bu-off]) li.bu-links .bu-link-ic { display: inline-flex; }
-html:not([data-bu-off]) li.bu-links svg { width: 15px; height: 15px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+li.bu-links a.bu-link * { color: inherit !important; }
+li.bu-links a.bu-link:hover,
+li.bu-links a.bu-link.on { background: var(--accent) !important; color: var(--on-accent) !important; border-color: var(--accent); }
+li.bu-links a.bu-link:hover * { color: inherit !important; }
+li.bu-links .bu-link-ic { display: inline-flex; }
+li.bu-links svg { width: 15px; height: 15px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 html:not([data-bu-off]) .bu-hide { display: none !important; }
 
 /* ===== Ovládacie tlačidlá (režim, hľadanie, nastavenia) ===== */
-html:not([data-bu-off]) #bu-ctl { display: inline-flex; align-items: center; gap: 6px; margin: 0 10px; vertical-align: middle; }
-html:not([data-bu-off]) #bu-ctl.bu-ctl-abs { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); margin: 0; z-index: 9999; }
-html:not([data-bu-off]) #bu-ctl.bu-float { position: fixed; left: 16px; bottom: 16px; z-index: 99999; margin: 0; padding: 6px; background: var(--bg-2) !important; border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow-2); }
-html:not([data-bu-off]) #bu-ctl .bu-btn {
+#bu-ctl { display: inline-flex; align-items: center; gap: 6px; margin: 0 10px; vertical-align: middle; }
+#bu-ctl.bu-ctl-abs { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); margin: 0; z-index: 9999; }
+#bu-ctl.bu-float { position: fixed; left: 16px; bottom: 16px; z-index: 99999; margin: 0; padding: 6px; background: var(--bg-2) !important; border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow-2); }
+#bu-ctl .bu-btn {
   width: 32px; height: 32px; padding: 0; display: grid; place-items: center;
   border-radius: 50% !important; background: var(--bg-3) !important; border: 1px solid var(--border) !important;
   cursor: pointer; transition: border-color .15s, transform .15s;
 }
-html:not([data-bu-off]) #bu-ctl .bu-btn:hover { border-color: var(--accent) !important; transform: translateY(-1px); filter: none; }
-html:not([data-bu-off]) #bu-ctl .bu-btn svg { width: 17px; height: 17px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#bu-ctl .bu-btn:hover { border-color: var(--accent) !important; transform: translateY(-1px); filter: none; }
+#bu-ctl .bu-btn svg { width: 17px; height: 17px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ===== Profilovka ===== */
 html:not([data-bu-off]) img.bu-avatar { object-fit: cover; object-position: center; border-radius: 50% !important; border: 0; box-shadow: var(--shadow-1); width: 40px !important; height: 40px !important; }
@@ -366,12 +366,12 @@ html:not([data-bu-off]) #menu-popup .lang-switcher a { color: var(--text) !impor
 @keyframes bu-scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 
 /* Zjednotené tlačidlá v hlavičke */
-html:not([data-bu-off]) #bu-ctl .bu-btn {
+#bu-ctl .bu-btn {
   transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, filter .15s ease;
 }
-html:not([data-bu-off]) #bu-ctl .bu-btn:hover { transform: translateY(-1px); border-color: var(--accent) !important; box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 25%, transparent); }
-html:not([data-bu-off]) #bu-ctl .bu-btn:active { transform: translateY(0) scale(0.94); }
-html:not([data-bu-off]) #bu-ctl .bu-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#bu-ctl .bu-btn:hover { transform: translateY(-1px); border-color: var(--accent) !important; box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 25%, transparent); }
+#bu-ctl .bu-btn:active { transform: translateY(0) scale(0.94); }
+#bu-ctl .bu-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Table-tools lišta – zjednotená s témou */
 html:not([data-bu-off]) .bu-tt-bar .bu-tt-filter,
@@ -589,19 +589,23 @@ html:not([data-bu-off]) :focus-visible { outline: 2px solid var(--accent); outli
 
 /* ===== OG AIS – hlavička presne podľa archivovaného UIS ===== */
 html[data-bu-theme="og"] #hlavicka { background-color: #831135 !important; height: 170px; min-width: 940px; }
-html[data-bu-theme="og"] #univerzita { color: #ffffff !important; font: 3em Tahoma, Verdana, Arial, sans-serif !important; text-transform: uppercase !important; text-align: right !important; padding: 3px 20px 7px 0 !important; }
+html[data-bu-theme="og"] #univerzita { color: #ffffff !important; font: 3em "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", monospace !important; text-transform: uppercase !important; text-align: right !important; padding: 3px 20px 7px 0 !important; }
 html[data-bu-theme="og"] #menu { color: #c8c8db !important; font-size: 11px !important; border-top: 1px solid #ffffff !important; height: 25px; }
 html[data-bu-theme="og"] #odkazy_fakult a { color: #c8c8db !important; }
 html[data-bu-theme="og"] #svatek { color: #c8c8db !important; }
 
 /* ===== OG AIS – nový header (#header) v štýle archívu ===== */
-html[data-bu-theme="og"] #header { background-color: #831135 !important; min-height: 200px !important; }
-html[data-bu-theme="og"] #header, html[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
-html[data-bu-theme="og"] #header .info,
+html[data-bu-theme="og"] #header { background-color: #831135 !important; min-height: 200px !important; position: relative; }
+html[data-bu-theme="og"] #header, html[data-bu-theme="og"] #header * { color: #ffffff !important; font-family: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", monospace !important; }
 html[data-bu-theme="og"] #pfp,
 html[data-bu-theme="og"] img.bu-avatar,
 html[data-bu-theme="og"] #header img[src*="foto.pl"],
-html[data-bu-theme="og"] #header img[src*="podobizn"] { display: none !important; }
+html[data-bu-theme="og"] #header img[src*="podobizn"],
+html[data-bu-theme="og"] #header img#uis-logo,
+html[data-bu-theme="og"] #header img[src*="uis_color"] { display: none !important; }
+/* Meno/čas/uvítanie vpravo hore, v jednom riadku vedľa seba */
+html[data-bu-theme="og"] #header .info { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px 16px; position: absolute; top: 12px; right: 16px; margin: 0 !important; white-space: nowrap; }
+html[data-bu-theme="og"] #header .info > * { display: inline-flex !important; margin: 0 !important; white-space: nowrap; }
 html[data-bu-theme="og"] #header .left, html[data-bu-theme="og"] #header h1 { text-transform: uppercase !important; font-size: 2.2em !important; }
 
 
@@ -636,13 +640,13 @@ html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionsetup,
 html:not([data-bu-off]):not([data-bu-theme="og"]) .bu-card .menusectionclose { display: none !important; }
 
 /* ===== Badge nových dokumentov pri odkaze Dokumentový server ===== */
-html:not([data-bu-off]) li.bu-links a .bu-doc-badge {
+li.bu-links a .bu-doc-badge {
   display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px;
   border-radius: 999px; background: var(--crit); color: #fff; font-size: 11px; font-weight: 700; margin-left: 4px;
 }
 
 /* ===== Badge pošty (nové správy) ===== */
-html:not([data-bu-off]) li.bu-links a .bu-mail-badge {
+li.bu-links a .bu-mail-badge {
   display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px;
   border-radius: 999px; background: var(--warn); color: #fff; font-size: 11px; font-weight: 700; margin-left: 4px;
 }
