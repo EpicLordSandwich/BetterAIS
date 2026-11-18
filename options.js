@@ -87,6 +87,7 @@
     if ($('hideOperinfo')) $('hideOperinfo').checked = !!(S.ui && S.ui.hideOperinfo);
     if ($('aisLogo')) $('aisLogo').checked = !!(S.ui && S.ui.aisLogo);
     if ($('oled')) $('oled').checked = !!(S.ui && S.ui.oled);
+    if ($('mailPreview')) $('mailPreview').checked = !!(S.ui && S.ui.mail);
      $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
@@ -235,6 +236,7 @@
   if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) });
   if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) });
   if ($('oled')) $('oled').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { oled: e.target.checked }) });
+  if ($('mailPreview')) $('mailPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { mail: e.target.checked }) });
 
   $('renameUis').checked = !!S.rename.uisToAis;
   $('renameUis').onchange = (e) => commit({ rename: { uisToAis: e.target.checked } });

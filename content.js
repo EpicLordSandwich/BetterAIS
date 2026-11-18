@@ -63,7 +63,7 @@
     const off = offNow();
     const wasOff = document.documentElement.dataset.buOff === '1';
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
-    if (off) { setOff(true); return; }
+    if (off) { setOff(true); mailPreview(); return; }
     setOff(false);
     // OG v svetlom režime = 1:1 pôvodný AIS (vypnuté všetky CSS).
     // V tmavom režime necháme CSS pôsobiť, aby téma mala reálny tmavý vzhľad.
@@ -1112,8 +1112,180 @@
     }
   }
 
+  /* ================= 13) Náhľad pošty (voliteľný) =================
+     Číta len zoznam správ (rovnaká doména, s prihlásením), nič neodosiela.
+     Dáta sú v pamäti + v chrome.storage.local['bu:mail'] (lokálne, nesynchronizuje sa). */
+  const MAIL_URL = '/auth/posta/slozka.pl';
+  const MAIL_MAX = 10;
+  const MAIL_REFRESH_MS = 3 * 60 * 1000;
+  const MAIL_CACHE = 'bu:mail';
+  const MAIL_UNREAD_RE = /(?:unread|nepre[cč]ítan\S*|nepře[cč]ten\S*)[^:\d]{0,20}:\s*(\d+)/i;
+  let mailState = { items: [], unread: null, time: 0, status: '', error: '' };
+  let mailTimer = null;
+  let mailFetching = false;
+
+  function mailOn() {
+    return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.mail);
+  }
+  function mailMk(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function mailSafeHref(href) {
+    try { const u = new URL(href, location.origin); return u.origin === location.origin ? u.href : ''; } catch (e) { return ''; }
+  }
+  function mailCountUnread(doc, items) {
+    const text = (doc.body ? doc.body.textContent : '').replace(/\u00a0/g, ' ');
+    const m = text.match(MAIL_UNREAD_RE);
+    const summary = m ? parseInt(m[1], 10) : 0;
+    const rows = items.filter((i) => i.unread).length;
+    if (summary > 0 && rows === 0) items.slice(0, summary).forEach((i) => { i.unread = true; });
+    return Math.max(summary || 0, rows);
+  }
+  function mailParse(html, baseUrl) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const items = [];
+    const seen = new Set();
+    for (const a of doc.querySelectorAll('a[href*="email.pl?eid="], a[href*="email.pl?eid%3D"]')) {
+      const row = a.closest('tr');
+      const cell = a.closest('td');
+      if (!row || !cell || seen.has(row)) continue;
+      seen.add(row);
+      const cells = [...row.cells];
+      const idx = cells.indexOf(cell);
+      items.push({
+        href: new URL(a.getAttribute('href'), baseUrl).href,
+        subject: (a.getAttribute('title') || a.textContent).replace(/\u00a0/g, ' ').trim(),
+        sender: idx > 0 ? cells[idx - 1].textContent.replace(/\u00a0/g, ' ').trim() : '',
+        date: cells[idx + 1] ? cells[idx + 1].textContent.replace(/\u00a0/g, ' ').trim() : '',
+        unread: !!row.querySelector("b, strong, [data-sysid*='nov'], [data-sysid*='nepre'], [data-sysid*='unread']")
+          || /\b(unread|new|nepre\S*)\b/i.test(row.className),
+      });
+      if (items.length >= MAIL_MAX) break;
+    }
+    return { items, unread: mailCountUnread(doc, items) };
+  }
+  async function mailRead(res) {
+    const buf = await res.arrayBuffer();
+    const ct = res.headers.get('content-type') || '';
+    let charset = (ct.match(/charset=([^;\s]+)/i) || [])[1];
+    if (!charset) {
+      const head = new TextDecoder('latin1').decode(buf.slice(0, 2048));
+      charset = (head.match(/charset=["']?([\w-]+)/i) || [])[1];
+    }
+    try { return new TextDecoder(charset || 'utf-8').decode(buf); }
+    catch (e) { return new TextDecoder('utf-8').decode(buf); }
+  }
+  function mailPanel() {
+    const menitko = document.getElementById('menitko');
+    if (!menitko || !menitko.parentNode) return null;
+    let panel = document.getElementById('bu-mail');
+    if (!panel) { panel = mailMk('section', 'bu-mail'); panel.id = 'bu-mail'; }
+    if (menitko.previousElementSibling !== panel) menitko.parentNode.insertBefore(panel, menitko);
+    return panel;
+  }
+  function mailRender() {
+    if (!mailOn()) return;
+    const panel = mailPanel();
+    if (!panel) return;
+    panel.dataset.buRendered = '1';
+    panel.replaceChildren();
+
+    const head = mailMk('div', 'bu-mail-head');
+    const title = mailMk('a', 'bu-mail-title', 'Pošta');
+    title.href = MAIL_URL;
+    head.appendChild(title);
+    if (mailState.unread) head.appendChild(mailMk('span', 'bu-mail-badge', String(mailState.unread)));
+    head.appendChild(mailMk('span', 'bu-mail-status', mailState.status));
+    const btn = mailMk('button', 'bu-mail-refresh', '↻');
+    btn.type = 'button';
+    btn.title = 'Obnoviť';
+    btn.setAttribute('aria-label', 'Obnoviť poštu');
+    btn.addEventListener('click', () => mailFetch());
+    head.appendChild(btn);
+    panel.appendChild(head);
+
+    if (mailState.error) panel.appendChild(mailMk('p', 'bu-mail-msg bu-mail-err', mailState.error));
+    else if (!mailState.items.length) panel.appendChild(mailMk('p', 'bu-mail-msg', mailState.time ? 'Žiadne správy.' : 'Načítavam…'));
+    else {
+      const ul = mailMk('ul', 'bu-mail-list');
+      for (const m of mailState.items) {
+        const li = mailMk('li', m.unread ? 'bu-mail-unread' : '');
+        const a = mailMk('a', 'bu-mail-subject', m.subject);
+        const href = mailSafeHref(m.href);
+        if (href) a.href = href;
+        li.append(mailMk('span', 'bu-mail-sender', m.sender), a, mailMk('span', 'bu-mail-date', m.date));
+        ul.appendChild(li);
+      }
+      panel.appendChild(ul);
+    }
+  }
+  async function mailFetch() {
+    if (!mailOn() || mailFetching) return;
+    mailFetching = true;
+    mailState = Object.assign({}, mailState, { status: 'obnovujem…', error: '' });
+    mailRender();
+    try {
+      const res = await fetch(MAIL_URL, { credentials: 'include', cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const html = await mailRead(res);
+      const parsed = mailParse(html, res.url);
+      if (!parsed.items.length) throw new Error('empty');
+      const time = new Date();
+      mailState = {
+        items: parsed.items,
+        unread: parsed.unread,
+        time: time.getTime(),
+        status: 'obnovené ' + time.toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' }),
+        error: '',
+      };
+      try { await chrome.storage.local.set({ [MAIL_CACHE]: mailState }); } catch (e) { swallow(e); }
+    } catch (e) {
+      mailState = Object.assign({}, mailState, { status: '', error: 'Poštu sa nepodarilo načítať.' });
+    } finally {
+      mailFetching = false;
+      mailRender();
+    }
+  }
+  function mailStart() {
+    if (mailTimer) return;
+    mailTimer = setInterval(mailFetch, MAIL_REFRESH_MS);
+    chrome.storage.local.get(MAIL_CACHE).then((r) => {
+      const c = r && r[MAIL_CACHE];
+      if (c && Array.isArray(c.items) && c.items.length && !mailOn()) return;
+      if (c && Array.isArray(c.items) && c.items.length) {
+        mailState = {
+          items: c.items,
+          unread: typeof c.unread === 'number' ? c.unread : null,
+          time: c.time || 0,
+          status: 'z vyrovnávacej pamäte',
+          error: '',
+        };
+        mailRender();
+      }
+      if (!mailState.time || Date.now() - mailState.time > MAIL_REFRESH_MS) mailFetch();
+    }).catch(() => { mailFetch(); });
+  }
+  function mailStop() {
+    if (mailTimer) { clearInterval(mailTimer); mailTimer = null; }
+  }
+  function mailPreview() {
+    if (!mailOn()) {
+      mailStop();
+      const p = document.getElementById('bu-mail');
+      if (p) p.remove();
+      return;
+    }
+    const panel = mailPanel();
+    if (!panel) { mailStop(); const p = document.getElementById('bu-mail'); if (p) p.remove(); return; }
+    if (!panel.dataset.buRendered) { panel.dataset.buRendered = '1'; mailRender(); }
+    mailStart();
+  }
+
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); }
+  function runLightContentPass() { if (S.theme !== 'og') tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); gradesDashboard(); renameUis(); swapNick(); mailPreview(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {

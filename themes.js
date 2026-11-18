@@ -77,7 +77,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false, aisLogo: true, oled: false }, // skryť .operinfo.sd-box; zobraziť AIS logo; OLED čierna v tmavom režime
+    ui: { hideOperinfo: false, aisLogo: true, oled: false, mail: false }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -328,7 +328,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), oled: bool(s.ui && s.ui.oled, DEFAULTS.ui.oled) },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), oled: bool(s.ui && s.ui.oled, DEFAULTS.ui.oled), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail) },
       snippets, disabledPages,
       customThemes: customThemes,
       grades,

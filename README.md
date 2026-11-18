@@ -1,6 +1,6 @@
 # betterAIS
 
-Browser extension (Chrome/Firefox, MV3) for [is.stuba.sk](https://is.stuba.sk): themes, dark/light mode, CSS snippets, command palette (Ctrl+K), table-tools, custom links, grades dashboard.
+Browser extension (Chrome/Firefox, MV3) for [is.stuba.sk](https://is.stuba.sk): themes, dark/light mode, CSS snippets, command palette (Ctrl+K), table-tools, custom links, grades dashboard, optional mail preview.
 
 Unofficial. Not affiliated with STU.
 
@@ -13,6 +13,8 @@ Unofficial. Not affiliated with STU.
 ## Privacy
 
 Everything runs locally in the browser. Settings are stored in `chrome.storage` (local + sync for cross-device). The extension does **not** send browsing data to any server. The optional experimental update check contacts GitHub only when enabled and triggered manually from settings.
+
+The optional mail preview reads the AIS inbox list from the same site (`/auth/posta/slozka.pl`) using your existing login session, shows it on the main page, and caches the last list locally. It never opens, deletes or sends messages and uploads nothing.
 
 ## Development
 

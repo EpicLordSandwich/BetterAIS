@@ -52,3 +52,9 @@ test('OLED prepne tmavé pozadie na čiernu', () => {
   const light = BU.compute({ theme: 'classic', mode: 'light', ui: { oled: true } });
   assert.notEqual(light.vars['--bg'], '#000000');
 });
+
+test('náhľad pošty je opt-in a zachová sa', () => {
+  assert.equal(BU.normalize(null).ui.mail, false);
+  assert.equal(BU.normalize({ ui: { mail: true } }).ui.mail, true);
+  assert.equal(BU.normalize({ ui: { mail: false } }).ui.mail, false);
+});

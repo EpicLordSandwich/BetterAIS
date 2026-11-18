@@ -403,7 +403,7 @@ html:not([data-bu-off]) .bu-tt-table th:hover { background: var(--bg-2) !importa
 
 /* ===== Table-tools (triedy pridáva content.js) ===== */
 html:not([data-bu-off]) .bu-tt-table th { cursor: pointer; position: sticky; top: 0; z-index: 5; }
-html:not([data-bu-off]) .bu-tt-table th .bu-tt-ind { margin-left: 5px; opacity: .8; font-size: .85em; }
+html:not([data-bu-off]) .bu-tt-table th .bu-tt-ind { margin-left: 5px; opacity: .8; font-size: 13px; }
 html:not([data-bu-off]) .bu-tt { position: relative; }
 html:not([data-bu-off]) .bu-tt-bar { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
 html:not([data-bu-off]) .bu-tt-bar .bu-tt-filter { flex: 0 1 240px; min-width: 130px; padding: 5px 10px; font: inherit; }
@@ -630,6 +630,96 @@ html[data-bu-theme="og"] #header .info > * { display: inline-flex !important; ma
 
 /* Logo – nový AIS logo (červený kruh, biele písmo) – bez invertovania, viditeľné v oboch režimoch */
 html:not([data-bu-off]) img.bu-logo { object-fit: contain; }
+
+/* ===== Náhľad pošty (voliteľný, hlavná stránka) ===== */
+html:not([data-bu-off]) #bu-mail {
+  margin: 0 0 12px;
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  font-size: 14px;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-3) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-title { font-weight: 600; color: var(--text) !important; text-decoration: none; }
+html:not([data-bu-off]) #bu-mail .bu-mail-title:hover { color: var(--accent) !important; }
+html:not([data-bu-off]) #bu-mail .bu-mail-badge {
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+  border-radius: 999px !important;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-status {
+  margin-left: auto;
+  color: var(--muted) !important;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-refresh {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text) !important;
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 999px !important;
+  transition: background-color .12s, border-color .12s;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-refresh:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+html:not([data-bu-off]) #bu-mail .bu-mail-list { list-style: none !important; margin: 0; padding: 0; }
+html:not([data-bu-off]) #bu-mail .bu-mail-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border) !important;
+  background: transparent !important;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-list li:first-child { border-top: 0 !important; }
+html:not([data-bu-off]) #bu-mail .bu-mail-list li:hover { background: var(--bg-3) !important; }
+html:not([data-bu-off]) #bu-mail .bu-mail-sender {
+  color: var(--muted) !important;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+html:not([data-bu-off]) #bu-mail .bu-mail-subject { color: var(--text) !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html:not([data-bu-off]) #bu-mail .bu-mail-date { color: var(--muted) !important; font-size: 13px; white-space: nowrap; }
+html:not([data-bu-off]) #bu-mail .bu-mail-list li.bu-mail-unread { box-shadow: inset 3px 0 0 var(--accent); }
+html:not([data-bu-off]) #bu-mail .bu-mail-unread .bu-mail-subject { font-weight: 600; color: var(--accent) !important; }
+html:not([data-bu-off]) #bu-mail .bu-mail-unread .bu-mail-sender { color: var(--text) !important; font-weight: 600; }
+html:not([data-bu-off]) #bu-mail .bu-mail-msg { margin: 0; padding: 12px; color: var(--muted) !important; }
+html:not([data-bu-off]) #bu-mail .bu-mail-err { color: var(--crit) !important; }
+@media (max-width: 640px) {
+  html:not([data-bu-off]) #bu-mail .bu-mail-list li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "sender date" "subject subject";
+    column-gap: 8px;
+    row-gap: 2px;
+  }
+  html:not([data-bu-off]) #bu-mail .bu-mail-sender { grid-area: sender; }
+  html:not([data-bu-off]) #bu-mail .bu-mail-date { grid-area: date; }
+  html:not([data-bu-off]) #bu-mail .bu-mail-subject { grid-area: subject; }
+}
 
 /* ===== Design polish (všetky témy) ===== */
 html:not([data-bu-off]) h1 { font-size: 1.45em; line-height: 1.25; }
