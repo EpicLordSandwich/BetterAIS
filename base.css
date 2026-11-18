@@ -161,7 +161,7 @@ html:not([data-bu-off]) #bu-ctl .bu-btn:hover { border-color: var(--accent) !imp
 html:not([data-bu-off]) #bu-ctl .bu-btn svg { width: 17px; height: 17px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ===== Profilovka ===== */
-html:not([data-bu-off]) img.bu-avatar { object-fit: cover; border-radius: 50% !important; border: 2px solid var(--border); box-shadow: var(--shadow-1); aspect-ratio: 1 / 1; }
+html:not([data-bu-off]) img.bu-avatar { object-fit: cover; object-position: center top; border-radius: 50% !important; border: 1px solid var(--border); box-shadow: var(--shadow-1); aspect-ratio: 1 / 1; }
 
 /* ===== Zásadky ===== */
 html:not([data-bu-off]) .zasadky-info,

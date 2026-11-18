@@ -470,7 +470,7 @@
         img.dataset.buOrigSrc = img.getAttribute('src') || '';
         img.dataset.buOrigSrcset = img.getAttribute('srcset') || '';
         img.dataset.buOrigStyle = img.getAttribute('style') || '';
-        const size = Math.min(48, Math.round(Math.min(r.width || 40, r.height || 40))) || 40;
+        const size = Math.min(40, Math.round(Math.min(r.width || 40, r.height || 40))) || 40;
         img.style.setProperty('width', size + 'px', 'important');
         img.style.setProperty('height', size + 'px', 'important');
         img.classList.add('bu-avatar');
