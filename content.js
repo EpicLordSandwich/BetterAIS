@@ -126,6 +126,7 @@
   /* ================= 3) Vlastné odkazy v lište ================= */
   function sameOrigin(u) { try { return new URL(u, location.origin).origin === location.origin; } catch (e) { return false; } }
 
+  const POP_SKIP = '#bu-ctl, #bu-dialog, #bu-palette, .bu-pop, #uisFixedBox, #uisFloatingBox, .ui-dialog, .bu-keep';
   function scanPopups() {
     if (!isTop || document.hidden) return;              // ťažké skeny len v hlavnom frame (P0-3)
     const t0 = performance.now();
@@ -407,7 +408,7 @@
      UIS nechávame nedotknuté; panel je doplnok s viditeľnou značkou
      „neoficiálny prepočet“. Beží len v hlavnom frame a len na E-indexe. */
   /* ================= spúšťanie ================= */
-  function runLightContentPass() { if (BU.features) { console.log("[betterAIS] runLight, features:", BU.features.list().map(f=>f.name).join(",")); BU.features.runAll("light"); } else console.log("[betterAIS] NO FEATURES"); }
+  function runLightContentPass() { if (BU.features) BU.features.runAll("light"); }
 
   /* ================= prezývka v hlavičke ================= */
   /* ================= premenovanie UIS → AIS ================= */
