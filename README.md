@@ -1,7 +1,6 @@
 # betterAIS
 
-Neoficiálny doplnok pre [is.stuba.sk](https://is.stuba.sk) (AIS STU) pre študentov a zamestnancov STU. Pridáva tmavý režim a farebné témy, rýchlejšie triedenie tabuliek, vlastné odkazy v hlavičke, náhľad pošty a rozvrhu na hlavnej stránke a klávesové skratky. Beta verzia – používanie na vlastné riziko.
-
+An unofficial extension for is.stuba.sk (AIS STU) for STU students and staff. It adds dark mode and color themes, faster table sorting, custom links in the header, email and schedule previews on the home page, and keyboard shortcuts. Beta version—use at your own risk.
 Unofficial. Not affiliated with STU.
 
 ## Features
