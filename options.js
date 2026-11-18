@@ -107,7 +107,6 @@
     pic.src = S.avatar.mode === 'custom' && S.avatar.dataUrl ? S.avatar.dataUrl
       : S.avatar.mode === 'url' && S.avatar.url ? S.avatar.url
         : avatarShot || 'icon48.png';
-    pic.referrerPolicy = 'no-referrer';
     if (urlInput) { urlInput.hidden = S.avatar.mode !== 'url'; urlInput.value = S.avatar.url || ''; }
     if (avStatus) avStatus.textContent = statusText;
     // zvýrazni aktívny mód
@@ -311,10 +310,12 @@
   document.querySelectorAll('[data-reset]').forEach((b) => (b.onclick = () => setCustom(b.dataset.reset, '')));
 
   // profilovka
-  $('avUrl').onclick = () => {
+  $('avUrl').onclick = async () => {
     const inp = $('avUrlInput');
-    if (inp) { inp.hidden = false; inp.focus(); inp.select(); }
-    commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '', source: '', crop: null } });
+    if (inp) inp.hidden = false;
+    await commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '', source: '', crop: null } });
+    const i = $('avUrlInput');
+    if (i) { i.value = S.avatar.url || ''; i.focus(); i.select(); }
   };
   const avUrlInput = $('avUrlInput');
   if (avUrlInput) {
@@ -337,11 +338,10 @@
     }
   };
   async function fileToDataUrl(f) {
-    if (f.type === 'image/gif' && f.size <= 4 * 1024 * 1024) return readAsDataURL(f);
+    if (f.type === 'image/gif') return readAsDataURL(f);
     let bmp;
     try { bmp = await createImageBitmap(f); }
     catch (_) {
-      // fallback pre prehliadače bez createImageBitmap
       bmp = await new Promise((res, rej) => {
         const img = new Image();
         img.onload = () => res(img);
@@ -356,10 +356,7 @@
     const c = document.createElement('canvas');
     c.width = c.height = size;
     const s = Math.min(bmp.width, bmp.height);
-    const ctx = c.getContext('2d');
-    ctx.drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
-    // gif animovaný necháme ako data URL originálu
-    if (f.type === 'image/gif') return readAsDataURL(f);
+    c.getContext('2d').drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
     return c.toDataURL('image/webp', 0.9);
   }
   function readAsDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
