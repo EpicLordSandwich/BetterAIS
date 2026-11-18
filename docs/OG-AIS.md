@@ -7,28 +7,18 @@ alebo opravovať.
 
 ## 1. Zdroj
 
-- Referenčný obrázok: [`docs/og-uis-reference.png`](og-uis-reference.png)
-- Pôvodný súbor: screenshot z iPhone (1170×2532), stará verzia `https://is.stuba.sk/`
-  pred redesignom („University Information System“).
-- Na obrázku je: bordová hlavička STU, horizontálne menu fakúlt, breadcrumb, krémové
+- Pôvodný zdroj: screenshot starej verzie `https://is.stuba.sk/` pred redesignom
+  („University Information System“), 1170×2532.
+- **Screenshot sa v repozitári zámerne neuchováva** (môže obsahovať osobné údaje).
+  Zostali len odčítané farby a verbálny opis nižšie.
+- Na obrázku bolo: bordová hlavička STU, horizontálne menu fakúlt, breadcrumb, krémové
   warning boxy, žlté info boxy, sekcie s ikonami a bordové odkazy.
 
 ## 2. Metóda extrakcie
 
 Použité boli **priame pixelové vzorky** a **histogramy dominantných farieb** (Pillow),
-nie odhad „od oka“:
-
-```python
-from PIL import Image
-from collections import Counter
-im = Image.open('docs/og-uis-reference.png').convert('RGB')
-# vzorka konkrétneho bodu
-im.getpixel((x, y))
-# dominantné farby regiónu (hlavička, warning box, info box)
-Counter(im.crop((x0, y0, x1, y1)).getdata()).most_common(10)
-```
-
-Reprodukovateľne: `python docs/sample-og-colors.py` (vyžaduje Pillow).
+nie odhad „od oka“. Skript ani referenčný obrázok sa v repozitári neuchovávajú
+(obrázok môže obsahovať osobné údaje); farby nižšie sú už odčítané hodnoty.
 
 Overené vzorky (RGB):
 
@@ -122,8 +112,7 @@ ostatné témy sa nemenia.
 ### Vizuálny náhľad
 
 - [`docs/og-preview.html`](og-preview.html) – statický náhľad (otvor v prehliadači).
-- [`docs/og-preview.png`](og-preview.png) – screenshot náhľadu (Chrome headless).
-- [`docs/og-uis-reference.png`](og-uis-reference.png) – pôvodný screenshot.
+  Obsahuje len vymyslené ukážkové údaje, žiadne reálne mená ani ID.
 
 ## 5. Kontrast
 
@@ -163,5 +152,5 @@ Výsledok: **0 porušení** (téma `og` je zahrnutá automaticky, lebo checker i
 - [ ] Pri novej UIS štruktúre doplniť selektory do OG bloku v `base.css`.
 - [ ] Ak pribudne svetlý/tmavý variant, doplniť obe palety do `THEMES.og`.
 - [ ] Po zmene `themes.js` spustiť `npm test` a `npm run package`.
-- [ ] Referenčný obrázok nechať v `docs/og-uis-reference.png` (nie v zip balíku).
+- [ ] Screenshoty ani referenčné obrázky necommitovať (môžu obsahovať osobné údaje).
 PY

@@ -1,4 +1,5 @@
 dist/
 node_modules/
 tools/shots/
-*.zip
+*.zipdocs/og-uis-reference.png
+docs/og-preview.png
