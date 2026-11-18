@@ -1,6 +1,6 @@
 # betterAIS
 
-Browser extension (Chrome/Firefox, MV3) for [is.stuba.sk](https://is.stuba.sk): themes, dark/light mode, CSS snippets, command palette (Ctrl+K), table-tools, custom links, optional mail/schedule preview.
+Neoficiálny doplnok pre [is.stuba.sk](https://is.stuba.sk) (AIS STU) pre študentov a zamestnancov STU. Pridáva tmavý režim a farebné témy, rýchlejšie triedenie tabuliek, vlastné odkazy v hlavičke, náhľad pošty a rozvrhu na hlavnej stránke a klávesové skratky. Beta verzia – používanie na vlastné riziko.
 
 Unofficial. Not affiliated with STU.
 
@@ -11,7 +11,7 @@ Unofficial. Not affiliated with STU.
 - Custom links in header bar + presets
 - CSS snippets
 - Table-tools: sortable/filterable tables, CSV copy
-- Command palette (Ctrl+K)
+- Globálne vyhľadávanie v AIS (Ctrl+K)
 - Optional mail preview on home page (full width)
 - Optional schedule preview on home page (full width)
 - Kill-switch per page
@@ -43,3 +43,5 @@ No build step. Runtime is plain JS/CSS/HTML.
 ## License
 
 Free to use (see LICENSE).
+
+#makeaisgreatagain
