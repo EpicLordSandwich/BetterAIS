@@ -99,8 +99,6 @@ function build(target) {
     const src = join(root, f);
     if (existsSync(src)) cpSync(src, join(stage, f));
   }
-  const featuresDir = join(root, 'features');
-  if (existsSync(featuresDir)) cpSync(featuresDir, join(stage, 'features'), { recursive: true });
   // zip
   const files = [];
   function walk(dir, base) {
