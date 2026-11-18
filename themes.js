@@ -388,7 +388,7 @@ const FONTS = [
   function compute(raw) {
     const s = normalize(raw);
     const t = getTheme(s.theme, s.customThemes) || THEMES[DEFAULTS.theme];
-    const mode = resolveMode(s.mode);
+    const mode = s.theme === 'og' ? 'light' : resolveMode(s.mode);
     const dark = mode === 'dark';
     const p = Object.assign({}, t[mode]);
     if (s.custom.accent && HEX.test(s.custom.accent)) p.accent = s.custom.accent.toLowerCase();
