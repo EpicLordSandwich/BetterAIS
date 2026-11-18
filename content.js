@@ -531,7 +531,7 @@
       img.dataset.buKey = key;
       img.removeAttribute('srcset');
       img.setAttribute('referrerpolicy', 'no-referrer');
-      img.alt = avatarName() + ' – profilová fotka';
+      img.alt = avatarName() + ' (profilová fotka)';
       img.onerror = () => { img.onerror = null; img.src = initialAvatarUrl(); };
       img.src = src;
     });
