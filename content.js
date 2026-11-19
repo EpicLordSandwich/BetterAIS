@@ -1314,10 +1314,13 @@
   function schedPanel() {
     let p = document.getElementById('bu-schedule');
     if (p) return p;
-    const anchor = document.getElementById('bu-mail') || document.getElementById('menitko');
-    if (!anchor || !anchor.parentNode) return null;
+    const menitko = document.getElementById('menitko');
+    if (!menitko || !menitko.parentNode) return null;
     p = document.createElement('section');
     p.id = 'bu-schedule';
+    // pod domovským riadkom (mail+todo), nie doň
+    const homeRow = document.getElementById('bu-home-row');
+    const anchor = homeRow || menitko;
     anchor.parentNode.insertBefore(p, anchor.nextSibling);
     return p;
   }

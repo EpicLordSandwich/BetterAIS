@@ -42,7 +42,7 @@
       const det = document.createElement('details'); det.open = true; det.style.margin = '8px 0';
       const sum = document.createElement('summary'); sum.textContent = g.label; sum.style.cursor = 'pointer'; sum.style.fontWeight = '600'; sum.style.textAlign = 'center'; sum.style.padding = '6px'; sum.style.background = 'var(--bg-3)'; sum.style.borderRadius = 'var(--radius-sm)';
       det.appendChild(sum);
-      const grid = document.createElement('div'); grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(150px, 1fr))'; grid.style.gap = '8px'; grid.style.marginTop = '8px';
+      const grid = document.createElement('div'); grid.style.display = 'flex'; grid.style.flexWrap = 'wrap'; grid.style.gap = '8px'; grid.style.marginTop = '8px'; grid.style.justifyContent = 'center';
       items.forEach(([id, t]) => {
         const b = renderThemeBtnEl(id, t, mode);
         grid.appendChild(b);
@@ -54,7 +54,7 @@
       const det = document.createElement('details'); det.open = true; det.style.margin = '8px 0';
       const sum = document.createElement('summary'); sum.textContent = 'Importované'; sum.style.cursor = 'pointer'; sum.style.fontWeight = '600'; sum.style.textAlign = 'center'; sum.style.padding = '6px'; sum.style.background = 'var(--bg-3)'; sum.style.borderRadius = 'var(--radius-sm)';
       det.appendChild(sum);
-      const grid = document.createElement('div'); grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(150px, 1fr))'; grid.style.gap = '8px'; grid.style.marginTop = '8px';
+      const grid = document.createElement('div'); grid.style.display = 'flex'; grid.style.flexWrap = 'wrap'; grid.style.gap = '8px'; grid.style.marginTop = '8px'; grid.style.justifyContent = 'center';
       custom.forEach(({ id, t }) => { grid.appendChild(renderThemeBtnEl(id, t, mode)); });
       det.appendChild(grid);
       store.appendChild(det);
