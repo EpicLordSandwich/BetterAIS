@@ -1325,8 +1325,16 @@
     return p;
   }
   function schedUrl() {
-    const a = [...document.querySelectorAll('a[href*="rozvrh"]')].find((x) => /rozvrhy_view\.pl/.test(x.getAttribute('href') || ''));
-    const href = a ? a.getAttribute('href') : '/auth/katalog/rozvrhy_view.pl?lang=sk';
+    // prefer a link that already carries the user's schedule params
+    const links = [...document.querySelectorAll('a[href*="rozvrhy_view"]')];
+    const a = links.find((x) => /rozvrh_student/.test(x.getAttribute('href') || ''))
+          || links.find((x) => /zobraz=1/.test(x.getAttribute('href') || ''))
+          || links[0];
+    let href = a ? a.getAttribute('href') : '';
+    if (!href) {
+      try { href = (JSON.parse(localStorage.getItem('bu:schedUrl') || '""')) || ''; } catch (e) { href = ''; }
+    }
+    if (!href) href = '/auth/katalog/rozvrhy_view.pl?lang=sk';
     try { return new URL(href, location.origin).href; } catch (e) { return '/auth/katalog/rozvrhy_view.pl?lang=sk'; }
   }
   function schedRender() {
@@ -1383,6 +1391,7 @@
       finally { clearTimeout(t); }
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const html = await res.text();
+      try { localStorage.setItem('bu:schedUrl', JSON.stringify(schedUrl())); } catch (e) { swallow(e); }
       schedState = { html, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour:'2-digit', minute:'2-digit' }), error: '' };
       try { await chrome.storage.local.set({ [SCHED_CACHE]: schedState }); } catch (e) { swallow(e); }
     } catch (e) {
