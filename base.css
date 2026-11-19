@@ -626,3 +626,23 @@ li.bu-links a .bu-mail-badge {
 
 /* Pôvodné STU logo – v tmavom režime invertuj, aby bolo viditeľné */
 html:not([data-bu-off])[data-bu-mode="dark"] img.bu-logo-orig { filter: brightness(0) invert(1); }
+
+/* ===== Prístupnosť: vysoký kontrast a vynútené farby ===== */
+@media (prefers-contrast: more) {
+  html:not([data-bu-off]) {
+    --shadow-1: none; --shadow-2: none; --shadow-3: none;
+  }
+  html:not([data-bu-off]) :is(table, thead, tbody, tfoot, tr, td, th, div, p, span):not(.bu-keep) {
+    border-color: var(--text) !important;
+  }
+}
+@media (forced-colors: active) {
+  html:not([data-bu-off]) {
+    --accent-soft: transparent;
+    --hover: transparent;
+  }
+  html:not([data-bu-off]) #bu-ctl .bu-btn,
+  html:not([data-bu-off]) #bu-mail .bu-mail-refresh {
+    forced-color-adjust: none;
+  }
+}
