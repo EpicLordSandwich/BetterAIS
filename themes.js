@@ -142,7 +142,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false, aisLogo: true, mail: false, schedule: false }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
+    ui: { hideOperinfo: false, aisLogo: true, mail: false, schedule: false, colorblind: 'off' }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -387,7 +387,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule) },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule), colorblind: ['off','deuteranopia','protanopia','tritanopia','achromatopsia'].includes(s.ui && s.ui.colorblind) ? s.ui.colorblind : DEFAULTS.ui.colorblind },
       snippets, disabledPages,
       customThemes: customThemes,
       experimental: bool(s.experimental, DEFAULTS.experimental),
@@ -469,11 +469,13 @@ const FONTS = [
     if (s.custom.accent && HEX.test(s.custom.accent)) p.accent = s.custom.accent.toLowerCase();
     if (s.custom.link && HEX.test(s.custom.link)) p.link = s.custom.link.toLowerCase();
     p.onAccent = contrast(p.accent) || '#ffffff';
+    const cb = s.ui && s.ui.colorblind && s.ui.colorblind !== 'off';
+    if (cb) { p.accent = '#0072B2'; p.link = '#0072B2'; p.warn = '#E69F00'; p.crit = '#D55E00'; p.info = '#56B4E9'; p.onAccent = '#ffffff'; }
     const r = s.custom.radius !== '' && s.custom.radius != null ? Number(s.custom.radius) : t.radius;
     const font = s.custom.font || t.font || '';
     const bar = (t.bar && typeof t.bar === 'object') ? t.bar : {};
     return {
-      mode, font, theme: s.theme, bar: !!(t.bar && t.bar.color),
+      mode, font, theme: s.theme, bar: !!(t.bar && t.bar.color), colorblind: (s.ui && s.ui.colorblind) || 'off',
       vars: {
         '--bg-0': p.bg0, '--bg': p.bg, '--bg-2': p.bg2, '--bg-3': p.bg3,
         '--border': p.border, '--text': p.text, '--muted': p.muted,
@@ -504,6 +506,7 @@ const FONTS = [
     root.dataset.buMode = out.mode;
     if (out.theme) root.dataset.buTheme = out.theme;
     if (out.bar) root.dataset.buBar = '1'; else delete root.dataset.buBar;
+    if (out.colorblind && out.colorblind !== 'off') root.dataset.buCb = out.colorblind; else delete root.dataset.buCb;
     const safeFont = out.font || 'system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif';
     root.style.setProperty('--font', safeFont);
     root.dataset.buFont = '1';

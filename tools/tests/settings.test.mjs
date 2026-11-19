@@ -52,3 +52,9 @@ test('náhľad rozvrhu je opt-in', () => {
   assert.equal(BU.normalize(null).ui.schedule, false);
   assert.equal(BU.normalize({ ui: { schedule: true } }).ui.schedule, true);
 });
+
+test('režim farboslepých je opt-in a validuje sa', () => {
+  assert.equal(BU.normalize(null).ui.colorblind, 'off');
+  assert.equal(BU.normalize({ ui: { colorblind: 'deuteranopia' } }).ui.colorblind, 'deuteranopia');
+  assert.equal(BU.normalize({ ui: { colorblind: 'nonsense' } }).ui.colorblind, 'off');
+});

@@ -646,3 +646,11 @@ html:not([data-bu-off])[data-bu-mode="dark"] img.bu-logo-orig { filter: brightne
     forced-color-adjust: none;
   }
 }
+
+/* ===== Režim pre farboslepých ===== */
+html[data-bu-cb] { filter: none; }
+html[data-bu-cb="achromatopsia"] { filter: grayscale(1); }
+/* Vzory pre stavové boxy, aby sa nespoliehali len na farbu */
+html[data-bu-cb] .zasadky-warning[class] { background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0,0,0,.06) 6px, rgba(0,0,0,.06) 12px) !important; }
+html[data-bu-cb] .zasadky-info[class] { background-image: repeating-linear-gradient(-45deg, transparent, transparent 6px, rgba(0,0,0,.06) 6px, rgba(0,0,0,.06) 12px) !important; }
+html[data-bu-cb] #bu-mail .bu-mail-list li.bu-mail-unread { background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,.04) 4px, rgba(0,0,0,.04) 8px); }
