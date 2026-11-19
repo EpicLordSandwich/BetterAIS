@@ -30,10 +30,28 @@
   function renderStore(mode) {
     const store = $('store');
     store.innerHTML = '';
-    const list = Object.entries(BU.THEMES).concat(Object.entries(S.customThemes || {}));
-    list.forEach(([id, t]) => {
-      const p = t[mode];
-      const b = document.createElement('button');
+    const groups = [
+      { key: 'general', label: 'Všeobecné' },
+      { key: 'stu', label: 'STU (fakulty)' },
+      { key: 'pastel', label: 'Pastelové' },
+    ];
+    const custom = Object.entries(S.customThemes || {}).map(([id, t]) => ({ id, t, group: 'custom' }));
+    groups.forEach((g) => {
+      const items = Object.entries(BU.THEMES).filter(([, t]) => (t.group || 'general') === g.key);
+      if (!items.length) return;
+      const h = document.createElement('h3'); h.textContent = g.label; h.style.margin = '12px 0 6px'; h.style.fontSize = '.95em';
+      store.appendChild(h);
+      items.forEach(([id, t]) => renderThemeBtn(store, id, t, mode));
+    });
+    if (custom.length) {
+      const h = document.createElement('h3'); h.textContent = 'Importované'; h.style.margin = '12px 0 6px'; h.style.fontSize = '.95em';
+      store.appendChild(h);
+      custom.forEach(({ id, t }) => renderThemeBtn(store, id, t, mode));
+    }
+  }
+  function renderThemeBtn(store, id, t, mode) {
+    const p = t[mode];
+    const b = document.createElement('button');
       b.className = 'theme' + (S.theme === id ? ' on' : '');
       const pv = document.createElement('div'); pv.className = 'pv'; pv.style.background = p.bg;
       const bar = document.createElement('div'); bar.className = 'bar'; bar.style.background = p.bg0;
@@ -63,7 +81,6 @@
         meta.appendChild(del);
       }
       store.appendChild(b);
-    });
   }
 
   /* ================= render ================= */
