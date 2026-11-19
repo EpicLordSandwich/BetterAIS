@@ -1312,16 +1312,20 @@
     return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.schedule);
   }
   function schedPanel() {
-    let p = document.getElementById('bu-schedule');
-    if (p) return p;
     const menitko = document.getElementById('menitko');
     if (!menitko || !menitko.parentNode) return null;
-    p = document.createElement('section');
-    p.id = 'bu-schedule';
-    // pod domovským riadkom (mail+todo), nie doň
+    let p = document.getElementById('bu-schedule');
     const homeRow = document.getElementById('bu-home-row');
-    const anchor = homeRow || menitko;
-    anchor.parentNode.insertBefore(p, anchor.nextSibling);
+    if (p && homeRow && p.parentNode === homeRow) {
+      // presunúť von z flex riadku (pod mail+todo)
+      homeRow.parentNode.insertBefore(p, homeRow.nextSibling);
+    }
+    if (!p) {
+      p = document.createElement('section');
+      p.id = 'bu-schedule';
+      const anchor = homeRow || menitko;
+      anchor.parentNode.insertBefore(p, anchor.nextSibling);
+    }
     return p;
   }
   function schedUrl() {
@@ -1370,12 +1374,15 @@
       return;
     }
     const doc = new DOMParser().parseFromString(schedState.html, 'text/html');
-    const tbl = doc.querySelector('table.bu-tt-table, table[class*="rozvrh"], table');
+    const tbl = doc.querySelector('table:has(.rozvrh-pred), table:has(.rozvrh-cvic)')
+      || doc.querySelector('.mainpage table')
+      || doc.querySelector('table');
     if (!tbl) { const e = document.createElement('p'); e.className='bu-mail-msg'; e.textContent='Rozvrh sa nepodarilo nájsť.'; p.appendChild(e); return; }
     const wrap = document.createElement('div');
     wrap.style.overflowX = 'auto';
     const clone = document.importNode(tbl, true);
     clone.classList.add('bu-tt-table');
+    clone.dataset.buTt = '1';
     wrap.appendChild(clone);
     p.appendChild(wrap);
   }
