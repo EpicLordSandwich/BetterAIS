@@ -39,17 +39,28 @@
     groups.forEach((g) => {
       const items = Object.entries(BU.THEMES).filter(([, t]) => (t.group || 'general') === g.key);
       if (!items.length) return;
-      const h = document.createElement('h3'); h.textContent = g.label; h.style.margin = '12px 0 6px'; h.style.fontSize = '.95em';
-      store.appendChild(h);
-      items.forEach(([id, t]) => renderThemeBtn(store, id, t, mode));
+      const det = document.createElement('details'); det.open = true; det.style.margin = '8px 0';
+      const sum = document.createElement('summary'); sum.textContent = g.label; sum.style.cursor = 'pointer'; sum.style.fontWeight = '600'; sum.style.textAlign = 'center'; sum.style.padding = '6px'; sum.style.background = 'var(--bg-3)'; sum.style.borderRadius = 'var(--radius-sm)';
+      det.appendChild(sum);
+      const grid = document.createElement('div'); grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(150px, 1fr))'; grid.style.gap = '8px'; grid.style.marginTop = '8px';
+      items.forEach(([id, t]) => {
+        const b = renderThemeBtnEl(id, t, mode);
+        grid.appendChild(b);
+      });
+      det.appendChild(grid);
+      store.appendChild(det);
     });
     if (custom.length) {
-      const h = document.createElement('h3'); h.textContent = 'Importované'; h.style.margin = '12px 0 6px'; h.style.fontSize = '.95em';
-      store.appendChild(h);
-      custom.forEach(({ id, t }) => renderThemeBtn(store, id, t, mode));
+      const det = document.createElement('details'); det.open = true; det.style.margin = '8px 0';
+      const sum = document.createElement('summary'); sum.textContent = 'Importované'; sum.style.cursor = 'pointer'; sum.style.fontWeight = '600'; sum.style.textAlign = 'center'; sum.style.padding = '6px'; sum.style.background = 'var(--bg-3)'; sum.style.borderRadius = 'var(--radius-sm)';
+      det.appendChild(sum);
+      const grid = document.createElement('div'); grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(150px, 1fr))'; grid.style.gap = '8px'; grid.style.marginTop = '8px';
+      custom.forEach(({ id, t }) => { grid.appendChild(renderThemeBtnEl(id, t, mode)); });
+      det.appendChild(grid);
+      store.appendChild(det);
     }
   }
-  function renderThemeBtn(store, id, t, mode) {
+  function renderThemeBtnEl(id, t, mode) {
     const p = t[mode];
     const b = document.createElement('button');
       b.className = 'theme' + (S.theme === id ? ' on' : '');
@@ -80,7 +91,7 @@
         };
         meta.appendChild(del);
       }
-      store.appendChild(b);
+      return b;
   }
 
   /* ================= render ================= */
@@ -105,6 +116,7 @@
     if ($('aisLogo')) $('aisLogo').checked = !!(S.ui && S.ui.aisLogo);
     if ($('mailPreview')) $('mailPreview').checked = !!(S.ui && S.ui.mail);
     if ($('schedulePreview')) $('schedulePreview').checked = !!(S.ui && S.ui.schedule);
+    if ($('todoPreview')) $('todoPreview').checked = !!(S.ui && S.ui.todo);
     if ($('colorblindSel')) $('colorblindSel').value = (S.ui && S.ui.colorblind) || 'off';
      $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
@@ -252,6 +264,7 @@
   if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) });
   if ($('mailPreview')) $('mailPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { mail: e.target.checked }) });
   if ($('schedulePreview')) $('schedulePreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedule: e.target.checked }) });
+  if ($('todoPreview')) $('todoPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { todo: e.target.checked }) });
   if ($('colorblindSel')) $('colorblindSel').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { colorblind: e.target.value }) });
 
   /* ================= dashboard hodnotení ================= */
@@ -336,6 +349,9 @@
     avUrlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); saveUrl(); avUrlInput.blur(); } });
   }
   $('avOrig').onclick = () => commit({ avatar: { mode: 'original', dataUrl: '', url: '', source: '', crop: null } });
+  if ($('avReloadShot')) $('avReloadShot').onclick = async () => {
+    try { const r = await chrome.storage.local.get('bu-avatar-shot'); const v = r && r['bu-avatar-shot']; avatarShot = typeof v === 'string' ? v : (v && v.data) || ''; render(); toast(); } catch (e) { console.warn(e); }
+  };
   $('avUpload').onclick = () => $('avFile').click();
   $('avFile').onchange = async (e) => {
     const f = e.target.files[0];

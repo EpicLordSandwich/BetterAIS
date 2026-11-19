@@ -1,3 +1,5 @@
+section h2 { text-align: center; }
+section .sub { text-align: center; }
 @charset "UTF-8";
 :root { --bg:#262624; --bg-0:#1f1e1d; --bg-2:#2f2e2c; --bg-3:#3a3936; --border:#4a4844; --text:#f0eee6; --muted:#b8b5aa; --link:#8cb4e6; --accent:#3f74d9; --on-accent:#fff; --radius:8px; --radius-sm:4px; --shadow-1:0 1px 3px rgba(0,0,0,.3); --shadow-2:0 4px 14px rgba(0,0,0,.4); }
 * { box-sizing: border-box; }

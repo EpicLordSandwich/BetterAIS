@@ -654,3 +654,17 @@ html[data-bu-cb="achromatopsia"] { filter: grayscale(1); }
 html[data-bu-cb] .zasadky-warning[class] { background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0,0,0,.06) 6px, rgba(0,0,0,.06) 12px) !important; }
 html[data-bu-cb] .zasadky-info[class] { background-image: repeating-linear-gradient(-45deg, transparent, transparent 6px, rgba(0,0,0,.06) 6px, rgba(0,0,0,.06) 12px) !important; }
 html[data-bu-cb] #bu-mail .bu-mail-list li.bu-mail-unread { background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,.04) 4px, rgba(0,0,0,.04) 8px); }
+
+/* ===== Domov: mail (60%) + todo (40%) ===== */
+html:not([data-bu-off]) #bu-home-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; }
+html:not([data-bu-off]) #bu-home-row > section { flex: 1 1 0; min-width: 0; }
+html:not([data-bu-off]) #bu-home-row #bu-mail { flex: 3; }
+html:not([data-bu-off]) #bu-home-row #bu-todo { flex: 2; }
+@media (max-width: 720px) {
+  html:not([data-bu-off]) #bu-home-row { flex-direction: column; }
+  html:not([data-bu-off]) #bu-home-row > section { flex: none; width: 100%; }
+}
+html:not([data-bu-off]) #bu-todo .bu-mail-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-3) !important; border-bottom: 1px solid var(--border) !important; }
+html:not([data-bu-off]) #bu-todo .bu-mail-title { font-weight: 600; color: var(--text) !important; }
+html:not([data-bu-off]) #bu-todo .bu-mail-refresh { width: 26px; height: 26px; display: grid; place-items: center; padding: 0; cursor: pointer; color: var(--text) !important; background: var(--bg-2) !important; border: 1px solid var(--border) !important; border-radius: 999px !important; }
+html:not([data-bu-off]) #bu-todo .bu-mail-msg { margin: 0; padding: 10px 12px; color: var(--muted) !important; }

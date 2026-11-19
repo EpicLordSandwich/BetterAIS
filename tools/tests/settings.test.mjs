@@ -43,14 +43,19 @@ test('avatar crop a source sa validujú', () => {
 });
 
 test('náhľad pošty je opt-in a zachová sa', () => {
-  assert.equal(BU.normalize(null).ui.mail, false);
+  assert.equal(BU.normalize(null).ui.mail, true);
   assert.equal(BU.normalize({ ui: { mail: true } }).ui.mail, true);
   assert.equal(BU.normalize({ ui: { mail: false } }).ui.mail, false);
 });
 
 test('náhľad rozvrhu je opt-in', () => {
-  assert.equal(BU.normalize(null).ui.schedule, false);
+  assert.equal(BU.normalize(null).ui.schedule, true);
   assert.equal(BU.normalize({ ui: { schedule: true } }).ui.schedule, true);
+});
+
+test('todo je opt-in', () => {
+  assert.equal(BU.normalize(null).ui.todo, true);
+  assert.equal(BU.normalize({ ui: { todo: false } }).ui.todo, false);
 });
 
 test('režim farboslepých je opt-in a validuje sa', () => {

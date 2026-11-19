@@ -51,11 +51,6 @@
       dark:  P('#2a1620', '#241218', '#2e1a22', '#3a222c', '#5a3644', '#fbeaf0', '#d4b3c0', '#f472b6', '#f472b6', '#9fd0ff', '#e8b45a', '#ff8a7a'),
       light: P('#fbeef4', '#fdf6f9', '#ffffff', '#f7e8ef', '#ecd3de', '#2a1620', '#6d5560', '#be185d', '#be185d', '#1d6fd0', '#8a5a00', '#b3261e'),
     },
-  stu_univ: {
-      name: 'STU', tagline: 'Univerzita', radius: 12, font: '', group: 'stu', bar: { color: '#971D32', text: '#ffffff' },
-      dark:  P('#1a0a0e', '#220e14', '#2c141a', '#3a1c24', '#4d2830', '#f5e0e4', '#c4a0a8', '#e09aaa', '#c94d6e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
-      light: P('#f5e6ea', '#ffffff', '#fffdfa', '#f2e6ea', '#d9c6cc', '#331018', '#663038', '#971d32', '#971d32', '#1565c0', '#8a5a00', '#b3261e'),
-    },
   mtf: {
       name: 'MTF', tagline: 'Materiálovotechnologická fakulta', radius: 12, font: '', group: 'stu', bar: { color: '#E72B1E', text: '#ffffff' },
       dark:  P('#1a0808', '#220a0a', '#2c1010', '#3a1616', '#4d2020', '#f5d0d0', '#c48a8a', '#f08080', '#e72b1e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
@@ -142,7 +137,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false, aisLogo: true, mail: false, schedule: false, colorblind: 'off' }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
+    ui: { hideOperinfo: false, aisLogo: true, mail: true, schedule: true, todo: true, colorblind: 'off' }, // skryť .operinfo.sd-box; AIS logo; OLED čierna; náhľad pošty na hlavnej stránke
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -387,7 +382,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule), colorblind: ['off','deuteranopia','protanopia','tritanopia','achromatopsia'].includes(s.ui && s.ui.colorblind) ? s.ui.colorblind : DEFAULTS.ui.colorblind },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule), todo: bool(s.ui && s.ui.todo, DEFAULTS.ui.todo), colorblind: ['off','deuteranopia','protanopia','tritanopia','achromatopsia'].includes(s.ui && s.ui.colorblind) ? s.ui.colorblind : DEFAULTS.ui.colorblind },
       snippets, disabledPages,
       customThemes: customThemes,
       experimental: bool(s.experimental, DEFAULTS.experimental),

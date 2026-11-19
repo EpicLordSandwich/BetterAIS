@@ -63,7 +63,7 @@
     const off = offNow();
     const wasOff = document.documentElement.dataset.buOff === '1';
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
-    if (off) { setOff(true); mailPreview(); schedPreview(); return; }
+    if (off) { setOff(true); mailPreview(); schedPreview(); todoPreview(); return; }
     setOff(false);
     const mode = BU.compute(S).mode;
     delete document.documentElement.dataset.buOff;
@@ -1009,12 +1009,27 @@
     try { return new TextDecoder(charset || 'utf-8').decode(buf); }
     catch (e) { return new TextDecoder('utf-8').decode(buf); }
   }
-  function mailPanel() {
+  function homeRow() {
     const menitko = document.getElementById('menitko');
     if (!menitko || !menitko.parentNode) return null;
+    let row = document.getElementById('bu-home-row');
+    if (!row) {
+      row = document.createElement('div');
+      row.id = 'bu-home-row';
+      row.style.display = 'flex';
+      row.style.gap = '12px';
+      row.style.alignItems = 'flex-start';
+      row.style.marginBottom = '12px';
+      menitko.parentNode.insertBefore(row, menitko);
+    }
+    return row;
+  }
+  function mailPanel() {
+    const row = homeRow();
+    if (!row) return null;
     let panel = document.getElementById('bu-mail');
-    if (!panel) { panel = mailMk('section', 'bu-mail'); panel.id = 'bu-mail'; }
-    if (menitko.previousElementSibling !== panel) menitko.parentNode.insertBefore(panel, menitko);
+    if (!panel) { panel = mailMk('section', 'bu-mail'); panel.id = 'bu-mail'; panel.style.flex = '3'; panel.style.minWidth = '0'; }
+    if (panel.parentNode !== row) row.appendChild(panel);
     return panel;
   }
   function mailRender() {
@@ -1134,6 +1149,158 @@
   }
 
   /* ================= spúšťanie ================= */
+  /* ================= 13b) Zoznam úloh To-Do (voliteľný, hlavná stránka) ================= */
+  const TODO_CACHE = 'bu:todo';
+  const TODO_TYPES = ['úloha','zápočet','skúška'];
+  let todoItems = [];
+  let todoTimer = null;
+
+  function todoOn() {
+    return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.todo);
+  }
+  function todoPanel() {
+    const row = homeRow();
+    if (!row) return null;
+    let p = document.getElementById('bu-todo');
+    if (!p) { p = document.createElement('section'); p.id = 'bu-todo'; p.style.flex = '2'; p.style.minWidth = '0'; }
+    if (p.parentNode !== row) row.appendChild(p);
+    return p;
+  }
+  function todoLoad() {
+    chrome.storage.local.get(TODO_CACHE).then((r) => {
+      const c = r && r[TODO_CACHE];
+      todoItems = Array.isArray(c) ? c : [];
+      todoRender();
+    }).catch(() => { todoItems = []; todoRender(); });
+  }
+  function todoSave() {
+    try { chrome.storage.local.set({ [TODO_CACHE]: todoItems }); } catch (e) { swallow(e); }
+  }
+  function todoUid() { return 't' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+  function todoRender() {
+    if (!todoOn()) return;
+    const p = todoPanel();
+    if (!p) return;
+    p.replaceChildren();
+    const head = document.createElement('div');
+    head.className = 'bu-mail-head';
+    const title = document.createElement('span');
+    title.className = 'bu-mail-title';
+    title.textContent = 'To-Do';
+    head.appendChild(title);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'bu-mail-refresh';
+    addBtn.type = 'button';
+    addBtn.textContent = '+';
+    addBtn.title = 'Pridať úlohu';
+    addBtn.addEventListener('click', () => todoAddForm(p));
+    head.appendChild(addBtn);
+    p.appendChild(head);
+
+    if (!todoItems.length) {
+      const e = document.createElement('p'); e.className = 'bu-mail-msg'; e.textContent = 'Žiadne úlohy.'; p.appendChild(e);
+      return;
+    }
+    // sort by deadline
+    const sorted = todoItems.slice().sort((a,b) => {
+      const da = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+      const db = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      return da - db;
+    });
+    const ul = document.createElement('ul');
+    ul.className = 'bu-mail-list';
+    ul.style.listStyle = 'none';
+    for (const t of sorted) {
+      const li = document.createElement('li');
+      li.style.padding = '8px 12px';
+      li.style.borderTop = '1px solid var(--border)';
+      const row = document.createElement('div');
+      row.style.display = 'flex'; row.style.alignItems = 'center'; row.style.gap = '8px';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!t.done;
+      cb.addEventListener('change', () => { t.done = cb.checked; todoSave(); todoRender(); });
+      const tit = document.createElement('span'); tit.textContent = t.title; tit.style.flex = '1'; tit.style.overflow = 'hidden'; tit.style.textOverflow = 'ellipsis'; tit.style.whiteSpace = 'nowrap';
+      if (t.done) { tit.style.textDecoration = 'line-through'; tit.style.color = 'var(--muted)'; }
+      const typeBadge = document.createElement('span'); typeBadge.textContent = t.type; typeBadge.style.fontSize = '.75em'; typeBadge.style.color = 'var(--muted)';
+      const dl = document.createElement('span'); dl.textContent = t.deadline ? new Date(t.deadline).toLocaleString('sk-SK', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : ''; dl.style.fontSize = '.75em'; dl.style.color = 'var(--muted)'; dl.style.whiteSpace='nowrap';
+      row.append(cb, tit, typeBadge, dl);
+      li.appendChild(row);
+      if (t.notes) {
+        const n = document.createElement('p'); n.textContent = t.notes; n.style.margin = '4px 0 0 24px'; n.style.fontSize = '.8em'; n.style.color = 'var(--muted)'; n.style.whiteSpace = 'pre-wrap';
+        li.appendChild(n);
+      }
+      if (t.subtasks && t.subtasks.length) {
+        const ul2 = document.createElement('ul'); ul2.style.margin = '4px 0 0 24px'; ul2.style.padding = '0'; ul2.style.listStyle = 'none';
+        for (const st of t.subtasks) {
+          const li2 = document.createElement('li'); li2.style.fontSize = '.85em';
+          const cb2 = document.createElement('input'); cb2.type = 'checkbox'; cb2.checked = !!st.done;
+          cb2.addEventListener('change', () => { st.done = cb2.checked; todoSave(); todoRender(); });
+          const sp = document.createElement('span'); sp.textContent = st.title; if (st.done) { sp.style.textDecoration='line-through'; sp.style.color='var(--muted)'; }
+          li2.append(cb2, sp); ul2.appendChild(li2);
+        }
+        li.appendChild(ul2);
+      }
+      // actions
+      const actions = document.createElement('div'); actions.style.marginTop = '4px'; actions.style.marginLeft = '24px'; actions.style.display='flex'; actions.style.gap='6px';
+      const editBtn = document.createElement('button'); editBtn.textContent = 'upraviť'; editBtn.style.fontSize='.75em'; editBtn.addEventListener('click', () => todoEditForm(p, t));
+      const delBtn = document.createElement('button'); delBtn.textContent = 'zmazať'; delBtn.style.fontSize='.75em'; delBtn.addEventListener('click', () => { todoItems = todoItems.filter(x=>x.id!==t.id); todoSave(); todoRender(); });
+      actions.append(editBtn, delBtn);
+      li.appendChild(actions);
+      ul.appendChild(li);
+    }
+    p.appendChild(ul);
+  }
+  function todoAddForm(container) {
+    const form = document.createElement('div');
+    form.style.padding = '8px 12px'; form.style.borderTop = '1px solid var(--border)';
+    const titleIn = document.createElement('input'); titleIn.placeholder = 'Názov úlohy'; titleIn.style.width='100%';
+    const typeSel = document.createElement('select'); TODO_TYPES.forEach(x=>{const o=document.createElement('option');o.value=x;o.textContent=x;typeSel.appendChild(o);});
+    const dlIn = document.createElement('input'); dlIn.type='datetime-local';
+    const notesIn = document.createElement('textarea'); notesIn.placeholder='Poznámky'; notesIn.rows=2; notesIn.style.width='100%';
+    const subIn = document.createElement('input'); subIn.placeholder='Subtasky (oddelené čiarkou)';
+    const saveBtn = document.createElement('button'); saveBtn.textContent='Uložiť'; saveBtn.className='bu-mail-refresh'; saveBtn.style.width='auto'; saveBtn.style.padding='4px 10px';
+    saveBtn.addEventListener('click', () => {
+      const title = titleIn.value.trim();
+      if (!title) return;
+      const subtasks = subIn.value.split(',').map(x=>x.trim()).filter(Boolean).map(x=>({id:todoUid(),title:x,done:false}));
+      todoItems.push({ id: todoUid(), title, type: typeSel.value, deadline: dlIn.value || '', notes: notesIn.value.trim(), subtasks, done: false, created: Date.now() });
+      todoSave(); todoRender();
+    });
+    const cancelBtn = document.createElement('button'); cancelBtn.textContent='Zrušiť'; cancelBtn.style.fontSize='.8em'; cancelBtn.addEventListener('click', todoRender);
+    form.append(titleIn, typeSel, dlIn, notesIn, subIn, saveBtn, cancelBtn);
+    // insert form at top after head
+    const head = container.querySelector('.bu-mail-head');
+    if (head && head.nextSibling) container.insertBefore(form, head.nextSibling); else container.appendChild(form);
+  }
+  function todoEditForm(container, t) {
+    // simple: remove and re-add via addForm pre-filled not implemented; just toggle done handled. Provide delete+recreate by removing then add.
+    todoItems = todoItems.filter(x=>x.id!==t.id);
+    todoSave();
+    todoAddForm(container);
+    // prefill
+    setTimeout(() => {
+      const inputs = container.querySelectorAll('input, select, textarea');
+      if (inputs[0]) inputs[0].value = t.title;
+      if (inputs[1]) inputs[1].value = t.type;
+      if (inputs[2]) inputs[2].value = t.deadline || '';
+      if (inputs[3]) inputs[3].value = t.notes || '';
+      if (inputs[4]) inputs[4].value = (t.subtasks||[]).map(x=>x.title).join(', ');
+    }, 0);
+  }
+  function todoStart() {
+    todoLoad();
+  }
+  function todoStop() {
+    const p = document.getElementById('bu-todo'); if (p) p.remove();
+  }
+  function todoPreview() {
+    if (!todoOn()) { todoStop(); return; }
+    const p = todoPanel();
+    if (!p) return;
+    if (!p.dataset.buRendered) { p.dataset.buRendered = '1'; todoStart(); }
+    else todoRender();
+  }
+
   /* ================= 14) Náhľad rozvrhu (voliteľný, hlavná stránka) ================= */
   const SCHED_CACHE = 'bu:schedule';
   const SCHED_REFRESH_MS = 30 * 60 * 1000;
@@ -1243,7 +1410,7 @@
     schedStart();
   }
 
-  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); swapNick(); mailPreview(); schedPreview(); }
+  function runLightContentPass() { tagCards(); linksBar(); hideOriginals(); controls(); applyLogo(); avatar(); tableTools(); swapNick(); mailPreview(); schedPreview(); todoPreview(); }
 
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {

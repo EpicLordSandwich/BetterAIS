@@ -15,14 +15,27 @@
 
   <section>
     <h2>Zapínanie</h2>
-    <p class="sub">Hlavný vypínač a drobné preferencie. Jednotlivé stránky sa dajú vypnúť aj v popup-e rozšírenia.</p>
+    <p class="sub">Hlavný vypínač. Jednotlivé stránky sa dajú vypnúť aj v popup-e rozšírenia.</p>
     <div class="row">
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="masterSwitch"> Zapnúť betterAIS</label>
+    </div>
+  </section>
+
+  <section>
+    <h2>Voliteľné funkcie</h2>
+    <p class="sub">Doplnkové prvky na stránkach AIS. Všetky predvolene zapnuté.</p>
+    <div class="row" style="gap:10px; flex-wrap:wrap">
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="hideOperinfo"> Skryť štatistiky akcií AIS</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="aisLogo"> Zobrazovať AIS logo v hlavičke</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="mailPreview"> Náhľad pošty na hlavnej stránke</label>
       <label class="switch" style="flex-direction:row"><input type="checkbox" id="schedulePreview"> Náhľad rozvrhu na hlavnej stránke</label>
+      <label class="switch" style="flex-direction:row"><input type="checkbox" id="todoPreview"> Zoznam úloh (To-Do) na hlavnej stránke</label>
     </div>
+  </section>
+
+  <section>
+    <h2>Prístupnosť</h2>
+    <p class="sub">Prispôsobenie pre používateľov so zrakovým znevýhodnením. Režim pre farboslepých nahradí konfliktné farby (červená/zelena) bezpečnou paletou (modrá/oranžová) a pridá vzory.</p>
     <div class="row" style="margin-top:10px">
       <label class="f">Režim pre farboslepých
         <select id="colorblindSel">
@@ -85,6 +98,7 @@
           <button id="avUrl">Zadaj URL obrázka…</button>
           <button id="avUpload" class="primary">Nahrať vlastnú…</button>
           <button id="avOrig" class="ghost">Pôvodná z ISIC</button>
+          <button id="avReloadShot" class="ghost" title="Znovu načítať snímku z úložiska">↻ snímka</button>
           <input type="file" id="avFile" accept="image/*" hidden>
         </div>
         <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png/webp)" style="width:100%;margin-top:8px" hidden>
