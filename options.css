@@ -29,7 +29,8 @@ input[type=range] { accent-color: var(--accent); width: 180px; }
 .seg button.on { background: var(--accent); color: var(--on-accent); }
 .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; } .switch input { accent-color: var(--accent); width: 18px; height: 18px; }
 
-.store { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.store { display: block; }
+.store details { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; margin-bottom: 14px; background: var(--bg-0); }
 .theme { text-align: left; padding: 0; overflow: hidden; border-radius: var(--radius); background: var(--bg-3); display: flex; flex-direction: column; transition: border-color .15s, transform .15s; width: 100%; }
 .theme:hover { border-color: var(--accent); transform: translateY(-2px); }
 .theme.on { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent); }

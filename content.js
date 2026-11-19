@@ -1389,8 +1389,20 @@
   }
   function schedRememberCurrent() {
     if (!/rozvrhy_view\.pl/.test(location.href)) return;
-    if (!document.querySelector('.rozvrh-pred, .rozvrh-cvic')) return;
-    try { localStorage.setItem('bu:schedUrl', JSON.stringify(location.href)); } catch (e) { swallow(e); }
+    const tbl = document.querySelector('table.bu-tt-table, table:has(.rozvrh-pred), table:has(.rozvrh-cvic)');
+    if (!tbl) return;
+    try {
+      localStorage.setItem('bu:schedUrl', JSON.stringify(location.href));
+      const captured = {
+        html: tbl.outerHTML,
+        url: location.href,
+        time: Date.now(),
+        status: 'z poslednej návštevy rozvrhu',
+        error: '',
+      };
+      chrome.storage.local.set({ [SCHED_CACHE]: captured }).catch((e) => swallow(e));
+      if (!schedState.html || schedState.time < captured.time) schedState = captured;
+    } catch (e) { swallow(e); }
   }
   function schedRender() {
     if (!schedOn()) return;
@@ -1436,27 +1448,45 @@
   }
   async function schedFetch() {
     if (!schedOn() || schedFetching) return;
+    const candidates = [];
+    try { const s = JSON.parse(localStorage.getItem('bu:schedUrl') || '""'); if (s) candidates.push(s); } catch (e) {}
+    document.querySelectorAll('a[href*="rozvrhy_view"]').forEach((a) => {
+      const h = a.getAttribute('href') || '';
+      if (/rozvrh_student/.test(h)) candidates.push(h);
+    });
+    if (schedState.url) candidates.push(schedState.url);
+    const urls = [...new Set(candidates)].map((h) => {
+      try { return new URL(h, location.origin).href; } catch (e) { return ''; }
+    }).filter(Boolean);
+    if (!urls.length) { schedState = Object.assign({}, schedState, { status: '', error: 'Navštív najprv stránku s rozvrhom.' }); schedRender(); return; }
+
     schedFetching = true;
     schedState = Object.assign({}, schedState, { status: 'obnovujem…', error: '' });
     schedRender();
-    try {
-      const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 10000);
-      let res;
-      try { res = await fetch(schedUrl(), { credentials: 'include', cache: 'no-store', signal: ctrl.signal }); }
-      finally { clearTimeout(t); }
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const html = await res.text();
-      if (!schedFindTable(html)) throw new Error('no schedule table');
-      const usedUrl = schedUrl();
-      try { localStorage.setItem('bu:schedUrl', JSON.stringify(usedUrl)); } catch (e) { swallow(e); }
-      schedState = { html, url: usedUrl, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour:'2-digit', minute:'2-digit' }), error: '' };
-      try { await chrome.storage.local.set({ [SCHED_CACHE]: schedState }); } catch (e) { swallow(e); }
-    } catch (e) {
-      schedState = Object.assign({}, schedState, { status: '', error: 'Rozvrh sa nepodarilo načítať.' });
-    } finally {
-      schedFetching = false;
-      schedRender();
+    let ok = false;
+    for (const url of urls) {
+      try {
+        const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 10000);
+        let res;
+        try { res = await fetch(url, { credentials: 'include', cache: 'no-store', signal: ctrl.signal }); }
+        finally { clearTimeout(t); }
+        if (!res.ok) continue;
+        const html = await res.text();
+        if (!schedFindTable(html)) continue;
+        schedState = { html, url, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour:'2-digit', minute:'2-digit' }), error: '' };
+        try { localStorage.setItem('bu:schedUrl', JSON.stringify(url)); } catch (e) { swallow(e); }
+        try { await chrome.storage.local.set({ [SCHED_CACHE]: schedState }); } catch (e) { swallow(e); }
+        ok = true;
+        break;
+      } catch (e) { swallow(e); }
     }
+    if (!ok) {
+      // zlá uložená URL → zmaž, nech sa pri ďalšej návšteve uloží správna
+      try { localStorage.removeItem('bu:schedUrl'); } catch (e) { swallow(e); }
+      schedState = Object.assign({}, schedState, { status: '', error: 'Rozvrh sa nepodarilo načítať. Otvor raz svoj rozvrh.' });
+    }
+    schedFetching = false;
+    schedRender();
   }
   function schedStart() {
     if (schedTimer) return;
