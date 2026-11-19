@@ -118,7 +118,6 @@
     if ($('schedulePreview')) $('schedulePreview').checked = !!(S.ui && S.ui.schedule);
     if ($('todoPreview')) $('todoPreview').checked = !!(S.ui && S.ui.todo);
     if ($('colorblindSel')) $('colorblindSel').value = (S.ui && S.ui.colorblind) || 'off';
-     $('offCount').textContent = S.disabledPages.length ? '(' + S.disabledPages.length + ')' : '';
 
     $('nick').value = S.nick || '';
 
@@ -312,7 +311,6 @@
           snippetsCount: Array.isArray(s.snippets) ? s.snippets.length : 0,
           disabledPagesCount: Array.isArray(s.disabledPages) ? s.disabledPages.length : 0,
           avatarMode: s.avatar && s.avatar.mode,
-          grades: s.grades,
           customThemesCount: s.customThemes ? Object.keys(s.customThemes).length : 0,
         };
       })(),
