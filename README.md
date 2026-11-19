@@ -29,7 +29,7 @@ Unofficial. Not affiliated with STU.
 
 Everything runs locally in the browser. Settings are stored in `chrome.storage` (local + sync for cross-device). The extension does **not** send browsing data to any server. The optional experimental update check contacts GitHub only when enabled and triggered manually from settings.
 
-The optional mail preview reads the AIS inbox list from the same site (`/auth/posta/slozka.pl`) using your existing login session, shows it on the main page, and caches the last list locally. It never opens, deletes or sends messages and uploads nothing.
+The optional mail preview reads the AIS inbox list from the same site (`/auth/posta/slozka.pl`) using your existing login session, shows it on the main page, and caches the last list locally. It never opens, deletes or sends messages and uploads nothing. The optional schedule preview likewise reads one timetable page from the same site and caches it locally. Neither uploads anything.
 
 ## Development
 

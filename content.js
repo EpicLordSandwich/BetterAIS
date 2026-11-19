@@ -953,7 +953,6 @@
   let mailTimer = null;
   let mailFetching = false;
   let mailCollapsed = false;
-  let mailFailures = 0;
 
   function mailOn() {
     return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.mail);
@@ -1023,6 +1022,10 @@
       menitko.parentNode.insertBefore(row, menitko);
     }
     return row;
+  }
+  function homeRowCleanup() {
+    const row = document.getElementById('bu-home-row');
+    if (row && !row.children.length) row.remove();
   }
   function mailPanel() {
     const row = homeRow();
@@ -1102,10 +1105,8 @@
         status: 'obnovené ' + time.toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' }),
         error: '',
       };
-      mailFailures = 0;
       try { await chrome.storage.local.set({ [MAIL_CACHE]: mailState }); } catch (e) { swallow(e); }
     } catch (e) {
-      mailFailures++;
       mailState = Object.assign({}, mailState, { status: '', error: 'Poštu sa nepodarilo načítať.' });
     } finally {
       mailFetching = false;
@@ -1140,10 +1141,11 @@
       mailStop();
       const p = document.getElementById('bu-mail');
       if (p) p.remove();
+      homeRowCleanup();
       return;
     }
     const panel = mailPanel();
-    if (!panel) { mailStop(); const p = document.getElementById('bu-mail'); if (p) p.remove(); return; }
+    if (!panel) { mailStop(); const p = document.getElementById('bu-mail'); if (p) p.remove(); homeRowCleanup(); return; }
     if (!panel.dataset.buRendered) { panel.dataset.buRendered = '1'; mailRender(); }
     mailStart();
   }
@@ -1181,6 +1183,11 @@
     if (!todoOn()) return;
     const p = todoPanel();
     if (!p) return;
+    // Renderuj len pri zmene dát: inak by replaceChildren() spúšťal MutationObserver
+    // a panel by sa prepisoval každých 250 ms (strata fokusu pri písaní).
+    const sig = JSON.stringify(todoItems);
+    if (p.dataset.buSig === sig) return;
+    p.dataset.buSig = sig;
     p.replaceChildren();
     const head = document.createElement('div');
     head.className = 'bu-mail-head';
@@ -1292,6 +1299,7 @@
   }
   function todoStop() {
     const p = document.getElementById('bu-todo'); if (p) p.remove();
+    homeRowCleanup();
   }
   function todoPreview() {
     if (!todoOn()) { todoStop(); return; }
@@ -1341,6 +1349,11 @@
     if (!href) href = '/auth/katalog/rozvrhy_view.pl?lang=sk';
     try { return new URL(href, location.origin).href; } catch (e) { return '/auth/katalog/rozvrhy_view.pl?lang=sk'; }
   }
+  function schedFindTable(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.querySelector('table:has(.rozvrh-pred), table:has(.rozvrh-cvic)')
+      || doc.querySelector('.mainpage table');
+  }
   function schedRender() {
     if (!schedOn()) return;
     const p = schedPanel();
@@ -1373,10 +1386,7 @@
       const e = document.createElement('p'); e.className = 'bu-mail-msg'; e.textContent = schedState.time ? 'Žiadne údaje.' : 'Načítavam…'; p.appendChild(e);
       return;
     }
-    const doc = new DOMParser().parseFromString(schedState.html, 'text/html');
-    const tbl = doc.querySelector('table:has(.rozvrh-pred), table:has(.rozvrh-cvic)')
-      || doc.querySelector('.mainpage table')
-      || doc.querySelector('table');
+    const tbl = schedFindTable(schedState.html);
     if (!tbl) { const e = document.createElement('p'); e.className='bu-mail-msg'; e.textContent='Rozvrh sa nepodarilo nájsť.'; p.appendChild(e); return; }
     const wrap = document.createElement('div');
     wrap.style.overflowX = 'auto';
@@ -1398,8 +1408,10 @@
       finally { clearTimeout(t); }
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const html = await res.text();
-      try { localStorage.setItem('bu:schedUrl', JSON.stringify(schedUrl())); } catch (e) { swallow(e); }
-      schedState = { html, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour:'2-digit', minute:'2-digit' }), error: '' };
+      if (!schedFindTable(html)) throw new Error('no schedule table');
+      const usedUrl = schedUrl();
+      try { localStorage.setItem('bu:schedUrl', JSON.stringify(usedUrl)); } catch (e) { swallow(e); }
+      schedState = { html, url: usedUrl, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour:'2-digit', minute:'2-digit' }), error: '' };
       try { await chrome.storage.local.set({ [SCHED_CACHE]: schedState }); } catch (e) { swallow(e); }
     } catch (e) {
       schedState = Object.assign({}, schedState, { status: '', error: 'Rozvrh sa nepodarilo načítať.' });
@@ -1420,6 +1432,7 @@
   function schedStop() {
     if (schedTimer) { clearInterval(schedTimer); schedTimer = null; }
     const p = document.getElementById('bu-schedule'); if (p) p.remove();
+    homeRowCleanup();
   }
   function schedPreview() {
     if (!schedOn()) { schedStop(); return; }
@@ -1445,7 +1458,6 @@
     else nameDiv.textContent = orig;
   }
 
-  /* ================= premenovanie UIS → AIS ================= */
   function runHeavyDomScan() {
     if (!isTop) return;   // ťažké skeny (hlavička, boxy, logo, popupy, sémantika) len v hlavnom frame (P0-3)
     tagHeader(); applyLogo(); tagBoxes(); scanPopups(); semanticScan();

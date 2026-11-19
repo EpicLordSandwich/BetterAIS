@@ -588,9 +588,6 @@ const FONTS = [
     let syncOk = true;
     try {
       const all = await chrome.storage.sync.get(null);
-      const toRemove = Object.keys(all || {}).filter((k) => (k === KEY || k.startsWith('bu:sync:')) && !(k in items) && k !== 'bu:sync:core' ? true : (k === KEY));
-      // remove legacy single key
-      if (all && all[KEY]) toRemove.push(KEY);
       // only remove keys that are shards or legacy, not arbitrary
       const removeKeys = Object.keys(all || {}).filter((k) => (k === KEY) || (k.startsWith('bu:sync:') && !(k in items)));
       if (removeKeys.length) await chrome.storage.sync.remove(removeKeys).catch((e) => { swallow(e); });

@@ -39,9 +39,14 @@ async function checkUpdate() {
   try {
     const S = await settings();
     if (!S.experimental) { await chrome.storage.local.remove('bu-update'); return { ok: false, status: 'off' }; }
-    const resp = await fetch(UPDATE_URL, { cache: 'no-store' });
-    if (!resp.ok) return { ok: false, status: 'error' };
-    const m = await resp.json();
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    let resp, m;
+    try {
+      resp = await fetch(UPDATE_URL, { cache: 'no-store', signal: ctrl.signal });
+      if (!resp.ok) return { ok: false, status: 'error' };
+      m = await resp.json();
+    } finally { clearTimeout(timer); }
     const cur = chrome.runtime.getManifest().version;
     const remoteVer = m && m.tag_name ? m.tag_name : (m && m.name ? m.name : '');
     const newer = isNewer(remoteVer, cur);
@@ -81,7 +86,10 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
       if (k.startsWith('bu:sync:snip:')) snippets.push(v);
       else if (k.startsWith('bu:sync:theme:')) customThemes[k.slice('bu:sync:theme:'.length)] = v;
     }
-    const remote = BU.normalize({ ...core, snippets, customThemes: Object.keys(customThemes).length ? customThemes : null });
+    // snippet shards absent → keep local snippets (do not wipe with [])
+    const remoteBase = { ...core, customThemes: Object.keys(customThemes).length ? customThemes : null };
+    if (snippets.length) remoteBase.snippets = snippets;
+    const remote = BU.normalize(remoteBase);
     const lr = await chrome.storage.local.get(BU.KEY).catch(() => ({}));
     const local = lr && lr[BU.KEY] ? BU.normalize(lr[BU.KEY]) : BU.normalize(null);
     const syncKeys = ['theme', 'mode', 'custom', 'links', 'enabled', 'ui', 'disabledPages', 'experimental', 'rename', 'snippets', 'customThemes'];

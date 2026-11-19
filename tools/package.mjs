@@ -7,9 +7,9 @@ import zlib from 'node:zlib';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const common = [
-  'background.js', 'themes.js', 'text-utils.js', 'grades.js', 'content.js', 'base.css',
+  'background.js', 'themes.js', 'text-utils.js', 'content.js', 'base.css',
   'popup.html', 'popup.js', 'options.html', 'options.js', 'options.css',
-  'icon128.png',
+  'icon128.png', 'ais-logo.png',
 ];
 
 const manifest = JSON.parse(readFileSync(join(root, 'manifest.json'), 'utf8'));
