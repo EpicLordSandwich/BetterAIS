@@ -1358,6 +1358,10 @@
   let schedFetching = false;
   let schedStarted = false;
   let schedView = 'today';
+  let schedFormat = 'compact';
+  const schedNarrowMq = window.matchMedia('(max-width: 700px)');
+  let schedNarrow = schedNarrowMq.matches;
+  try { schedNarrowMq.addEventListener('change', (e) => { schedNarrow = e.matches; schedRenderKey = ''; schedRender(); }); } catch (e) { swallow(e); }
   let schedRenderKey = '';
   let schedVisitKey = '';
   let schedAnchorWarned = false;
@@ -1505,6 +1509,75 @@
     });
     return wrap;
   }
+  function schedSetFormat(v) {
+    schedFormat = v === 'grid' ? 'grid' : 'compact';
+    if (!S.ui) S.ui = {};
+    S.ui.scheduleView = schedFormat;
+    schedRenderKey = '';
+    schedRender();
+    BU.load().then((fresh) => BU.save(Object.assign({}, fresh, { ui: Object.assign({}, fresh.ui, { scheduleView: schedFormat }) }))).catch((e) => swallow(e));
+  }
+  function schedGridCardEl(card) {
+    const el = schedEl('div', 'bu-grid-card bu-sched-' + card.type + (card.selected ? ' selected' : ''));
+    el.style.setProperty('--col', String(card.col));
+    el.style.setProperty('--span', String(card.span));
+    el.style.setProperty('--lane', String(card.lane));
+    if (card.noteRef) {
+      const sup = schedEl('sup', 'bu-grid-note', '(' + card.noteRef + ')');
+      sup.title = card.note || '';
+      el.appendChild(sup);
+    }
+    if (card.room) el.appendChild(schedEl('span', 'bu-grid-room', card.room));
+    const subj = card.url ? schedEl('a', 'bu-grid-subject', card.subject) : schedEl('span', 'bu-grid-subject', card.subject);
+    if (card.url) subj.href = card.url;
+    el.appendChild(subj);
+    if (card.teacher) el.appendChild(schedEl('span', 'bu-grid-teacher', card.teacher));
+    if (card.group) el.appendChild(schedEl('span', 'bu-grid-group', card.group));
+    if (card.more > 0) {
+      const det = schedEl('details', 'bu-grid-more');
+      det.appendChild(schedEl('summary', '', '+' + card.more + ' ďalších možností'));
+      card.hidden.forEach((h) => det.appendChild(schedGridCardEl(h)));
+      el.appendChild(det);
+    }
+    return el;
+  }
+  function schedBodyGrid(p, data, today) {
+    if (schedNarrow) {
+      const range = BU.schedule.weekRange(today);
+      const start = new Date(Number(range.from.slice(6)), Number(range.from.slice(3, 5)) - 1, Number(range.from.slice(0, 2)));
+      ['Po', 'Ut', 'St', 'Št', 'Pi'].forEach((day, i) => {
+        const date = new Date(start); date.setDate(start.getDate() + i);
+        const box = schedEl('div', 'bu-sched-day');
+        box.appendChild(schedEl('h4', 'bu-sched-dayname', day + ' ' + BU.schedule.fmtDate(date)));
+        box.appendChild(schedDayList(date, data, schedGroups(), null, true, 'Voľný deň'));
+        p.appendChild(box);
+      });
+      return;
+    }
+    const grid = BU.schedule.renderScheduleGrid(data, { today, selected: schedGroups() });
+    const scroll = schedEl('div', 'bu-grid-scroll');
+    const table = schedEl('div', 'bu-grid');
+    const axis = schedEl('div', 'bu-grid-axis');
+    axis.appendChild(schedEl('div', 'bu-grid-corner', ''));
+    grid.hours.forEach((h) => axis.appendChild(schedEl('div', 'bu-grid-hour' + (h.current ? ' current' : ''), h.label)));
+    table.appendChild(axis);
+    grid.days.forEach((d) => {
+      const row = schedEl('div', 'bu-grid-day' + (d.isToday ? ' today' : ''));
+      row.appendChild(schedEl('div', 'bu-grid-dayname', d.day));
+      const track = schedEl('div', 'bu-grid-track');
+      track.style.setProperty('--lanes', String(d.laneCount));
+      if (d.isToday && grid.nowCol >= 0) {
+        const now = schedEl('div', 'bu-grid-nowline');
+        now.style.setProperty('--col', String(grid.nowCol));
+        track.appendChild(now);
+      }
+      d.cards.forEach((card) => track.appendChild(schedGridCardEl(card)));
+      row.appendChild(track);
+      table.appendChild(row);
+    });
+    scroll.appendChild(table);
+    p.appendChild(scroll);
+  }
   function schedBody(p, data) {
     const groups = schedGroups();
     const today = new Date();
@@ -1531,7 +1604,9 @@
     if (!schedOn()) return;
     const p = schedPanel();
     if (!p) return;
-    const key = JSON.stringify([schedView, schedState.time, schedState.error, schedState.status, schedState.html.length, schedGroups()]);
+    const wantFormat = (S.ui && S.ui.scheduleView) === 'grid' ? 'grid' : 'compact';
+    if (wantFormat !== schedFormat) { schedFormat = wantFormat; schedRenderKey = ''; }
+    const key = JSON.stringify([schedView, schedFormat, schedNarrow, schedState.time, schedState.error, schedState.status, schedState.html.length, schedGroups()]);
     if (key === schedRenderKey && p.childElementCount) return;
     schedRenderKey = key;
     p.replaceChildren();
@@ -1539,6 +1614,15 @@
     const title = schedEl('a', 'bu-mail-title', 'Rozvrh');
     title.href = schedState.url || schedFullUrl();
     head.appendChild(title);
+    const format = schedEl('div', 'seg bu-sched-format');
+    [['compact', 'Prehľad'], ['grid', 'Týždeň (AIS)']].forEach(([v, label]) => {
+      const b = schedEl('button', schedFormat === v ? 'on' : '', label);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', schedFormat === v ? 'true' : 'false');
+      b.addEventListener('click', () => schedSetFormat(v));
+      format.appendChild(b);
+    });
+    head.appendChild(format);
     const status = schedEl('span', 'bu-mail-status', schedState.status);
     head.appendChild(status);
     const btn = schedEl('button', 'bu-mail-refresh', '↻');
@@ -1546,17 +1630,19 @@
     btn.addEventListener('click', () => schedFetch());
     head.appendChild(btn);
     p.appendChild(head);
-    const tabs = schedEl('div', 'bu-sched-tabs');
-    SCHED_VIEWS.forEach(([v, label]) => {
-      const b = schedEl('button', 'bu-sched-tab' + (schedView === v ? ' on' : ''), label);
-      b.type = 'button'; b.setAttribute('aria-pressed', schedView === v ? 'true' : 'false');
-      b.addEventListener('click', () => {
-        schedView = v; schedRenderKey = ''; schedRender();
-        try { chrome.storage.local.set({ 'bu:sched-view': v }); } catch (e) { swallow(e); }
+    if (schedFormat === 'compact') {
+      const tabs = schedEl('div', 'bu-sched-tabs');
+      SCHED_VIEWS.forEach(([v, label]) => {
+        const b = schedEl('button', 'bu-sched-tab' + (schedView === v ? ' on' : ''), label);
+        b.type = 'button'; b.setAttribute('aria-pressed', schedView === v ? 'true' : 'false');
+        b.addEventListener('click', () => {
+          schedView = v; schedRenderKey = ''; schedRender();
+          try { chrome.storage.local.set({ 'bu:sched-view': v }); } catch (e) { swallow(e); }
+        });
+        tabs.appendChild(b);
       });
-      tabs.appendChild(b);
-    });
-    p.appendChild(tabs);
+      p.appendChild(tabs);
+    }
     if (schedState.error) {
       p.appendChild(schedEl('p', 'bu-mail-msg bu-mail-err', schedState.error));
       if (schedState.diagnostic) p.appendChild(schedEl('small', 'bu-sched-diag', schedState.diagnostic));
@@ -1576,7 +1662,8 @@
       p.appendChild(sk);
       return;
     }
-    schedBody(p, data);
+    if (schedFormat === 'grid') schedBodyGrid(p, data, new Date());
+    else schedBody(p, data);
     const foot = schedEl('div', 'bu-sched-foot');
     const full = schedEl('a', 'bu-sched-full', 'Celý rozvrh'); full.href = schedState.url || schedFullUrl();
     foot.appendChild(full);

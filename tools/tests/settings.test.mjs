@@ -66,6 +66,13 @@ test('zobrazenie rozvrhu a vlastné skupiny sa validujú', () => {
   assert.deepEqual(BU.normalize(BU.normalize({ ui: { schedView: 'week' } })), BU.normalize({ ui: { schedView: 'week' } }));
 });
 
+test('formát karty rozvrhu sa validuje', () => {
+  assert.equal(BU.normalize(null).ui.scheduleView, 'compact');
+  assert.equal(BU.normalize({ ui: { scheduleView: 'grid' } }).ui.scheduleView, 'grid');
+  assert.equal(BU.normalize({ ui: { scheduleView: 'nonsense' } }).ui.scheduleView, 'compact');
+  assert.deepEqual(BU.normalize(BU.normalize({ ui: { scheduleView: 'grid' } })), BU.normalize({ ui: { scheduleView: 'grid' } }));
+});
+
 test('režim farboslepých je opt-in a validuje sa', () => {
   assert.equal(BU.normalize(null).ui.colorblind, 'off');
   assert.equal(BU.normalize({ ui: { colorblind: 'deuteranopia' } }).ui.colorblind, 'deuteranopia');

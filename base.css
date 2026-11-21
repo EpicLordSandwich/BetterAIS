@@ -10,6 +10,8 @@
   --bg-0: #1f1e1d; --bg: #262624; --bg-2: #2f2e2c; --bg-3: #3a3936; --border: #4a4844;
   --text: #f0eee6; --muted: #b8b5aa; --link: #8cb4e6; --accent: #3f74d9; --on-accent: #fff;
   --info: #5b9bf0; --warn: #e0a73e; --crit: #e8756c;
+  --sched-pred: var(--info); --sched-cvic: var(--accent);
+  --hour-w: 110px; --lane-h: 76px; --grid-label-w: 48px;
   --radius: 12px; --radius-sm: 6px;
   --shadow-1: 0 1px 3px rgba(0,0,0,.30); --shadow-2: 0 4px 14px rgba(0,0,0,.40); --shadow-3: 0 16px 40px rgba(0,0,0,.55);
   --icon-glow: drop-shadow(0 0 3px rgba(255,255,255,.30)); --chip: #f0eee6;
@@ -716,4 +718,41 @@ html:not([data-bu-off]) .bu-sched-bar { height: 14px; margin-bottom: 8px; border
   html:not([data-bu-off]) .bu-sched-event { grid-template-columns: 80px minmax(0, 1fr); }
   html:not([data-bu-off]) .bu-sched-type, html:not([data-bu-off]) .bu-sched-room, html:not([data-bu-off]) .bu-sched-teacher, html:not([data-bu-off]) .bu-sched-group { grid-column: 2; }
   html:not([data-bu-off]) .bu-sched-more { padding-left: 12px; }
+}
+
+/* ===== Domov: rozvrh – mriežka AIS (hodiny 8.00-8.50 … 18.00-18.50) ===== */
+html:not([data-bu-off]) #bu-schedule .bu-sched-format { margin-left: 4px; }
+html:not([data-bu-off]) #bu-schedule .bu-sched-format button { padding: 4px 10px; font-size: 12px; }
+html:not([data-bu-off]) .bu-grid-scroll { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+html:not([data-bu-off]) .bu-grid { width: max-content; min-width: calc(var(--grid-label-w) + var(--hour-w) * 11); font-size: 12px; }
+html:not([data-bu-off]) .bu-grid-axis, html:not([data-bu-off]) .bu-grid-day { display: grid; grid-template-columns: var(--grid-label-w) repeat(11, var(--hour-w)); }
+html:not([data-bu-off]) .bu-grid-axis { position: sticky; top: 0; z-index: 3; background: var(--bg-3) !important; }
+html:not([data-bu-off]) .bu-grid-corner { border-right: 1px solid var(--border); }
+html:not([data-bu-off]) .bu-grid-hour { padding: 5px 6px; color: var(--muted) !important; border-left: 1px solid var(--border); white-space: nowrap; font-variant-numeric: tabular-nums; }
+html:not([data-bu-off]) .bu-grid-hour.current { color: var(--accent) !important; font-weight: 600; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+html:not([data-bu-off]) .bu-grid-day { min-height: calc(var(--lane-h) + 1px); border-top: 1px solid var(--border) !important; }
+html:not([data-bu-off]) .bu-grid-day.today { background: color-mix(in srgb, var(--accent) 6%, transparent) !important; }
+html:not([data-bu-off]) .bu-grid-dayname { position: sticky; left: 0; z-index: 2; display: grid; place-items: center; background: var(--bg-2) !important; border-right: 1px solid var(--border); color: var(--muted) !important; font-weight: 600; }
+html:not([data-bu-off]) .bu-grid-day.today .bu-grid-dayname { color: var(--accent) !important; box-shadow: inset 3px 0 0 var(--accent); }
+html:not([data-bu-off]) .bu-grid-track { position: relative; grid-column: 2 / -1; height: calc(var(--lane-h) * var(--lanes)); background-image: repeating-linear-gradient(90deg, transparent 0, transparent calc(var(--hour-w) - 1px), var(--border) calc(var(--hour-w) - 1px), var(--border) var(--hour-w)); }
+html:not([data-bu-off]) .bu-grid-nowline { position: absolute; top: 0; bottom: 0; left: calc(var(--hour-w) * var(--col) / 12); width: 2px; background: var(--accent); opacity: .8; z-index: 2; pointer-events: none; }
+html:not([data-bu-off]) .bu-grid-card { position: absolute; left: calc(var(--hour-w) * var(--col) / 12); top: calc(var(--lane) * var(--lane-h) + 3px); width: calc(var(--hour-w) * var(--span) / 12 - 4px); height: calc(var(--lane-h) - 6px); overflow: hidden; padding: 4px 6px; border: 1px solid var(--border) !important; border-left-width: 5px !important; border-radius: var(--radius-sm) !important; background: var(--bg-3) !important; display: flex; flex-direction: column; gap: 2px; z-index: 1; }
+html:not([data-bu-off]) .bu-grid-card.bu-sched-pred { border-left-style: solid !important; border-left-color: var(--sched-pred) !important; }
+html:not([data-bu-off]) .bu-grid-card.bu-sched-cvic { border-left-style: dashed !important; border-left-color: var(--sched-cvic) !important; }
+html:not([data-bu-off]) .bu-grid-card.selected { box-shadow: inset 0 0 0 1px var(--accent); }
+html:not([data-bu-off]) .bu-grid-note { position: absolute; top: 2px; right: 4px; color: var(--muted) !important; font-size: 10px; }
+html:not([data-bu-off]) .bu-grid-room { color: var(--muted) !important; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html:not([data-bu-off]) .bu-grid-subject { color: var(--text) !important; font-weight: 600; font-size: 11px; line-height: 1.2; text-decoration: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+html:not([data-bu-off]) a.bu-grid-subject:hover { color: var(--accent) !important; }
+html:not([data-bu-off]) .bu-grid-teacher { color: var(--muted) !important; font-size: 10px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html:not([data-bu-off]) .bu-grid-group { color: var(--muted) !important; font-size: 10px; }
+html:not([data-bu-off]) .bu-grid-card:has(.bu-grid-more[open]) { overflow: visible; z-index: 5; }
+html:not([data-bu-off]) .bu-grid-more { position: absolute; right: 2px; bottom: 2px; z-index: 2; }
+html:not([data-bu-off]) .bu-grid-more > summary { cursor: pointer; color: var(--link) !important; font-size: 10px; background: var(--bg-2) !important; padding: 0 3px; border-radius: var(--radius-sm); list-style: none; }
+html:not([data-bu-off]) .bu-grid-more > summary::-webkit-details-marker { display: none; }
+html:not([data-bu-off]) .bu-grid-more[open] { background: var(--bg-2) !important; border: 1px solid var(--border) !important; border-radius: var(--radius-sm); padding: 3px; max-height: 220px; overflow: auto; }
+html:not([data-bu-off]) .bu-grid-more .bu-grid-card { position: relative; left: auto; top: auto; width: 180px; height: auto; min-height: 48px; margin-top: 3px; }
+html:not([data-bu-off]) .bu-grid-more .bu-grid-note { position: static; }
+@media (max-width: 700px) {
+  html:not([data-bu-off]) .bu-grid-scroll { display: none; }
 }

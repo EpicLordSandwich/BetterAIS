@@ -19,6 +19,8 @@ eq(BU.contrast('#3f74d9'), '#000000', 'contrast: blue accent -> black text');
 eq(BU.contrast('#1f1e1d'), '#ffffff', 'contrast: dark bg -> white text');
 eq(BU.contrast('#ffffff'), '#000000', 'contrast: white -> black text');
 eq(BU.contrast('bad'), null, 'contrast: invalid -> null');
+eq(out.vars['--sched-pred'], out.vars['--info'], 'compute: prednáška používa farebnú premennú témy');
+eq(out.vars['--sched-cvic'], out.vars['--accent'], 'compute: cvičenie používa farebnú premennú témy');
 eq(Math.abs(BU.contrastRatio('#ffffff', '#000000') - 21) < 0.01, true, 'contrastRatio: black/white = 21');
 eq(BU.contrastRatio('#777777', '#777777'), 1, 'contrastRatio: same color = 1');
 eq(BU.contrastRatio('bad', '#ffffff'), null, 'contrastRatio: invalid -> null');

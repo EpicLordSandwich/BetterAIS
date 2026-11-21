@@ -148,6 +148,7 @@
     if ($('schedulePreview')) $('schedulePreview').checked = !!(S.ui && S.ui.schedule);
     if ($('todoPreview')) $('todoPreview').checked = !!(S.ui && S.ui.todo);
     if ($('colorblindSel')) $('colorblindSel').value = (S.ui && S.ui.colorblind) || 'off';
+    if ($('scheduleView') && document.activeElement !== $('scheduleView')) $('scheduleView').value = (S.ui && S.ui.scheduleView) || 'compact';
     if ($('schedView') && document.activeElement !== $('schedView')) $('schedView').value = (S.ui && S.ui.schedView) || 'today';
     if ($('schedGroups') && document.activeElement !== $('schedGroups')) $('schedGroups').value = (S.ui && S.ui.schedGroups) || '';
 
@@ -297,6 +298,7 @@
   if ($('schedulePreview')) $('schedulePreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedule: e.target.checked }) }, e.target);
   if ($('todoPreview')) $('todoPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { todo: e.target.checked }) }, e.target);
   if ($('colorblindSel')) $('colorblindSel').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { colorblind: e.target.value }) }, e.target);
+  if ($('scheduleView')) $('scheduleView').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { scheduleView: e.target.value }) }, e.target);
   if ($('schedView')) $('schedView').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedView: e.target.value }) }, e.target);
   let groupsTimer;
   if ($('schedGroups')) $('schedGroups').oninput = (e) => {

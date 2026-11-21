@@ -91,7 +91,13 @@
           <label class="switch"><input type="checkbox" id="schedulePreview"> Zapnuté</label>
         </div>
         <div class="field-grid">
-          <label class="field">Predvolené zobrazenie
+          <label class="field">Formát karty
+            <select id="scheduleView">
+              <option value="compact">Prehľad (Dnes / Zajtra)</option>
+              <option value="grid">Týždeň (AIS)</option>
+            </select>
+          </label>
+          <label class="field">Predvolený deň v prehľade
             <select id="schedView">
               <option value="today">Dnes</option>
               <option value="tomorrow">Zajtra</option>

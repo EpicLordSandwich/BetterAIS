@@ -137,7 +137,7 @@ const FONTS = [
     nick: '', // lokálna prezývka (len lokálne, nesyncuje sa)
     links: null,            // zoznam odkazov v lište (null = predvolené)
     enabled: true,          // hlavný vypínač
-    ui: { hideOperinfo: false, aisLogo: true, mail: true, schedule: true, todo: true, colorblind: 'off', schedView: 'today', schedGroups: '' }, // skryť .operinfo.sd-box; AIS logo; náhľady na hlavnej stránke
+    ui: { hideOperinfo: false, aisLogo: true, mail: true, schedule: true, todo: true, colorblind: 'off', schedView: 'today', scheduleView: 'compact', schedGroups: '' }, // skryť .operinfo.sd-box; AIS logo; náhľady na hlavnej stránke
     snippets: [],           // vlastné CSS snippety [{ id, name, css, on }]
     disabledPages: [],      // cesty (/auth/...), kde je betterUIS vypnutý
     customThemes: null,     // importované témy { 'c-xxx': {name, tagline, radius, font, dark, light} }
@@ -382,7 +382,7 @@ const FONTS = [
       nick: String(s.nick || '').trim().slice(0, 40),
       links,
       enabled: bool(s.enabled, DEFAULTS.enabled),
-      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule), todo: bool(s.ui && s.ui.todo, DEFAULTS.ui.todo), colorblind: ['off','deuteranopia','protanopia','tritanopia','achromatopsia'].includes(s.ui && s.ui.colorblind) ? s.ui.colorblind : DEFAULTS.ui.colorblind, schedView: ['today','tomorrow','week'].includes(s.ui && s.ui.schedView) ? s.ui.schedView : DEFAULTS.ui.schedView, schedGroups: String((s.ui && s.ui.schedGroups) || '').slice(0, 200) },
+      ui: { hideOperinfo: bool(s.ui && s.ui.hideOperinfo, DEFAULTS.ui.hideOperinfo), aisLogo: bool(s.ui && s.ui.aisLogo, DEFAULTS.ui.aisLogo), mail: bool(s.ui && s.ui.mail, DEFAULTS.ui.mail), schedule: bool(s.ui && s.ui.schedule, DEFAULTS.ui.schedule), todo: bool(s.ui && s.ui.todo, DEFAULTS.ui.todo), colorblind: ['off','deuteranopia','protanopia','tritanopia','achromatopsia'].includes(s.ui && s.ui.colorblind) ? s.ui.colorblind : DEFAULTS.ui.colorblind, schedView: ['today','tomorrow','week'].includes(s.ui && s.ui.schedView) ? s.ui.schedView : DEFAULTS.ui.schedView, scheduleView: ['compact','grid'].includes(s.ui && s.ui.scheduleView) ? s.ui.scheduleView : DEFAULTS.ui.scheduleView, schedGroups: String((s.ui && s.ui.schedGroups) || '').slice(0, 200) },
       snippets, disabledPages,
       customThemes: customThemes,
       experimental: bool(s.experimental, DEFAULTS.experimental),
@@ -476,6 +476,7 @@ const FONTS = [
         '--border': p.border, '--text': p.text, '--muted': p.muted,
         '--link': p.link, '--accent': p.accent, '--on-accent': p.onAccent,
         '--info': p.info, '--warn': p.warn, '--crit': p.crit,
+        '--sched-pred': p.info, '--sched-cvic': p.accent,
         '--radius': r + 'px', '--radius-sm': Math.max(3, Math.round(r / 2)) + 'px',
         '--shadow-1': dark ? '0 1px 3px rgba(0,0,0,.30)' : '0 1px 3px rgba(0,0,0,.08)',
         '--shadow-2': dark ? '0 4px 14px rgba(0,0,0,.40)' : '0 4px 14px rgba(0,0,0,.12)',

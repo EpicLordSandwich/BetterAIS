@@ -6,6 +6,7 @@ const html = readFileSync('options.html', 'utf8');
 const css = readFileSync('options.css', 'utf8');
 const js = readFileSync('options.js', 'utf8');
 const popup = readFileSync('popup.html', 'utf8');
+const base = readFileSync('base.css', 'utf8');
 
 test('options.css má @charset na prvom riadku', () => {
   assert.equal(css.split('\n')[0], '@charset "UTF-8";');
@@ -29,7 +30,7 @@ test('navigácia zodpovedá panelom', () => {
 test('všetky ovládacie prvky používajú v JS existujúce ID', () => {
   for (const id of [
     'masterSwitch', 'mode', 'store', 'accent', 'link', 'radius', 'fontSel', 'fontCustom',
-    'hideOperinfo', 'aisLogo', 'mailPreview', 'schedulePreview', 'schedView', 'schedGroups',
+    'hideOperinfo', 'aisLogo', 'mailPreview', 'schedulePreview', 'scheduleView', 'schedView', 'schedGroups',
     'todoPreview', 'links', 'addLink', 'nick', 'pic', 'avUrl', 'avUpload', 'avOrig',
     'colorblindSel', 'snippets', 'addSnippet', 'experimentalOn', 'exportCfg', 'importCfg',
     'importTheme', 'copyDiag', 'reset', 'toast',
@@ -46,6 +47,14 @@ test('šablóna používa triedy z CSS a responzívnu mriežku tém', () => {
   assert.ok(css.includes(':disabled'));
   assert.ok(js.includes('hashchange'));
   assert.ok(js.includes('addEventListener(\'input\''));
+});
+
+test('mriežka rozvrhu používa premenné a vlastný scroll kontajner', () => {
+  assert.ok(base.includes('--hour-w'));
+  assert.ok(base.includes('--sched-pred'));
+  assert.ok(base.includes('--sched-cvic'));
+  assert.ok(base.includes('.bu-grid-scroll { overflow-x: auto'));
+  assert.ok(base.includes('max-width: 700px'));
 });
 
 test('texty predvolených hodnôt zodpovedajú DEFAULTS', () => {
