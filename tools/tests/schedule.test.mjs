@@ -87,6 +87,13 @@ test('filter dňa rešpektuje paritu, voľný deň a výber skupín', () => {
   assert.equal(Sch.isEventActive(p.events[2], p.notes, new Date(2026, 10, 16), []), true);
 });
 
+test('table-tools preskočí rozvrh aj legendu', () => {
+  const tables = HTML.match(/<table\b[^>]*>[\s\S]*?<\/table>/gi) || [];
+  assert.equal(Sch.isScheduleOrLegend(tables[0]), true);
+  assert.equal(Sch.isScheduleOrLegend(tables[1]), true);
+  assert.equal(Sch.isScheduleOrLegend('<table><tr><th>x</th></tr><tr><td>y</td></tr></table>'), false);
+});
+
 test('vlastné ID sa nájde v odkaze aj vo fotke a musí sedieť', () => {
   const html = '<a href="../lide/clovek.pl?id=150164">Ja</a><img src="../foto.pl?id=150164"><img src="../foto.pl?id=900001">';
   assert.equal(globalThis.BU.notif.studentIdFromHtml(html), '150164');

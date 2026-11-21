@@ -184,5 +184,10 @@
     return true;
   }
 
-  BU.schedule = { parseSchedule, schedMainTable: (html) => !!mainTable(html), buildScheduleUrl, weekRange, isoWeek, isEventActive, fmtDate, DAY_INDEX };
+  function isScheduleOrLegend(html) {
+    return /<t[dh]\b[^>]*class\s*=\s*"[^"]*\brozvrh-(?:pred|cvic)\b/i.test(html || '')
+      || /<table\b[^>]*class\s*=\s*"[^"]*\buisLegend\b/i.test(html || '');
+  }
+
+  BU.schedule = { parseSchedule, schedMainTable: (html) => !!mainTable(html), isScheduleOrLegend, buildScheduleUrl, weekRange, isoWeek, isEventActive, fmtDate, DAY_INDEX };
 })(self);

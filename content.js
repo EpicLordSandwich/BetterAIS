@@ -868,7 +868,7 @@
      formulára. Pravidlo je testované v node ako BU.notif.hasFormControls; tu sa
      kontroluje rovnakým spôsobom cez DOM query. Marker data-bu-tt bráni slučke
      MutationObserver → init (opakovaná inicializácia by prekresľovala donekonečna). */
-  const TT_EXCLUDE = '#bu-ctl, #bu-dialog, #bu-palette, .bu-pop, #uisFixedBox, #uisFloatingBox, .ui-dialog, .bu-keep';
+  const TT_EXCLUDE = '#bu-ctl, #bu-dialog, #bu-palette, .bu-pop, #uisFixedBox, #uisFloatingBox, .ui-dialog, .bu-keep, .uisLegend';
 
   function tableTools() {
     if (offNow()) return;
@@ -881,7 +881,7 @@
       const sortable = [...tbody.rows].filter((r) => !r.querySelector('th'));   // riadky s <th> (hlavička v tbody) sa nehýbu
       if (sortable.length < 2) return;
       if (BU.notif.hasFormControls([table.outerHTML])) return;       // = pravidlo hasFormControls (testované v node)
-      if (table.closest(TT_EXCLUDE)) return;
+      if (BU.schedule.isScheduleOrLegend(table.outerHTML) || table.closest(TT_EXCLUDE)) return;
       table.dataset.buTt = '1';
       table.classList.add('bu-tt-table');
 
