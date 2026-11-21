@@ -174,8 +174,8 @@
     const wanted = (groups || []).map((x) => String(x).trim().toLowerCase()).filter(Boolean);
     for (const ref of event.noteRefs || []) {
       const note = notes[ref] || '';
-      if (/Párny\s+týždeň/i.test(note) && isoWeek(date) % 2 !== 0) return false;
-      if (/Nepárny\s+týždeň/i.test(note) && isoWeek(date) % 2 === 0) return false;
+      const parity = /(ne)?párny\s+týždeň/i.exec(note);
+      if (parity && (isoWeek(date) % 2 === 0) === !!parity[1]) return false;
       const free = /Voľný\s+deň:\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})/i.exec(note);
       if (free && Number(free[1]) === date.getDate() && Number(free[2]) === date.getMonth() + 1 && Number(free[3]) === date.getFullYear()) return false;
       const only = /Určené\s+pre:\s*(.+)$/i.exec(note);

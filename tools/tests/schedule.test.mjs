@@ -87,6 +87,13 @@ test('filter dňa rešpektuje paritu, voľný deň a výber skupín', () => {
   assert.equal(Sch.isEventActive(p.events[2], p.notes, new Date(2026, 10, 16), []), true);
 });
 
+test('Nepárny týždeň sa nevyhodnotí ako Párny', () => {
+  const ev = { day: 'Po', noteRefs: [99] };
+  const notes = { 99: 'Nepárny týždeň (podľa kalendára)' };
+  assert.equal(Sch.isEventActive(ev, notes, new Date(2026, 10, 16), []), true);
+  assert.equal(Sch.isEventActive(ev, notes, new Date(2026, 10, 23), []), false);
+});
+
 test('table-tools preskočí rozvrh aj legendu', () => {
   const tables = HTML.match(/<table\b[^>]*>[\s\S]*?<\/table>/gi) || [];
   assert.equal(Sch.isScheduleOrLegend(tables[0]), true);
