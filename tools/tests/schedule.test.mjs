@@ -18,9 +18,18 @@ test('parser nájde rozvrh, nie legendu ani formulár', () => {
   assert.equal(Sch.parseSchedule('<form><table><tr><td>x</td></tr></table></form>', FETCH_URL).events.length, 0);
 });
 
-test('Bunka s colspan 22 na stĺpci 24 je 10:00–11:50', () => {
+test('Bunka s colspan 22 na stĺpci 24 je 10:00–11:40 (1 h 40)', () => {
   const e = parsed().events[0];
-  assert.deepEqual({ day: e.day, start: e.start, end: e.end, type: e.type }, { day: 'Po', start: '10:00', end: '11:50', type: 'pred' });
+  assert.deepEqual({ day: e.day, start: e.start, end: e.end, type: e.type }, { day: 'Po', start: '10:00', end: '11:40', type: 'pred' });
+});
+
+test('hodinové bloky sú 8.00-8.50 až 18.00-18.50', () => {
+  const hours = Sch.hourBlocks();
+  assert.equal(hours.length, 11);
+  assert.deepEqual(hours[0], { hour: 8, label: '8.00-8.50', col: 0, current: false });
+  assert.deepEqual(hours[10], { hour: 18, label: '18.00-18.50', col: 120, current: false });
+  assert.equal(Sch.colAt('10:00'), 24);
+  assert.equal(Sch.colAt('11:40'), 44);
 });
 
 test('event obsahuje miestnosť, skupinu, predmet, vyučujúceho a poznámky', () => {
@@ -44,7 +53,7 @@ test('pokračovací riadok dedí deň', () => {
   const e = parsed().events[2];
   assert.equal(e.day, 'Po');
   assert.equal(e.group, 'B1');
-  assert.equal(e.start, '11:50');
+  assert.equal(e.start, '12:00');
   assert.deepEqual(e.noteRefs, []);
 });
 
@@ -99,6 +108,46 @@ test('table-tools preskočí rozvrh aj legendu', () => {
   assert.equal(Sch.isScheduleOrLegend(tables[0]), true);
   assert.equal(Sch.isScheduleOrLegend(tables[1]), true);
   assert.equal(Sch.isScheduleOrLegend('<table><tr><th>x</th></tr><tr><td>y</td></tr></table>'), false);
+});
+
+test('renderScheduleGrid: dni, karty, lane a pozícia 10:00', () => {
+  const g = Sch.renderScheduleGrid(parsed(), { today: new Date(2026, 10, 16) });
+  assert.equal(g.days.length, 5);
+  const po = g.days[0], ut = g.days[1];
+  assert.equal(po.isToday, true);
+  assert.equal(ut.isToday, false);
+  assert.equal(po.cards.length, 2);
+  assert.equal(po.more, 1);
+  assert.equal(ut.cards.length, 1);
+  assert.equal(po.laneCount, 2);
+  assert.equal(po.cards[0].col, 24);
+  assert.equal(po.cards[0].span, 20);
+  assert.equal(po.cards[0].note, 'Párny týždeň (podľa kalendára)');
+  assert.equal(po.cards[1].lane, 0);
+  assert.equal(po.cards[1].hidden[0].lane, 1);
+  assert.equal(g.hours[2].label, '10.00-10.50');
+  assert.equal(g.hours[2].col, 24);
+});
+
+test('renderScheduleGrid: paralelné udalosti dostanú samostatné lane', () => {
+  const ev = (subject, group, start, end) => ({ day: 'St', subject, subjectId: subject, group, start, end, type: 'cvic', noteRefs: [], url: '' });
+  const g = Sch.renderScheduleGrid({ notes: {}, events: [
+    ev('AJ1', 'A2', '10:00', '11:40'), ev('AJ1', 'B1', '10:00', '11:40'),
+    ev('AJ1', 'C1', '11:00', '12:40'), ev('MAT1', '', '12:00', '13:40'),
+  ] }, { today: new Date(2026, 10, 18) });
+  const st = g.days[2];
+  assert.equal(st.laneCount, 3);
+  assert.deepEqual(st.cards.map((c) => c.lane), [0, 2, 0]);
+  assert.deepEqual(st.cards[0].hidden.map((c) => c.lane), [1]);
+  assert.equal(st.more, 1);
+});
+
+test('renderScheduleGrid: zvolená skupina sa stane primárnou kartou', () => {
+  const g = Sch.renderScheduleGrid(parsed(), { today: new Date(2026, 10, 16), selected: ['B1'] });
+  const po = g.days[0];
+  assert.equal(po.cards[1].group, 'B1');
+  assert.equal(po.cards[1].selected, true);
+  assert.equal(po.cards[1].hidden[0].group, 'A2');
 });
 
 test('vlastné ID sa nájde v odkaze aj vo fotke a musí sedieť', () => {

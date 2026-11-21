@@ -146,10 +146,11 @@
           const teachLink = ls.find((l) => /clovek\.pl/i.test(l.href));
           const roomParts = (roomLink ? roomLink.text : '').split(/\s*\/\s*/);
           const subjectId = subjLink ? (/[?;&]predmet=([^&;"']+)/.exec(subjLink.href) || [])[1] || '' : '';
+          const startMin = 8 * 60 + 5 * col;
           events.push({
             day,
-            start: hhmm(8 * 60 + 5 * col),
-            end: hhmm(8 * 60 + 5 * (col + colspan)),
+            start: hhmm(startMin),
+            end: hhmm(Math.max(startMin + 5, 8 * 60 + 5 * (col + colspan) - 10)),
             type: hasClass(c.attrs, 'rozvrh-pred') ? 'pred' : 'cvic',
             room: roomParts[0] || '',
             group: roomParts.slice(1).join(' / '),
@@ -184,10 +185,85 @@
     return true;
   }
 
+  function colAt(time) {
+    const m = /^(\d{1,2}):(\d{2})/.exec(String(time || ''));
+    if (!m) return 0;
+    return Math.max(0, Math.round(((Number(m[1]) - 8) * 60 + Number(m[2])) / 5));
+  }
+  function hourBlocks(now) {
+    const currentHour = now ? now.getHours() : -1;
+    const out = [];
+    for (let h = 8; h <= 18; h++) out.push({ hour: h, label: h + '.00-' + h + '.50', col: (h - 8) * 12, current: h === currentHour });
+    return out;
+  }
+  function normGroups(groups) {
+    return (groups || []).map((x) => String(x).trim().toLowerCase()).filter(Boolean);
+  }
+  function isGroupSelected(ev, notes, selected) {
+    if (!selected.length || !ev) return true;
+    if (ev.group && selected.includes(ev.group.toLowerCase())) return true;
+    for (const ref of ev.noteRefs || []) {
+      const only = /Určené\s+pre:\s*(.+)$/i.exec(notes[ref] || '');
+      if (only && only[1].toLowerCase().split(/[,;/ ]+/).some((x) => selected.includes(x))) return true;
+    }
+    return !ev.group;
+  }
+  function renderScheduleGrid(model, opts) {
+    const notes = (model && model.notes) || {};
+    const today = opts && opts.today instanceof Date ? opts.today : null;
+    const selected = normGroups(opts && opts.selected);
+    const weekday = today ? ((today.getDay() + 6) % 7) + 1 : 0;
+    const hasToday = !!today && !!DAY_INDEX[Object.keys(DAY_INDEX).find((d) => DAY_INDEX[d] === weekday)];
+    const hours = hourBlocks(hasToday ? today : null);
+    const nowCol = hasToday ? colAt(pad(today.getHours()) + ':' + pad(today.getMinutes())) : -1;
+    const days = ['Po', 'Ut', 'St', 'Št', 'Pi'].map((day) => {
+      const all = ((model && model.events) || []).filter((ev) => ev.day === day).map((ev) => Object.assign({}, ev, {
+        col: colAt(ev.start),
+        span: Math.max(1, colAt(ev.end) - colAt(ev.start)),
+      })).sort((a, b) => a.col - b.col || a.start.localeCompare(b.start));
+      const lanes = [];
+      all.forEach((ev) => {
+        let lane = 0;
+        while (lanes[lane] && lanes[lane].some((o) => ev.col < o.col + o.span && ev.col + ev.span > o.col)) lane++;
+        ev.lane = lane;
+        (lanes[lane] = lanes[lane] || []).push(ev);
+      });
+      const variants = new Map();
+      all.forEach((ev) => {
+        const key = [ev.subjectId || ev.subject, ev.start, ev.end, ev.type].join('|');
+        if (!variants.has(key)) variants.set(key, []);
+        variants.get(key).push(ev);
+      });
+      const cards = [];
+      variants.forEach((list) => {
+        let idx = list.findIndex((ev) => isGroupSelected(ev, notes, selected));
+        if (idx < 0) idx = 0;
+        const primary = list[idx];
+        const noteRef = (primary.noteRefs || [])[0];
+        cards.push(Object.assign({}, primary, {
+          selected: isGroupSelected(primary, notes, selected),
+          noteRef: noteRef || 0,
+          note: noteRef ? (notes[noteRef] || '') : '',
+          hidden: list.filter((_, i) => i !== idx),
+          more: list.length - 1,
+        }));
+      });
+      cards.sort((a, b) => a.col - b.col || a.lane - b.lane);
+      return {
+        day,
+        isToday: !!hasToday && DAY_INDEX[day] === weekday,
+        events: all,
+        cards,
+        more: cards.reduce((n, c) => n + c.more, 0),
+        laneCount: Math.max(1, lanes.length),
+      };
+    });
+    return { hours, nowCol, days };
+  }
   function isScheduleOrLegend(html) {
     return /<t[dh]\b[^>]*class\s*=\s*"[^"]*\brozvrh-(?:pred|cvic)\b/i.test(html || '')
       || /<table\b[^>]*class\s*=\s*"[^"]*\buisLegend\b/i.test(html || '');
   }
 
-  BU.schedule = { parseSchedule, schedMainTable: (html) => !!mainTable(html), isScheduleOrLegend, buildScheduleUrl, weekRange, isoWeek, isEventActive, fmtDate, DAY_INDEX };
+  BU.schedule = { parseSchedule, schedMainTable: (html) => !!mainTable(html), isScheduleOrLegend, buildScheduleUrl, weekRange, isoWeek, isEventActive, isGroupSelected, colAt, hourBlocks, renderScheduleGrid, fmtDate, DAY_INDEX };
 })(self);
