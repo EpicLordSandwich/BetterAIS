@@ -1009,17 +1009,13 @@
     catch (e) { return new TextDecoder('utf-8').decode(buf); }
   }
   function homeRow() {
-    const menitko = document.getElementById('menitko');
-    if (!menitko || !menitko.parentNode) return null;
+    const anchor = homeAnchor();
+    if (!anchor || !anchor.parentNode) return null;
     let row = document.getElementById('bu-home-row');
     if (!row) {
       row = document.createElement('div');
       row.id = 'bu-home-row';
-      row.style.display = 'flex';
-      row.style.gap = '12px';
-      row.style.alignItems = 'flex-start';
-      row.style.marginBottom = '12px';
-      menitko.parentNode.insertBefore(row, menitko);
+      anchor.parentNode.insertBefore(row, anchor);
     }
     return row;
   }
@@ -1348,157 +1344,289 @@
   /* ================= 14) Náhľad rozvrhu (voliteľný, hlavná stránka) ================= */
   const SCHED_CACHE = 'bu:schedule';
   const SCHED_REFRESH_MS = 30 * 60 * 1000;
-  let schedState = { html: '', time: 0, status: '', error: '' };
+  let schedState = { html: '', url: '', time: 0, status: '', error: '', diagnostic: '' };
+  let schedData = null;
   let schedTimer = null;
   let schedFetching = false;
+  let schedStarted = false;
+  let schedView = 'today';
+  let schedRenderKey = '';
+  let schedVisitKey = '';
+  let schedAnchorWarned = false;
 
   function schedOn() {
     return !offNow() && document.documentElement.dataset.buOff !== '1' && !!(S.ui && S.ui.schedule);
   }
-  function schedPanel() {
+  function schedEl(tag, cls, txt) {
+    const el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (txt != null) el.textContent = txt;
+    return el;
+  }
+  function homeAnchor() {
     const menitko = document.getElementById('menitko');
-    if (!menitko || !menitko.parentNode) return null;
+    if (menitko && menitko.parentNode) return menitko;
+    const main = document.querySelector('#stranka .mainpage');
+    if (main && main.parentNode) return main.firstElementChild || main;
+    if (!schedAnchorWarned) {
+      schedAnchorWarned = true;
+      console.debug('betterAIS: chýba kotva #menitko pre karty na domovskej stránke, používam #stranka .mainpage');
+    }
+    return null;
+  }
+  function schedPanel() {
+    const anchor = homeAnchor();
+    if (!anchor || !anchor.parentNode) return null;
     let p = document.getElementById('bu-schedule');
     const homeRow = document.getElementById('bu-home-row');
     if (p && homeRow && p.parentNode === homeRow) {
-      // presunúť von z flex riadku (pod mail+todo)
       homeRow.parentNode.insertBefore(p, homeRow.nextSibling);
     }
     if (!p) {
-      p = document.createElement('section');
+      p = schedEl('section', '', '');
       p.id = 'bu-schedule';
-      const anchor = homeRow || menitko;
       anchor.parentNode.insertBefore(p, anchor.nextSibling);
     }
     return p;
   }
-  function schedUrl() {
-    // preferuj uloženú URL z návštevy rozvrhu (obsahuje rozvrh_student, obdobie, ...)
-    let saved = '';
-    try { saved = (JSON.parse(localStorage.getItem('bu:schedUrl') || '""')) || ''; } catch (e) { saved = ''; }
-    const links = [...document.querySelectorAll('a[href*="rozvrhy_view"]')];
-    const a = links.find((x) => /rozvrh_student/.test(x.getAttribute('href') || ''));
-    const href = saved || (a ? a.getAttribute('href') : '') || '/auth/katalog/rozvrhy_view.pl?lang=sk';
-    try { return new URL(href, location.origin).href; } catch (e) { return '/auth/katalog/rozvrhy_view.pl?lang=sk'; }
+  let schedOwnId = '';
+  function ownId() {
+    if (schedOwnId) return schedOwnId;
+    const a = document.querySelector('#menu-popup .user-info a[href*="clovek.pl?id="]');
+    const img = document.querySelector('#pfp img[src*="foto.pl?id="]');
+    schedOwnId = BU.notif.photoId(a && a.getAttribute('href')) || BU.notif.photoId(img && img.getAttribute('src'))
+      || (document.body ? BU.notif.studentIdFromHtml(document.body.innerHTML.slice(0, 120000)) : '');
+    return schedOwnId;
   }
-  function schedFindTable(html) {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    // IBA skutočný rozvrh (bunky .rozvrh-pred/.rozvrh-cvic). Nikdy nie formulár
-    // „Formát / Zobraziť" z výberu kritérií – to nie je rozvrh.
-    return doc.querySelector('table:has(.rozvrh-pred), table:has(.rozvrh-cvic)');
+  function schedUrls() {
+    const id = ownId();
+    if (!id) return [];
+    const range = BU.schedule.weekRange(new Date());
+    return [
+      BU.schedule.buildScheduleUrl(id, range.from, range.to, 'souhrn'),
+      BU.schedule.buildScheduleUrl(id, range.from, range.to, 'konani'),
+    ];
+  }
+  function schedFullUrl() {
+    return schedUrls()[0] || BU.schedule.buildScheduleUrl('', BU.schedule.weekRange(new Date()).from, BU.schedule.weekRange(new Date()).to);
+  }
+  function schedParsed() {
+    if (!schedState.html) return null;
+    if (!schedData || schedData.html !== schedState.html) {
+      schedData = { html: schedState.html, data: BU.schedule.parseSchedule(schedState.html, schedState.url || schedFullUrl()) };
+    }
+    return schedData.data;
+  }
+  function schedGroups() {
+    return String((S.ui && S.ui.schedGroups) || '').split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
+  }
+  function schedKeepGroup(ev, groups) {
+    if (!groups.length) return true;
+    if (ev.group && groups.includes(ev.group.toLowerCase())) return true;
+    return !ev.group;
   }
   function schedRememberCurrent() {
     if (!/rozvrhy_view\.pl/.test(location.href)) return;
-    const tbl = document.querySelector('table.bu-tt-table, table:has(.rozvrh-pred), table:has(.rozvrh-cvic)');
-    if (!tbl) return;
-    try {
-      localStorage.setItem('bu:schedUrl', JSON.stringify(location.href));
-      const captured = {
-        html: tbl.outerHTML,
-        url: location.href,
-        time: Date.now(),
-        status: 'z poslednej návštevy rozvrhu',
-        error: '',
-      };
-      chrome.storage.local.set({ [SCHED_CACHE]: captured }).catch((e) => swallow(e));
-      if (!schedState.html || schedState.time < captured.time) schedState = captured;
-    } catch (e) { swallow(e); }
+    const id = ownId();
+    if (!id) return;
+    const key = location.href + '|' + id;
+    if (schedVisitKey === key) return;
+    schedVisitKey = key;
+    if (!BU.schedule.schedMainTable(document.documentElement.innerHTML)) return;
+    const range = BU.schedule.weekRange(new Date());
+    try { localStorage.setItem('bu:schedUrl', JSON.stringify(BU.schedule.buildScheduleUrl(id, range.from, range.to))); } catch (e) { swallow(e); }
+  }
+  const SCHED_VIEWS = [['today', 'Dnes'], ['tomorrow', 'Zajtra'], ['week', 'Celý týždeň']];
+  const toMin = (s) => Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5));
+
+  function schedEventEl(ev, mark, compact) {
+    const row = schedEl('div', 'bu-sched-event bu-sched-' + ev.type);
+    if (mark === 'now') row.classList.add('bu-sched-now');
+    else if (mark === 'next') row.classList.add('bu-sched-next');
+    row.appendChild(schedEl('span', 'bu-sched-time', ev.start + '–' + ev.end));
+    row.appendChild(schedEl('span', 'bu-sched-type', ev.type === 'pred' ? 'Prednáška' : 'Cvičenie'));
+    const name = ev.url ? schedEl('a', 'bu-sched-subject', ev.subject) : schedEl('span', 'bu-sched-subject', ev.subject);
+    if (ev.url) name.href = ev.url;
+    row.appendChild(name);
+    if (!compact) {
+      if (ev.room) {
+        const room = ev.roomUrl ? schedEl('a', 'bu-sched-room', ev.room) : schedEl('span', 'bu-sched-room', ev.room);
+        if (ev.roomUrl) room.href = ev.roomUrl;
+        row.appendChild(room);
+      }
+      if (ev.teacher) {
+        const teacher = ev.teacherUrl ? schedEl('a', 'bu-sched-teacher', ev.teacher) : schedEl('span', 'bu-sched-teacher', ev.teacher);
+        if (ev.teacherUrl) teacher.href = ev.teacherUrl;
+        row.appendChild(teacher);
+      }
+      if (ev.group) row.appendChild(schedEl('span', 'bu-sched-group', ev.group));
+    }
+    const notes = (ev.noteRefs || []).map((n) => (schedParsed() || { notes: {} }).notes[n]).filter(Boolean);
+    if (notes.length) row.title = notes.join('\n');
+    return row;
+  }
+  function schedDayList(date, data, groups, nowMin, compact, emptyText) {
+    const events = data.events.filter((ev) => BU.schedule.isEventActive(ev, data.notes, date, groups) && schedKeepGroup(ev, groups))
+      .sort((a, b) => a.start.localeCompare(b.start) || a.subject.localeCompare(b.subject));
+    const wrap = schedEl('div', 'bu-sched-list');
+    if (!events.length) { wrap.appendChild(schedEl('p', 'bu-mail-msg', emptyText || 'Dnes nemáš výučbu')); return wrap; }
+    const markOf = (ev) => (nowMin != null && toMin(ev.start) <= nowMin && nowMin < toMin(ev.end) ? 'now' : '');
+    const variants = new Map();
+    events.forEach((ev) => {
+      const key = ev.subjectId + '|' + ev.start + '|' + ev.end + '|' + ev.type;
+      if (!variants.has(key)) variants.set(key, []);
+      variants.get(key).push(ev);
+    });
+    let nextMarked = false;
+    variants.forEach((list) => {
+      let mark = markOf(list[0]);
+      if (!mark && !nextMarked && nowMin != null && toMin(list[0].start) > nowMin) { mark = 'next'; nextMarked = true; }
+      wrap.appendChild(schedEventEl(list[0], mark, compact));
+      if (list.length > 1 && !compact) {
+        const det = schedEl('details', 'bu-sched-more');
+        det.appendChild(schedEl('summary', '', '+' + (list.length - 1) + ' ďalších možností'));
+        list.slice(1).forEach((ev) => det.appendChild(schedEventEl(ev, markOf(ev), compact)));
+        wrap.appendChild(det);
+      }
+    });
+    return wrap;
+  }
+  function schedBody(p, data) {
+    const groups = schedGroups();
+    const today = new Date();
+    if (schedView === 'week') {
+      const range = BU.schedule.weekRange(today);
+      const start = new Date(Number(range.from.slice(6)), Number(range.from.slice(3, 5)) - 1, Number(range.from.slice(0, 2)));
+      ['Po', 'Ut', 'St', 'Št', 'Pi'].forEach((day, i) => {
+        const date = new Date(start); date.setDate(start.getDate() + i);
+        const box = schedEl('div', 'bu-sched-day');
+        box.appendChild(schedEl('h4', 'bu-sched-dayname', day + ' ' + BU.schedule.fmtDate(date)));
+        const events = data.events.filter((ev) => BU.schedule.isEventActive(ev, data.notes, date, groups) && schedKeepGroup(ev, groups));
+        if (!events.length) box.appendChild(schedEl('p', 'bu-sched-empty', 'Voľný deň'));
+        else box.appendChild(schedDayList(date, data, groups, null, true, ''));
+        p.appendChild(box);
+      });
+      return;
+    }
+    const date = new Date(today);
+    if (schedView === 'tomorrow') date.setDate(date.getDate() + 1);
+    const nowMin = schedView === 'today' ? today.getHours() * 60 + today.getMinutes() : null;
+    p.appendChild(schedDayList(date, data, groups, nowMin, false, schedView === 'tomorrow' ? 'Zajtra nemáš výučbu' : 'Dnes nemáš výučbu'));
   }
   function schedRender() {
     if (!schedOn()) return;
     const p = schedPanel();
     if (!p) return;
+    const key = JSON.stringify([schedView, schedState.time, schedState.error, schedState.status, schedState.html.length, schedGroups()]);
+    if (key === schedRenderKey && p.childElementCount) return;
+    schedRenderKey = key;
     p.replaceChildren();
-    const head = document.createElement('div');
-    head.className = 'bu-mail-head';
-    const title = document.createElement('a');
-    title.className = 'bu-mail-title';
-    title.href = schedUrl();
-    title.textContent = 'Rozvrh';
+    const head = schedEl('div', 'bu-mail-head');
+    const title = schedEl('a', 'bu-mail-title', 'Rozvrh');
+    title.href = schedState.url || schedFullUrl();
     head.appendChild(title);
-    const status = document.createElement('span');
-    status.className = 'bu-mail-status';
-    status.textContent = schedState.status;
+    const status = schedEl('span', 'bu-mail-status', schedState.status);
     head.appendChild(status);
-    const btn = document.createElement('button');
-    btn.className = 'bu-mail-refresh';
-    btn.type = 'button';
-    btn.textContent = '↻';
-    btn.title = 'Obnoviť';
+    const btn = schedEl('button', 'bu-mail-refresh', '↻');
+    btn.type = 'button'; btn.title = 'Obnoviť'; btn.setAttribute('aria-label', 'Obnoviť rozvrh');
     btn.addEventListener('click', () => schedFetch());
     head.appendChild(btn);
     p.appendChild(head);
+    const tabs = schedEl('div', 'bu-sched-tabs');
+    SCHED_VIEWS.forEach(([v, label]) => {
+      const b = schedEl('button', 'bu-sched-tab' + (schedView === v ? ' on' : ''), label);
+      b.type = 'button'; b.setAttribute('aria-pressed', schedView === v ? 'true' : 'false');
+      b.addEventListener('click', () => {
+        schedView = v; schedRenderKey = ''; schedRender();
+        try { chrome.storage.local.set({ 'bu:sched-view': v }); } catch (e) { swallow(e); }
+      });
+      tabs.appendChild(b);
+    });
+    p.appendChild(tabs);
     if (schedState.error) {
-      const e = document.createElement('p'); e.className = 'bu-mail-msg bu-mail-err'; e.textContent = schedState.error; p.appendChild(e);
+      p.appendChild(schedEl('p', 'bu-mail-msg bu-mail-err', schedState.error));
+      if (schedState.diagnostic) p.appendChild(schedEl('small', 'bu-sched-diag', schedState.diagnostic));
+      const actions = schedEl('div', 'bu-sched-actions');
+      const retry = schedEl('button', 'bu-sched-retry', 'Skúsiť znova');
+      retry.type = 'button'; retry.addEventListener('click', () => schedFetch());
+      actions.appendChild(retry);
+      const full = schedEl('a', 'bu-sched-full', 'Celý rozvrh'); full.href = schedFullUrl();
+      actions.appendChild(full);
+      p.appendChild(actions);
       return;
     }
-    if (!schedState.html) {
-      const e = document.createElement('p'); e.className = 'bu-mail-msg'; e.textContent = schedState.time ? 'Žiadne údaje.' : 'Načítavam…'; p.appendChild(e);
+    const data = schedParsed();
+    if (!data) {
+      const sk = schedEl('div', 'bu-sched-skeleton');
+      for (let i = 0; i < 3; i++) sk.appendChild(schedEl('div', 'bu-sched-bar'));
+      p.appendChild(sk);
       return;
     }
-    const tbl = schedFindTable(schedState.html);
-    if (!tbl) { const e = document.createElement('p'); e.className='bu-mail-msg'; e.textContent='Rozvrh sa nepodarilo nájsť.'; p.appendChild(e); return; }
-    const wrap = document.createElement('div');
-    wrap.style.overflowX = 'auto';
-    const clone = document.importNode(tbl, true);
-    clone.classList.add('bu-tt-table');
-    clone.dataset.buTt = '1';
-    wrap.appendChild(clone);
-    p.appendChild(wrap);
+    schedBody(p, data);
+    const foot = schedEl('div', 'bu-sched-foot');
+    const full = schedEl('a', 'bu-sched-full', 'Celý rozvrh'); full.href = schedState.url || schedFullUrl();
+    foot.appendChild(full);
+    if (schedState.time) foot.appendChild(schedEl('span', 'bu-sched-updated', 'Aktualizované ' + new Date(schedState.time).toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' })));
+    p.appendChild(foot);
   }
   async function schedFetch() {
     if (!schedOn() || schedFetching) return;
-    const candidates = [];
-    try { const s = JSON.parse(localStorage.getItem('bu:schedUrl') || '""'); if (s) candidates.push(s); } catch (e) {}
-    document.querySelectorAll('a[href*="rozvrhy_view"]').forEach((a) => {
-      const h = a.getAttribute('href') || '';
-      if (/rozvrh_student/.test(h)) candidates.push(h);
-    });
-    if (schedState.url) candidates.push(schedState.url);
-    const urls = [...new Set(candidates)].map((h) => {
-      try { return new URL(h, location.origin).href; } catch (e) { return ''; }
-    }).filter(Boolean);
-    if (!urls.length) { schedState = Object.assign({}, schedState, { status: '', error: 'Navštív najprv stránku s rozvrhom.' }); schedRender(); return; }
-
+    const urls = schedUrls();
+    if (!urls.length) {
+      schedState = Object.assign({}, schedState, { status: '', error: 'ID študenta sa nepodarilo zistiť.', diagnostic: 'Skontroluj prihlásenie do AIS.' });
+      schedRender(); return;
+    }
     schedFetching = true;
-    schedState = Object.assign({}, schedState, { status: 'obnovujem…', error: '' });
+    schedState = Object.assign({}, schedState, { status: 'obnovujem…', error: '', diagnostic: '' });
     schedRender();
+    const diag = [];
     let ok = false;
     for (const url of urls) {
+      const kind = url.indexOf('typ_vypisu=konani') >= 0 ? 'konani' : 'souhrn';
       try {
         const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 10000);
         let res;
         try { res = await fetch(url, { credentials: 'include', cache: 'no-store', signal: ctrl.signal }); }
         finally { clearTimeout(t); }
-        if (!res.ok) continue;
+        if (!res.ok) { diag.push(kind + ': HTTP ' + res.status); continue; }
         const html = await res.text();
-        if (!schedFindTable(html)) continue;
-        schedState = { html, url, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour:'2-digit', minute:'2-digit' }), error: '' };
+        if (!BU.schedule.schedMainTable(html)) {
+          const what = /<form\b/i.test(html) ? 'formulár namiesto rozvrhu' : (/prihlás|login|sign in/i.test(html) ? 'prihlasovacia stránka' : 'neznáma odpoveď');
+          diag.push(kind + ': ' + what);
+          continue;
+        }
+        schedState = { html, url: res.url || url, time: Date.now(), status: 'obnovené ' + new Date().toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' }), error: '', diagnostic: '' };
         try { localStorage.setItem('bu:schedUrl', JSON.stringify(url)); } catch (e) { swallow(e); }
-        try { await chrome.storage.local.set({ [SCHED_CACHE]: schedState }); } catch (e) { swallow(e); }
+        try { await chrome.storage.local.set({ [SCHED_CACHE]: { html, url: schedState.url, time: schedState.time } }); } catch (e) { swallow(e); }
         ok = true;
         break;
-      } catch (e) { swallow(e); }
+      } catch (e) { diag.push(kind + ': ' + (e && e.name === 'AbortError' ? 'časový limit' : 'sieť')); swallow(e); }
     }
     if (!ok) {
-      // zlá uložená URL → zmaž, nech sa pri ďalšej návšteve uloží správna
-      try { localStorage.removeItem('bu:schedUrl'); } catch (e) { swallow(e); }
-      schedState = Object.assign({}, schedState, { status: '', error: 'Rozvrh sa nepodarilo načítať. Otvor raz svoj rozvrh.' });
+      schedState = Object.assign({}, schedState, { status: '', error: 'Rozvrh sa nepodarilo načítať.', diagnostic: diag.join(' · ') });
     }
     schedFetching = false;
     schedRender();
   }
   function schedStart() {
-    if (schedTimer) return;
+    if (schedStarted) return;
+    schedStarted = true;
     schedTimer = setInterval(() => { if (schedOn()) schedFetch(); }, SCHED_REFRESH_MS);
-    chrome.storage.local.get(SCHED_CACHE).then((r) => {
+    chrome.storage.local.get([SCHED_CACHE, 'bu:sched-view']).then((r) => {
+      const v = r && r['bu:sched-view'];
+      if (SCHED_VIEWS.some(([id]) => id === v)) { schedView = v; schedRenderKey = ''; }
       const c = r && r[SCHED_CACHE];
-      if (c && c.html && schedFindTable(c.html)) { schedState = { html: c.html, time: c.time || 0, status: 'z vyrovnávacej pamäte', error: '' }; schedRender(); }
-      if (!schedState.time || Date.now() - schedState.time > SCHED_REFRESH_MS) schedFetch();
+      if (c && c.html && BU.schedule.schedMainTable(c.html)) {
+        schedState = { html: c.html, url: c.url || '', time: c.time || 0, status: 'z vyrovnávacej pamäte', error: '', diagnostic: '' };
+        schedRender();
+      }
+      if (Date.now() - schedState.time > SCHED_REFRESH_MS) schedFetch();
     }).catch(() => { schedFetch(); });
   }
   function schedStop() {
     if (schedTimer) { clearInterval(schedTimer); schedTimer = null; }
+    schedStarted = false;
+    schedRenderKey = '';
     const p = document.getElementById('bu-schedule'); if (p) p.remove();
     homeRowCleanup();
   }
@@ -1506,7 +1634,7 @@
     schedRememberCurrent();
     if (!schedOn()) { schedStop(); return; }
     const p = schedPanel();
-    if (!p) return;
+    if (!p) { schedStop(); return; }
     if (!p.dataset.buRendered) { p.dataset.buRendered = '1'; schedRender(); }
     schedStart();
   }

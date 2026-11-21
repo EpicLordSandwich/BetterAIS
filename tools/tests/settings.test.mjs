@@ -58,6 +58,14 @@ test('todo je opt-in', () => {
   assert.equal(BU.normalize({ ui: { todo: false } }).ui.todo, false);
 });
 
+test('zobrazenie rozvrhu a vlastné skupiny sa validujú', () => {
+  assert.equal(BU.normalize(null).ui.schedView, 'today');
+  assert.equal(BU.normalize({ ui: { schedView: 'week', schedGroups: 'A2, B1' } }).ui.schedView, 'week');
+  assert.equal(BU.normalize({ ui: { schedView: 'nonsense' } }).ui.schedView, 'today');
+  assert.equal(BU.normalize({ ui: { schedGroups: 'A2' } }).ui.schedGroups, 'A2');
+  assert.deepEqual(BU.normalize(BU.normalize({ ui: { schedView: 'week' } })), BU.normalize({ ui: { schedView: 'week' } }));
+});
+
 test('režim farboslepých je opt-in a validuje sa', () => {
   assert.equal(BU.normalize(null).ui.colorblind, 'off');
   assert.equal(BU.normalize({ ui: { colorblind: 'deuteranopia' } }).ui.colorblind, 'deuteranopia');

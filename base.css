@@ -668,3 +668,52 @@ html:not([data-bu-off]) #bu-todo .bu-mail-head { display: flex; align-items: cen
 html:not([data-bu-off]) #bu-todo .bu-mail-title { font-weight: 600; color: var(--text) !important; }
 html:not([data-bu-off]) #bu-todo .bu-mail-refresh { width: 26px; height: 26px; display: grid; place-items: center; padding: 0; cursor: pointer; color: var(--text) !important; background: var(--bg-2) !important; border: 1px solid var(--border) !important; border-radius: 999px !important; }
 html:not([data-bu-off]) #bu-todo .bu-mail-msg { margin: 0; padding: 10px 12px; color: var(--muted) !important; }
+
+/* ===== Domov: karta rozvrhu (Dnes / Zajtra / Celý týždeň) ===== */
+html:not([data-bu-off]) #bu-schedule { margin: 0 0 12px; background: var(--bg-2) !important; border: 1px solid var(--border) !important; border-radius: var(--radius) !important; box-shadow: var(--shadow-1); overflow: hidden; font-size: 14px; }
+html:not([data-bu-off]) #bu-schedule .bu-mail-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-3) !important; border-bottom: 1px solid var(--border) !important; }
+html:not([data-bu-off]) #bu-schedule .bu-mail-title { font-weight: 600; color: var(--text) !important; text-decoration: none; }
+html:not([data-bu-off]) #bu-schedule .bu-mail-title:hover { color: var(--accent) !important; }
+html:not([data-bu-off]) #bu-schedule .bu-mail-status { margin-left: auto; color: var(--muted) !important; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html:not([data-bu-off]) #bu-schedule .bu-mail-refresh { flex: none; width: 26px; height: 26px; display: grid; place-items: center; padding: 0; cursor: pointer; color: var(--text) !important; background: var(--bg-2) !important; border: 1px solid var(--border) !important; border-radius: 999px !important; transition: background-color .12s, border-color .12s; }
+html:not([data-bu-off]) #bu-schedule .bu-mail-refresh:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+html:not([data-bu-off]) .bu-sched-tabs { display: flex; gap: 6px; padding: 8px 12px; border-bottom: 1px solid var(--border) !important; }
+html:not([data-bu-off]) .bu-sched-tab { font: inherit; font-size: 13px; padding: 5px 12px; color: var(--muted) !important; background: transparent !important; border: 1px solid var(--border) !important; border-radius: 999px !important; cursor: pointer; transition: background-color .12s, border-color .12s; }
+html:not([data-bu-off]) .bu-sched-tab:hover { color: var(--text) !important; border-color: var(--accent) !important; }
+html:not([data-bu-off]) .bu-sched-tab.on { color: var(--on-accent) !important; background: var(--accent) !important; border-color: var(--accent) !important; }
+html:not([data-bu-off]) .bu-sched-list { padding: 4px 0; }
+html:not([data-bu-off]) .bu-sched-event { display: grid; grid-template-columns: 96px 84px minmax(0, 1fr) auto; gap: 8px 12px; align-items: baseline; padding: 8px 12px; border-top: 1px solid var(--border) !important; background: transparent !important; }
+html:not([data-bu-off]) .bu-sched-event:first-child { border-top: 0 !important; }
+html:not([data-bu-off]) .bu-sched-event:hover { background: var(--bg-3) !important; }
+html:not([data-bu-off]) .bu-sched-time { color: var(--muted) !important; font-variant-numeric: tabular-nums; white-space: nowrap; }
+html:not([data-bu-off]) .bu-sched-type { font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px !important; border: 1px solid var(--border) !important; color: var(--muted) !important; white-space: nowrap; }
+html:not([data-bu-off]) .bu-sched-pred .bu-sched-type { color: var(--info) !important; border-color: color-mix(in srgb, var(--info) 45%, var(--border)) !important; }
+html:not([data-bu-off]) .bu-sched-cvic .bu-sched-type { color: var(--accent) !important; border-color: color-mix(in srgb, var(--accent) 45%, var(--border)) !important; }
+html:not([data-bu-off]) .bu-sched-subject { color: var(--text) !important; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+html:not([data-bu-off]) a.bu-sched-subject:hover { color: var(--accent) !important; }
+html:not([data-bu-off]) .bu-sched-room { color: var(--muted) !important; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html:not([data-bu-off]) .bu-sched-teacher, html:not([data-bu-off]) .bu-sched-group { color: var(--muted) !important; font-size: 12px; white-space: nowrap; }
+html:not([data-bu-off]) .bu-sched-now { box-shadow: inset 3px 0 0 var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent) !important; }
+html:not([data-bu-off]) .bu-sched-next .bu-sched-time { color: var(--accent) !important; font-weight: 600; }
+html:not([data-bu-off]) .bu-sched-more { padding: 0 12px 8px 120px; }
+html:not([data-bu-off]) .bu-sched-more summary { cursor: pointer; color: var(--link) !important; font-size: 12px; }
+html:not([data-bu-off]) .bu-sched-more .bu-sched-event { grid-template-columns: 96px 84px minmax(0, 1fr); }
+html:not([data-bu-off]) .bu-sched-more .bu-sched-room, html:not([data-bu-off]) .bu-sched-more .bu-sched-teacher, html:not([data-bu-off]) .bu-sched-more .bu-sched-group { display: none; }
+html:not([data-bu-off]) .bu-sched-day { padding: 4px 0; }
+html:not([data-bu-off]) .bu-sched-dayname { margin: 0; padding: 6px 12px; font-size: 12px; color: var(--muted) !important; background: var(--bg-3) !important; font-weight: 600; }
+html:not([data-bu-off]) .bu-sched-day .bu-sched-event { grid-template-columns: 90px 72px minmax(0, 1fr); padding: 6px 12px; }
+html:not([data-bu-off]) .bu-sched-empty { margin: 0; padding: 6px 12px; color: var(--muted) !important; font-size: 13px; }
+html:not([data-bu-off]) .bu-sched-foot { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 8px 12px; border-top: 1px solid var(--border) !important; }
+html:not([data-bu-off]) .bu-sched-full, html:not([data-bu-off]) .bu-sched-updated { color: var(--link) !important; font-size: 12px; }
+html:not([data-bu-off]) .bu-sched-updated { color: var(--muted) !important; }
+html:not([data-bu-off]) .bu-sched-diag { display: block; padding: 0 12px 8px; color: var(--muted) !important; word-break: break-word; }
+html:not([data-bu-off]) .bu-sched-actions { display: flex; gap: 8px; padding: 8px 12px; }
+html:not([data-bu-off]) .bu-sched-retry { font: inherit; font-size: 13px; padding: 6px 12px; cursor: pointer; color: var(--text) !important; background: var(--bg-3) !important; border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; }
+html:not([data-bu-off]) .bu-sched-skeleton { padding: 8px 12px; }
+html:not([data-bu-off]) .bu-sched-bar { height: 14px; margin-bottom: 8px; border-radius: var(--radius-sm); background: linear-gradient(90deg, var(--bg-3), var(--border), var(--bg-3)); background-size: 200% 100%; animation: bu-sched-shimmer 1.2s linear infinite; }
+@keyframes bu-sched-shimmer { to { background-position: -200% 0; } }
+@media (max-width: 640px) {
+  html:not([data-bu-off]) .bu-sched-event { grid-template-columns: 80px minmax(0, 1fr); }
+  html:not([data-bu-off]) .bu-sched-type, html:not([data-bu-off]) .bu-sched-room, html:not([data-bu-off]) .bu-sched-teacher, html:not([data-bu-off]) .bu-sched-group { grid-column: 2; }
+  html:not([data-bu-off]) .bu-sched-more { padding-left: 12px; }
+}
