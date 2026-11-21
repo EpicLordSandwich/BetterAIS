@@ -6,7 +6,8 @@ Unofficial. Not affiliated with STU.
 
 ## Features
 
-- Themes (10+), light/dark/auto mode, custom accent/link/radius/font
+- Themes (20+), light/dark/auto mode, custom accent/link/radius/font
+- Špeciálne štýlové témy: Retro XP, Retro 95, jantárový terminál, Game Boy, C64, Synthwave, Brutalizmus, Aqua sklo, Noviny, DOS (vlastná CSS vrstva)
 - Custom nickname and profile picture (file/URL/original)
 - Rozvrh na domovskej stránke: Dnes / Zajtra / Celý týždeň, vlastné skupiny, 30-minútová vyrovnávacia pamäť
 - Custom links in header bar + presets

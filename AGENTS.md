@@ -30,6 +30,12 @@ Browser extension (Chrome/Firefox, MV3) for `is.stuba.sk`. Themes, dark/light mo
 - Motion: `transition: background-color .12s, border-color .12s`; respect `prefers-reduced-motion`.
 - Accessibility: visible focus states, WCAG 4.5:1.
 
+## Style themes (group `fun`, UI label `Špeciálne`)
+- Live in `fun-themes.js` (loaded right after `themes.js` everywhere, including background). Palette via `P(...)` plus optional `css`.
+- `css` is injected only for the active theme (`#bu-theme-css`), every selector is scoped to `html[data-bu-theme="<id>"][data-bu-mode]:not([data-bu-off])` (kill-switch safe).
+- May deviate from the one-accent/one-radius rules, but: palette must pass contrast-check, no `url()`, no external assets, no Microsoft or other trademarked images.
+- `tools/tests/fun-themes.test.mjs` enforces scope, kill-switch and sanitizeCss stability.
+
 ## Work style
 - One problem = one commit. Messages in Slovak, English prefix: `fix:`, `refactor:`, `docs:`, `test:`, `chore:`.
 - Commit messages must be professional and concise: no slang, no emojis, no filler. Subject ≤ 72 chars; body only when necessary.
@@ -40,7 +46,7 @@ Browser extension (Chrome/Firefox, MV3) for `is.stuba.sk`. Themes, dark/light mo
 
 ## Files
 ```
-themes.js, content.js, base.css, options.html/js/css, popup.html/js,
+themes.js, fun-themes.js, content.js, base.css, options.html/js/css, popup.html/js,
 text-utils.js, grades.js, background.js, manifest*.json
 tools/  tests, contrast-check, package.ps1
 ```

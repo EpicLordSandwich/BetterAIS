@@ -3,6 +3,7 @@
 // Vypíše páry farieb pod prahom a navrhne opravenú paletu (mení iba svetlosť, zachová odtieň/saturáciu).
 globalThis.self = globalThis;
 await import('../themes.js');
+await import('../fun-themes.js');
 const BU = globalThis.BU;
 
 const PRAH = 4.5;

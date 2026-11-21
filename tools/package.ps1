@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $dist = Join-Path $root 'dist'
 $common = @(
-  'background.js', 'themes.js', 'text-utils.js', 'grades.js', 'content.js', 'base.css',
+  'background.js', 'themes.js', 'fun-themes.js', 'text-utils.js', 'grades.js', 'content.js', 'base.css',
   'popup.html', 'popup.js', 'options.html', 'options.js', 'options.css',
   'logo.png', 'pedro.gif', 'icon16.png', 'icon32.png', 'icon48.png', 'icon128.png'
 )

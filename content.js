@@ -21,6 +21,7 @@
   let ready = false;
   let rawCardHtml = '';   // pôvodné HTML prvej karty (pre diagnostiku, kým ju nezmeníme)
   let snipStyle = null;
+  let themeStyle = null;  // CSS vrstva štýlových tém (fun-themes.js)
 
   /* ================= 0) Kill-switch (globálne / per-stránka) ================= */
   function pagePath() {
@@ -35,6 +36,7 @@
       for (const k of BU.varKeys()) root.style.removeProperty(k);
       root.style.removeProperty('--font');
       root.style.removeProperty('color-scheme');
+      if (themeStyle) themeStyle.textContent = '';
       delete root.dataset.buMode;
       delete root.dataset.buFont;
     } else {
@@ -51,12 +53,26 @@
     const offEarly = !!(oc && (!oc.enabled || (oc.paths || []).includes(pagePath())));
     const c = JSON.parse(localStorage.getItem('bu:cache') || 'null');
     if (offEarly) setOff(true);
-    else if (c) BU.applyVars(c);
+    else if (c) { BU.applyVars(c); applyThemeCss(c.theme); }
   } catch (e) { swallow(e); }
+
+  // Štýlové témy majú navyše vlastné CSS (rozsah html[data-bu-theme=...]); vkladá sa len pre aktívnu tému.
+  function applyThemeCss(themeId) {
+    const t = themeId && BU.THEMES[themeId];
+    const css = t && t.css ? BU.sanitizeCss(t.css) : '';
+    if (!css) { if (themeStyle) themeStyle.textContent = ''; return; }
+    if (!themeStyle) {
+      themeStyle = document.createElement('style');
+      themeStyle.id = 'bu-theme-css';
+      (document.head || document.documentElement).appendChild(themeStyle);
+    }
+    if (themeStyle.textContent !== css) themeStyle.textContent = css;
+  }
 
   function applyTheme() {
     const out = BU.compute(S);
     BU.applyVars(out);
+    applyThemeCss(out.theme);
     try { localStorage.setItem('bu:cache', JSON.stringify(out)); } catch (e) { swallow(e); }
   }
   function applyAll() {

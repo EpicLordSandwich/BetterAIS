@@ -64,6 +64,7 @@
       { key: 'general', label: 'Všeobecné' },
       { key: 'stu', label: 'STU (fakulty)' },
       { key: 'pastel', label: 'Pastelové' },
+      { key: 'fun', label: 'Špeciálne (retro a experimenty)' },
     ];
     const custom = Object.entries(S.customThemes || {}).map(([id, t]) => ({ id, t, group: 'custom' }));
     groups.forEach((g) => {
@@ -100,6 +101,7 @@
       const body = document.createElement('div'); body.className = 'body';
       [0, 1].forEach(() => {
         const c = document.createElement('div'); c.className = 'c'; c.style.background = p.bg2; c.style.borderColor = p.border;
+        if (t.group === 'fun') c.style.borderRadius = Math.min(t.radius, 8) + 'px';
         const bb = document.createElement('b'); bb.style.background = p.bg3;
         const s1 = document.createElement('span'); s1.style.background = p.text;
         const s2 = document.createElement('span'); s2.style.background = p.link; s2.style.width = '60%';

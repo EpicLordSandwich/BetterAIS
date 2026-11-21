@@ -7,7 +7,7 @@ import zlib from 'node:zlib';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const common = [
-  'background.js', 'themes.js', 'text-utils.js', 'schedule.js', 'content.js', 'base.css',
+  'background.js', 'themes.js', 'fun-themes.js', 'text-utils.js', 'schedule.js', 'content.js', 'base.css',
   'popup.html', 'popup.js', 'options.html', 'options.js', 'options.css',
   'icon128.png', 'ais-logo.png',
 ];

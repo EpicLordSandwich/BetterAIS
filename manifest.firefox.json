@@ -16,6 +16,7 @@
   "background": {
     "scripts": [
       "themes.js",
+      "fun-themes.js",
       "text-utils.js",
       "background.js"
     ]
@@ -73,6 +74,7 @@
       ],
       "js": [
         "themes.js",
+        "fun-themes.js",
         "text-utils.js",
         "schedule.js",
         "content.js"

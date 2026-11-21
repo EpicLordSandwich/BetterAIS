@@ -2,7 +2,7 @@
 // Úlohy: relay príkazov (open-options, chrome.commands) + kontrola aktualizácií
 // (experimental, iba na výslovnú žiadosť) + welcome po prvej inštalácii.
 
-if (typeof importScripts === 'function') importScripts('themes.js', 'text-utils.js'); // Chrome SW; Firefox ich má v manifeste
+if (typeof importScripts === 'function') importScripts('themes.js', 'fun-themes.js', 'text-utils.js'); // Chrome SW; Firefox ich má v manifeste
 (function () {
   'use strict';
   const BU = self.BU;

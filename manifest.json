@@ -64,6 +64,7 @@
       ],
       "js": [
         "themes.js",
+        "fun-themes.js",
         "text-utils.js",
         "schedule.js",
         "content.js"

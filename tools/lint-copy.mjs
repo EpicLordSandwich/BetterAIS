@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 
 const BAD = [/[\u2013\u2014]/, /\bchat(u|e)?\b/i];
-const files = ['themes.js', 'options.html', 'options.js', 'content.js', 'popup.html', 'popup.js'];
+const files = ['themes.js', 'fun-themes.js', 'options.html', 'options.js', 'content.js', 'popup.html', 'popup.js'];
 
 let fails = 0;
 for (const f of files) {
