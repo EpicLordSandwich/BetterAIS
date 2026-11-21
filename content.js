@@ -1375,10 +1375,16 @@
     const menitko = document.getElementById('menitko');
     if (menitko && menitko.parentNode) return menitko;
     const main = document.querySelector('#stranka .mainpage');
-    if (main && main.parentNode) return main.firstElementChild || main;
+    if (main && main.parentNode) {
+      if (!schedAnchorWarned) {
+        schedAnchorWarned = true;
+        console.debug('betterAIS: chýba kotva #menitko, karty sa vkladajú do #stranka .mainpage');
+      }
+      return main.firstElementChild || main;
+    }
     if (!schedAnchorWarned) {
       schedAnchorWarned = true;
-      console.debug('betterAIS: chýba kotva #menitko pre karty na domovskej stránke, používam #stranka .mainpage');
+      console.debug('betterAIS: chýba kotva #menitko aj #stranka .mainpage, karty na domovskej stránke sa nevytvoria');
     }
     return null;
   }
@@ -1403,8 +1409,7 @@
     const a = document.querySelector('#menu-popup .user-info a[href*="clovek.pl?id="]');
     const img = document.querySelector('#pfp img');
     const src = img && (img.dataset.buOrigSrc || img.getAttribute('src') || '');
-    schedOwnId = BU.notif.photoId(a && a.getAttribute('href')) || BU.notif.photoId(src)
-      || (document.body ? BU.notif.studentIdFromHtml(document.body.innerHTML.slice(0, 120000)) : '');
+    schedOwnId = BU.notif.photoId(a && a.getAttribute('href')) || BU.notif.photoId(src);
     return schedOwnId;
   }
   function schedUrls() {
