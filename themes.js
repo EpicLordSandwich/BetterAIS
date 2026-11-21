@@ -27,7 +27,7 @@
       light: P('#dbe4fb', '#f2f5fd', '#ffffff', '#e3e9fb', '#c6d0f1', '#0f1a42', '#4d5a89', '#1c4ac4', '#2f5fe0', '#2759df', '#98641a', '#c93a3a'),
     },
     nostalgia: {
-      name: 'Nostalgia', tagline: 'Bordová hlavička, klasický vzhľad', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' }, group: 'general',
+      name: 'Nostalgia', tagline: 'Bordová hlavička, klasický vzhľad', radius: 0, font: 'Tahoma, Verdana, Arial, sans-serif', bar: { color: '#831135', text: '#ffffff' }, group: 'fun',
       dark:  P('#2a0e18', '#160f12', '#1f1619', '#2a1f23', '#3d2c31', '#ffffff', '#cfc6c8', '#8ec5ff', '#b8405e', '#7fb8ff', '#e8b45a', '#ff8a7a'),
       light: P('#f3e6ea', '#ffffff', '#fffdfa', '#f2f2f2', '#d9d9d9', '#333333', '#666666', '#831135', '#831135', '#1565c0', '#8a5a00', '#b3261e'),
     },
@@ -90,11 +90,6 @@
       name: 'Vysoký kontrast', tagline: 'Maximálny kontrast, prístupnosť', radius: 4, font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', group: 'general',
       dark:  P('#000000', '#000000', '#0a0a0a', '#141414', '#ffffff', '#ffffff', '#ffffff', '#66ccff', '#66ccff', '#66ccff', '#ffcc00', '#ff6666'),
       light: P('#ffffff', '#ffffff', '#f5f5f5', '#eaeaea', '#000000', '#000000', '#000000', '#0000cc', '#0000cc', '#0000cc', '#8a5a00', '#9d0006'),
-    },
-  matrix: {
-      name: 'Matrix', tagline: 'Čiernozelený terminál', radius: 0, font: 'ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace', group: 'general',
-      dark:  P('#000000', '#000000', '#0a0f0a', '#0f1a0f', '#1a2e1a', '#00ff41', '#00b32c', '#00ff41', '#00ff41', '#00ff41', '#00ff41', '#ff3333'),
-      light: P('#e8f5e9', '#f1f8f2', '#ffffff', '#e0f2e1', '#c8e6c9', '#1b3a1b', '#2e5e2e', '#1b5e20', '#1b5e20', '#1b5e20', '#8a5a00', '#b3261e'),
     },
   pastelYellow: {
       name: 'Pastelová žltá', tagline: 'Jemná žltá', radius: 12, font: '', group: 'pastel',
@@ -457,7 +452,7 @@ const FONTS = [
   function compute(raw) {
     const s = normalize(raw);
     const t = getTheme(s.theme, s.customThemes) || THEMES[DEFAULTS.theme];
-    const mode = resolveMode(s.mode);
+    const mode = t.mode || resolveMode(s.mode);
     const dark = mode === 'dark';
     const p = Object.assign({}, t[mode]);
 

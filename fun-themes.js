@@ -140,23 +140,18 @@ html[data-bu-theme="synthwave"][data-bu-mode="light"]:not([data-bu-off]), html[d
 & img.bu-avatar { border: 2px solid var(--accent) !important; box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 60%, transparent) !important; }
 `;
 
-  /* ================= Brutalizmus ================= */
-  const brutal = `
-& #header, & .sd-header { border-bottom: 4px solid var(--border) !important; }
-& nav[aria-label="breadcrumb"] { border-top: 0 !important; border-bottom: 3px solid var(--border) !important; }
-& :is(${CARDS}), & fieldset { border: 3px solid var(--border) !important; border-radius: 0 !important; box-shadow: 6px 6px 0 var(--border) !important; }
-& :is(${CARDS}):hover { box-shadow: 8px 8px 0 var(--border) !important; transform: translate(-2px, -2px); }
-& :is(${HEADS}) { border-bottom: 3px solid var(--border) !important; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; }
-& :is(th, thead td):not(.bu-keep) { border: 2px solid var(--border) !important; font-weight: 800; }
-& td { border-color: var(--border) !important; }
-& :is(${BTNS}), & #bu-ctl .bu-btn { border: 3px solid var(--border) !important; border-radius: 0 !important; font-weight: 800; box-shadow: 4px 4px 0 var(--border); }
-& :is(${BTNS}):hover, & #bu-ctl .bu-btn:hover { background-color: var(--accent) !important; color: var(--on-accent) !important; transform: translate(-1px, -1px); }
-& :is(${BTNS}):active, & #bu-ctl .bu-btn:active { box-shadow: 0 0 0 var(--border); transform: translate(4px, 4px); }
-& :is(${FIELDS}) { border: 3px solid var(--border) !important; border-radius: 0 !important; }
-& :is(${POPS}) { border: 3px solid var(--border) !important; border-radius: 0 !important; box-shadow: 8px 8px 0 var(--border) !important; }
-& a { text-decoration: underline 2px !important; text-underline-offset: 2px; }
-& img.bu-avatar { border: 3px solid var(--border) !important; border-radius: 0 !important; }
-& li.bu-links a.bu-link, & #bu-mail .bu-mail-badge { border-radius: 0 !important; border-width: 2px !important; }
+  /* ================= CRT (zelený fosfor, podľa Jantára) ================= */
+  const crt = crtamber.replace(/crtamber/g, 'crt');
+
+  /* ================= Nostalgia (pôvodné menu karty) ================= */
+  const nostalgia = `
+& .polozky-obal.bu-card.ui-draggable.ui-droppable,
+& .polozky-obal.bu-card.ui-draggable.ui-droppable:hover { background: #ffffff !important; border: 1px solid #d9d9d9 !important; border-left: 0 !important; border-radius: 0 !important; box-shadow: none !important; border-collapse: collapse !important; transform: none !important; transition: none !important; }
+& .polozky-obal.bu-card.ui-draggable.ui-droppable td { background: transparent !important; border: 0 !important; }
+& .polozky-obal.bu-card.ui-draggable.ui-droppable ul,
+& .polozky-obal.bu-card.ui-draggable.ui-droppable ol { list-style: disc !important; padding-left: 24px !important; }
+& .polozky-obal.bu-card.ui-draggable.ui-droppable li { list-style: inherit !important; margin: 0 !important; padding: 0 !important; }
+& .polozky-obal.bu-card.ui-draggable.ui-droppable li a { background: none !important; box-shadow: none !important; color: #831135 !important; }
 `;
 
   /* ================= Aqua / sklo ================= */
@@ -215,66 +210,70 @@ html[data-bu-theme="aqua"][data-bu-mode="dark"]:not([data-bu-off]), html[data-bu
   const FUN = {
     retroxp: {
       name: 'Retro XP', tagline: 'Modré okno, béžové tlačidlá, nostalgia z roku 2001', radius: 4, font: 'Tahoma, "Segoe UI", Verdana, sans-serif', group: 'fun',
-      dark:  P('#141414', '#1e1e1e', '#2a2a2a', '#363636', '#666666', '#eeeeee', '#bbbbbb', '#ffb04d', '#e8820c', '#6cb0ff', '#e0a73e', '#ff7b72'),
+      mode: 'light',
       light: P('#ece9d8', '#f5f4ea', '#ffffff', '#ece9d8', '#aca899', '#111111', '#4d4a3c', '#0033cc', '#316ac5', '#0a5bc4', '#8a5a00', '#b3261e'),
       css: build('retroxp', retroxp),
     },
     retro95: {
       name: 'Retro 95', tagline: 'Sivé skosené okná a tmavomodrý titulok', radius: 0, font: 'Tahoma, "Microsoft Sans Serif", Arial, sans-serif', group: 'fun',
-      dark:  P('#000000', '#101010', '#1c1c1c', '#2a2a2a', '#808080', '#ffffff', '#c0c0c0', '#66ffff', '#00a0a0', '#66b3ff', '#ffd060', '#ff8080'),
+      mode: 'light',
       light: P('#c0c0c0', '#c0c0c0', '#d4d4d4', '#b4b4b4', '#808080', '#000000', '#2b2b2b', '#0000a8', '#000080', '#00508a', '#674700', '#a00000'),
       css: build('retro95', retro95),
     },
     crtamber: {
       name: 'Jantárový terminál', tagline: 'Jantár na čiernej, jemné scanlines', radius: 0, font: MONO, group: 'fun',
       dark:  P('#0a0700', '#0f0a00', '#171000', '#221800', '#6b4a00', '#ffb000', '#d09000', '#ffd24d', '#ffb000', '#ffcc66', '#ffdd88', '#ff7043'),
-      light: P('#fff3d6', '#fff8e6', '#fffdf5', '#ffe9b8', '#d9b46a', '#3a2400', '#6b4a10', '#7a4a00', '#b36b00', '#1d5a8a', '#7a4a00', '#a82a10'),
+      mode: 'dark',
       css: build('crtamber', crtamber),
     },
     gameboy: {
       name: 'Game Boy', tagline: 'Štyri odtiene zelenej, pixelové tiene', radius: 0, font: MONO, group: 'fun',
-      dark:  P('#0f380f', '#0f380f', '#143f14', '#1b4a1b', '#8bac0f', '#b5d52b', '#a7c820', '#c4e03a', '#9bbc0f', '#c4e03a', '#e0e060', '#f0a080'),
+      mode: 'light',
       light: P('#8bac0f', '#9bbc0f', '#a8c716', '#8bac0f', '#0f380f', '#0f380f', '#173f17', '#0f380f', '#306230', '#0f380f', '#173f17', '#3a1a0f'),
       css: build('gameboy', gameboy),
     },
     c64: {
       name: 'Commodore 64', tagline: 'Modrá obrazovka a svetlomodrý rám', radius: 0, font: MONO, group: 'fun',
       dark:  P('#352879', '#40318d', '#4a3ba0', '#5547b0', '#7869c4', '#e6e2ff', '#cfcaff', '#ffffaa', '#a99bff', '#aaeeff', '#ffe08a', '#ffb0a0'),
-      light: P('#d8d2ff', '#e8e4ff', '#f6f4ff', '#d0c9ff', '#7869c4', '#2a1f6b', '#4a3f94', '#352879', '#40318d', '#20578a', '#6b4a00', '#a02a20'),
+      mode: 'dark',
       css: build('c64', c64),
     },
     synthwave: {
       name: 'Synthwave', tagline: 'Fialová noc, ružový a tyrkysový neón', radius: 6, font: '', group: 'fun',
       dark:  P('#120a24', '#1a1033', '#241547', '#2f1b5c', '#5b3a9e', '#f3e8ff', '#c0a8e8', '#4df0ff', '#ff2bd6', '#4df0ff', '#ffd166', '#ff6b8a'),
-      light: P('#f4e9ff', '#faf3ff', '#ffffff', '#ecd9ff', '#c9a5f0', '#2a0f4d', '#5b3d8c', '#a0008f', '#d4119e', '#0a6fa8', '#8a5a00', '#b3261e'),
+      mode: 'dark',
       css: build('synthwave', synthwave),
     },
-    brutal: {
-      name: 'Brutalizmus', tagline: 'Hrubé čierne rámy a posunuté tiene', radius: 0, font: 'system-ui, -apple-system, "Segoe UI", Arial, sans-serif', group: 'fun',
-      dark:  P('#000000', '#111111', '#1a1a1a', '#2b2b2b', '#ffffff', '#ffffff', '#cfcfcf', '#ffe600', '#ffe600', '#7fc0ff', '#ffb84d', '#ff7b7b'),
-      light: P('#ffe600', '#fffbe0', '#ffffff', '#ffe600', '#000000', '#000000', '#333333', '#1a1aff', '#e6002b', '#0033cc', '#7a4000', '#c00000'),
-      css: build('brutal', brutal),
+    crt: {
+      name: 'CRT', tagline: 'Zelený fosforový terminál, jemné scanlines', radius: 0, font: MONO, group: 'fun',
+      mode: 'dark',
+      dark:  P('#000a00', '#000f00', '#001700', '#002200', '#00a000', '#33ff66', '#00d090', '#66ff99', '#00ff66', '#66ffaa', '#aaff88', '#ff7043'),
+      css: build('crt', crt),
     },
     aqua: {
       name: 'Aqua (sklo)', tagline: 'Priesvitné karty a lesklé tlačidlá', radius: 14, font: '"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif', group: 'fun',
-      dark:  P('#0c1624', '#101e30', '#172a42', '#1f3856', '#35567e', '#e6f1ff', '#a9c3e0', '#7fc4ff', '#3b9cff', '#7fc4ff', '#e0b04a', '#ff8a80'),
+      mode: 'light',
       light: P('#dcecf8', '#eaf3fb', '#f7fbff', '#d3e6f5', '#9fc3e0', '#0b2540', '#3d5f7f', '#0a56b0', '#1c7be0', '#0a6fa8', '#7a5200', '#b3261e'),
       css: build('aqua', aqua),
     },
     newspaper: {
       name: 'Noviny', tagline: 'Pätkové písmo, dvojité linky, krémový papier', radius: 0, font: 'Georgia, "Times New Roman", serif', group: 'fun',
-      dark:  P('#171410', '#1d1913', '#26201a', '#312a21', '#6b5e4a', '#eee4cf', '#bfb299', '#e8c27a', '#d9a441', '#8fb8e0', '#e0a73e', '#e8756c'),
+      mode: 'light',
       light: P('#f1ead7', '#f7f1e1', '#fbf7ea', '#ebe3cb', '#3b3226', '#1b1710', '#544a3a', '#6b1a1a', '#8b1a1a', '#1d4e7a', '#7a4a00', '#9b1c1c'),
       css: build('newspaper', newspaper),
     },
     dos: {
       name: 'DOS (Norton)', tagline: 'Modrý panel, tyrkysová lišta, dvojité rámy', radius: 0, font: MONO, group: 'fun',
       dark:  P('#00007a', '#0000aa', '#0000b4', '#2c2cc8', '#55ffff', '#ffffff', '#d0d0ff', '#ffff55', '#55ffff', '#55ffff', '#ffff55', '#ff7777'),
-      light: P('#00aaaa', '#d8d8d8', '#e8e8e8', '#00aaaa', '#000080', '#000000', '#2a2a60', '#0000a8', '#0000aa', '#0000a8', '#6b4a00', '#a00000'),
+      mode: 'dark',
       css: build('dos', dos),
     },
   };
 
+  for (const t of Object.values(FUN)) t[t.mode === 'light' ? 'dark' : 'light'] = t[t.mode];
+  BU.THEMES.nostalgia.mode = 'light';
+  BU.THEMES.nostalgia.group = 'fun';
+  BU.THEMES.nostalgia.css = build('nostalgia', nostalgia);
   Object.assign(BU.THEMES, FUN);
-  BU.FUN_THEME_IDS = Object.keys(FUN);
+  BU.FUN_THEME_IDS = Object.keys(FUN).concat('nostalgia');
 })(self);

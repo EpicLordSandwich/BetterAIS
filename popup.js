@@ -34,6 +34,9 @@
   const render = () => {
     BU.applyVars(BU.compute(S));
     sel.value = (S.theme in BU.THEMES || (S.customThemes && S.theme in S.customThemes)) ? S.theme : 'classic';
+    const fixed = !!(BU.THEMES[S.theme] && BU.THEMES[S.theme].mode);
+    document.getElementById('mode').hidden = fixed;
+    document.getElementById('modeHead').hidden = fixed;
     document.querySelectorAll('#mode button').forEach((b) => b.classList.toggle('on', b.dataset.v === S.mode));
     renderPageToggle();
   };

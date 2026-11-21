@@ -92,7 +92,7 @@
     }
   }
   function renderThemeBtnEl(id, t, mode) {
-    const p = t[mode];
+    const p = t[mode] || t[t.mode] || t.dark || t.light;
     const b = document.createElement('button');
       b.className = 'theme' + (S.theme === id ? ' on' : '');
       const pv = document.createElement('div'); pv.className = 'pv'; pv.style.background = p.bg;
@@ -130,11 +130,12 @@
   function render() {
     const out = BU.compute(S);
     BU.applyVars(out);
+    const t = BU.getTheme(S.theme, S.customThemes) || BU.THEMES.classic;
+    document.getElementById('mode').hidden = !!t.mode;
     document.querySelectorAll('#mode button').forEach((b) => b.classList.toggle('on', b.dataset.v === S.mode));
     renderStore(out.mode);
 
-    const t = BU.getTheme(S.theme, S.customThemes) || BU.THEMES.classic;
-    const p = t[out.mode];
+    const p = t[out.mode] || t[t.mode] || t.dark || t.light;
     $('accent').value = S.custom.accent || p.accent;
     $('link').value = S.custom.link || p.link;
     const r = S.custom.radius !== '' ? S.custom.radius : t.radius;

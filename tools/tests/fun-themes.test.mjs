@@ -55,7 +55,15 @@ test('palety štýlových tém sú platné', () => {
   }
 });
 
-for (const id of ['retroxp', 'retro95', 'crtamber', 'gameboy', 'c64', 'synthwave', 'brutal', 'aqua', 'newspaper', 'dos']) {
+test('štýlové témy majú jeden pevný režim', () => {
+  for (const id of ids) {
+    const t = BU.THEMES[id];
+    assert.ok(t.mode === 'dark' || t.mode === 'light', id);
+    for (const mode of ['dark', 'light']) assert.equal(BU.compute({ theme: id, mode }).mode, t.mode, id);
+  }
+});
+
+for (const id of ['retroxp', 'retro95', 'crtamber', 'gameboy', 'c64', 'synthwave', 'crt', 'aqua', 'newspaper', 'dos', 'nostalgia']) {
   test('CSS témy ' + id + ' je bezpečné a v rozsahu témy', () => {
     const css = BU.THEMES[id].css;
     assert.ok(css && css.length > 200, 'prázdne css');

@@ -715,6 +715,7 @@
       if (m.name === 'pick') startPicker();
       else if (m.name === 'toggle-mode') {
         if (!cmdOnce()) return;
+        if (BU.THEMES[S.theme] && BU.THEMES[S.theme].mode) return;
         const next = BU.resolveMode(S.mode) === 'dark' ? 'light' : 'dark';
         S = BU.normalize(Object.assign({}, S, { mode: next }));
         applyAll(); BU.save(S);
@@ -733,6 +734,7 @@
     else if (e.ctrlKey && e.shiftKey && !e.altKey && e.code === 'KeyY') { e.preventDefault(); startPicker(); }
     else if (e.ctrlKey && e.shiftKey && !e.altKey && e.code === 'KeyM') {
       e.preventDefault();
+      if (BU.THEMES[S.theme] && BU.THEMES[S.theme].mode) return;
       const next = BU.resolveMode(S.mode) === 'dark' ? 'light' : 'dark';
       S = BU.normalize(Object.assign({}, S, { mode: next }));
       applyAll(); BU.save(S);

@@ -31,7 +31,7 @@ Browser extension (Chrome/Firefox, MV3) for `is.stuba.sk`. Themes, dark/light mo
 - Accessibility: visible focus states, WCAG 4.5:1.
 
 ## Style themes (group `fun`, UI label `Špeciálne`)
-- Live in `fun-themes.js` (loaded right after `themes.js` everywhere, including background). Palette via `P(...)` plus optional `css`.
+- Live in `fun-themes.js` (loaded right after `themes.js` everywhere, including background). Palette via `P(...)` plus optional `css` and a fixed `mode` (light/dark) that `compute()` forces; the mode switch is hidden in popup/settings and blocked by shortcut.
 - `css` is injected only for the active theme (`#bu-theme-css`), every selector is scoped to `html[data-bu-theme="<id>"][data-bu-mode]:not([data-bu-off])` (kill-switch safe).
 - May deviate from the one-accent/one-radius rules, but: palette must pass contrast-check, no `url()`, no external assets, no Microsoft or other trademarked images.
 - `tools/tests/fun-themes.test.mjs` enforces scope, kill-switch and sanitizeCss stability.
