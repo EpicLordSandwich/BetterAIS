@@ -123,8 +123,21 @@
     return s > 0.3 && l > 0.12 && l < 0.88;
   }
 
+  function photoId(src) {
+    const m = /(?:^|[?;&])id=(\d+)/.exec(String(src || ''));
+    return m ? m[1] : '';
+  }
+  function studentIdFromHtml(html) {
+    const m = /(?:clovek\.pl|foto\.pl)\?[^"'<>\s]*?\bid=(\d+)/i.exec(String(html || ''));
+    return m ? m[1] : '';
+  }
+  function pickOwnPhoto(sources, ownId) {
+    if (!ownId) return '';
+    return (sources || []).find((s) => photoId(s) === ownId) || '';
+  }
+
   g.BU = g.BU || {};
-  g.BU.notif = { stripDiacritics, fuzzyScore, compareCells, cellNum, cellDate, toCsv, hasFormControls, redactText, parseCol, isSaturated };
+  g.BU.notif = { stripDiacritics, fuzzyScore, compareCells, cellNum, cellDate, toCsv, hasFormControls, redactText, parseCol, isSaturated, photoId, studentIdFromHtml, pickOwnPhoto };
   // Backward-compatible alias (some tests/old code still reference BUNOTIF).
   g.BUNOTIF = g.BU.notif;
 })(self);

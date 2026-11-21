@@ -65,6 +65,7 @@
       "js": [
         "themes.js",
         "text-utils.js",
+        "schedule.js",
         "content.js"
       ],
       "run_at": "document_start",
