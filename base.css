@@ -756,3 +756,9 @@ html:not([data-bu-off]) .bu-grid-more .bu-grid-note { position: static; }
 @media (max-width: 700px) {
   html:not([data-bu-off]) .bu-grid-scroll { display: none; }
 }
+
+/* ===== Nostalgia: celá stránka ako pri vypnutom plugine, jediná zmena je hlavička ===== */
+html[data-bu-nostalgia="1"] #header,
+html[data-bu-nostalgia="1"] .sd-header { background: #831135 !important; background-image: none !important; border-bottom: 1px solid #6d0e2c !important; box-shadow: none !important; }
+html[data-bu-nostalgia="1"] :is(#header, .sd-header) :is(a, span, div, p, b, strong, small, li, td, h1, h2, h3, h4) { color: #ffffff !important; }
+html[data-bu-nostalgia="1"] img.bu-logo-ais { filter: invert(1) brightness(1.15) !important; }

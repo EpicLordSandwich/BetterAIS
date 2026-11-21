@@ -7,7 +7,8 @@ Unofficial. Not affiliated with STU.
 ## Features
 
 - Themes (20+), light/dark/auto mode, custom accent/link/radius/font
-- Špeciálne témy s pevným režimom a vlastnou CSS vrstvou: Retro XP, Retro 95, Game Boy, Aqua sklo, Noviny, Nostalgia (svetlé); Jantárový terminál, CRT, C64, DOS, Synthwave (tmavé)
+- Špeciálne témy s pevným režimom a vlastnou CSS vrstvou: Retro XP, Retro 95, Game Boy, Aqua sklo, Noviny (svetlé); Jantárový terminál, CRT, C64, DOS, Synthwave (tmavé)
+- Nostalgia: stránka vyzerá ako pri vypnutom betterAIS, jediná zmena je bordová hlavička
 - Custom nickname and profile picture (file/URL/original)
 - Rozvrh na domovskej stránke: Dnes / Zajtra / Celý týždeň, vlastné skupiny, 30-minútová vyrovnávacia pamäť
 - Custom links in header bar + presets

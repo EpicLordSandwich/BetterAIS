@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 globalThis.self = globalThis;
 await import('../../themes.js');
@@ -63,7 +64,7 @@ test('štýlové témy majú jeden pevný režim', () => {
   }
 });
 
-for (const id of ['retroxp', 'retro95', 'crtamber', 'gameboy', 'c64', 'synthwave', 'crt', 'aqua', 'newspaper', 'dos', 'nostalgia']) {
+for (const id of ['retroxp', 'retro95', 'crtamber', 'gameboy', 'c64', 'synthwave', 'crt', 'aqua', 'newspaper', 'dos']) {
   test('CSS témy ' + id + ' je bezpečné a v rozsahu témy', () => {
     const css = BU.THEMES[id].css;
     assert.ok(css && css.length > 200, 'prázdne css');
@@ -80,9 +81,20 @@ for (const id of ['retroxp', 'retro95', 'crtamber', 'gameboy', 'c64', 'synthwave
   });
 }
 
+test('Nostalgia je kill-switch s jedinou zmenou – hlavičkou', () => {
+  const content = readFileSync('content.js', 'utf8');
+  const css = readFileSync('base.css', 'utf8');
+  assert.match(content, /offNow\(\).*S\.theme === 'nostalgia'/);
+  assert.match(content, /dataset\.buNostalgia = '1'/);
+  assert.match(css, /html\[data-bu-nostalgia="1"\] #header/);
+  assert.ok(!BU.THEMES.nostalgia.css, 'Nostalgia nesmie mať vlastnú CSS vrstvu');
+});
+
 test('pravidlá štýlových tém rešpektujú kill-switch', () => {
   for (const id of ids) {
-    for (const [sel] of topRules(BU.THEMES[id].css)) {
+    const css = BU.THEMES[id].css;
+    if (!css) continue;
+    for (const [sel] of topRules(css)) {
       for (const part of splitSelectors(sel)) {
         if (/^html\[data-bu-theme="[a-z0-9]+"\]\[data-bu-mode="(dark|light)"\]\s*$/.test(part)) continue; // definície premenných
         assert.ok(part.includes(':not([data-bu-off])'), 'chýba kill-switch: ' + part);

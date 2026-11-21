@@ -143,17 +143,6 @@ html[data-bu-theme="synthwave"][data-bu-mode="light"]:not([data-bu-off]), html[d
   /* ================= CRT (zelený fosfor, podľa Jantára) ================= */
   const crt = crtamber.replace(/crtamber/g, 'crt');
 
-  /* ================= Nostalgia (pôvodné menu karty) ================= */
-  const nostalgia = `
-& .polozky-obal.bu-card.ui-draggable.ui-droppable,
-& .polozky-obal.bu-card.ui-draggable.ui-droppable:hover { background: #ffffff !important; border: 1px solid #d9d9d9 !important; border-left: 0 !important; border-radius: 0 !important; box-shadow: none !important; border-collapse: collapse !important; transform: none !important; transition: none !important; }
-& .polozky-obal.bu-card.ui-draggable.ui-droppable td { background: transparent !important; border: 0 !important; }
-& .polozky-obal.bu-card.ui-draggable.ui-droppable ul,
-& .polozky-obal.bu-card.ui-draggable.ui-droppable ol { list-style: disc !important; padding-left: 24px !important; }
-& .polozky-obal.bu-card.ui-draggable.ui-droppable li { list-style: inherit !important; margin: 0 !important; padding: 0 !important; }
-& .polozky-obal.bu-card.ui-draggable.ui-droppable li a { background: none !important; box-shadow: none !important; color: #831135 !important; }
-`;
-
   /* ================= Aqua / sklo ================= */
   const aqua = `
 html[data-bu-theme="aqua"][data-bu-mode="light"]:not([data-bu-off]), html[data-bu-theme="aqua"][data-bu-mode="light"]:not([data-bu-off]) body { background-image: radial-gradient(900px 500px at 12% -5%, #bfe3ff 0%, transparent 60%), radial-gradient(800px 500px at 95% 10%, #d9ecff 0%, transparent 55%), linear-gradient(180deg, #eaf3fb, #dcebf8) !important; background-attachment: fixed !important; }
@@ -273,7 +262,6 @@ html[data-bu-theme="aqua"][data-bu-mode="dark"]:not([data-bu-off]), html[data-bu
   for (const t of Object.values(FUN)) t[t.mode === 'light' ? 'dark' : 'light'] = t[t.mode];
   BU.THEMES.nostalgia.mode = 'light';
   BU.THEMES.nostalgia.group = 'fun';
-  BU.THEMES.nostalgia.css = build('nostalgia', nostalgia);
   Object.assign(BU.THEMES, FUN);
   BU.FUN_THEME_IDS = Object.keys(FUN).concat('nostalgia');
 })(self);

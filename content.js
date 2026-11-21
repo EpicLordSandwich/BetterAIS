@@ -28,7 +28,7 @@
     try { if (!isTop && window.top.location.origin === location.origin) return window.top.location.pathname; } catch (e) { swallow(e); }
     return location.pathname;
   }
-  function offNow() { return !S.enabled || S.disabledPages.includes(pagePath()); }
+  function offNow() { return !S.enabled || S.disabledPages.includes(pagePath()) || S.theme === 'nostalgia'; }
   function setOff(off) {
     const root = document.documentElement;
     if (off) {
@@ -39,8 +39,11 @@
       if (themeStyle) themeStyle.textContent = '';
       delete root.dataset.buMode;
       delete root.dataset.buFont;
+      if (S.theme === 'nostalgia' && S.enabled && !S.disabledPages.includes(pagePath())) root.dataset.buNostalgia = '1';
+      else delete root.dataset.buNostalgia;
     } else {
       delete root.dataset.buOff;
+      delete root.dataset.buNostalgia;
     }
   }
   function cacheOff() {
@@ -53,7 +56,7 @@
     const offEarly = !!(oc && (!oc.enabled || (oc.paths || []).includes(pagePath())));
     const c = JSON.parse(localStorage.getItem('bu:cache') || 'null');
     if (offEarly) setOff(true);
-    else if (c) { BU.applyVars(c); applyThemeCss(c.theme); }
+    else if (c && c.theme !== 'nostalgia') { BU.applyVars(c); applyThemeCss(c.theme); }
   } catch (e) { swallow(e); }
 
   // Štýlové témy majú navyše vlastné CSS (rozsah html[data-bu-theme=...]); vkladá sa len pre aktívnu tému.
