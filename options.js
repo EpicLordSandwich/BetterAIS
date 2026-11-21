@@ -14,17 +14,47 @@
   } catch (e) { console.warn('betterAIS: avatar shot read failed', e); }
 
   let toastT, toastResetT;
-  function toast() { const t = $('toast'); t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1100); }
-  function toastMsg(m) { $('toast').textContent = m; toast(); clearTimeout(toastResetT); toastResetT = setTimeout(() => { $('toast').textContent = 'Uložené'; }, 1600); }
+  function toastMsg(m) { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1400); clearTimeout(toastResetT); toastResetT = setTimeout(() => { t.textContent = 'Uložené'; }, 1800); }
+  function markSaved(trigger) {
+    const row = trigger && trigger.closest ? trigger.closest('.setting-row, .card') : null;
+    const el = row && row.querySelector(':scope .save-status');
+    if (!el) return;
+    el.textContent = 'Uložené';
+    clearTimeout(el._buTimer);
+    el._buTimer = setTimeout(() => { el.textContent = ''; }, 1400);
+  }
+
+  const panels = [...document.querySelectorAll('.panel')];
+  const navLinks = [...document.querySelectorAll('.nav a')];
+  function route() {
+    const id = location.hash.slice(1) || 'vzhlad';
+    let found = false;
+    panels.forEach((p) => { const on = p.id === id; p.classList.toggle('active', on); if (on) found = true; });
+    if (!found && panels[0]) { panels[0].classList.add('active'); }
+    navLinks.forEach((a) => {
+      const on = a.getAttribute('href') === '#' + (found ? id : (panels[0] && panels[0].id));
+      a.classList.toggle('on', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('hashchange', route);
+  document.querySelectorAll('.setting-row').forEach((row) => {
+    const info = row.querySelector('.setting-info');
+    if (!info || info.querySelector('.save-status')) return;
+    const s = document.createElement('span'); s.className = 'save-status'; s.setAttribute('aria-live', 'polite');
+    info.appendChild(s);
+  });
+  route();
 
   // Vždy základ z úložiska – nikdy neprepisujeme starými dátami v pamäti (stale-state).
-  async function commit(patch) {
+  async function commit(patch, trigger) {
     const fresh = await BU.load();
     S = BU.normalize(Object.assign({}, fresh, patch));
     await BU.save(S);
-    render(); toast();
+    render();
+    markSaved(trigger);
   }
-  const setCustom = (k, v) => commit({ custom: Object.assign({}, S.custom, { [k]: v }) });
+  const setCustom = (k, v, el) => commit({ custom: Object.assign({}, S.custom, { [k]: v }) }, el);
 
   /* ================= témy (obchod) ================= */
   function renderStore(mode) {
@@ -39,10 +69,10 @@
     groups.forEach((g) => {
       const items = Object.entries(BU.THEMES).filter(([, t]) => (t.group || 'general') === g.key);
       if (!items.length) return;
-      const det = document.createElement('details'); det.open = true; det.style.margin = '8px 0';
-      const sum = document.createElement('summary'); sum.textContent = g.label; sum.style.cursor = 'pointer'; sum.style.fontWeight = '600'; sum.style.textAlign = 'center'; sum.style.padding = '6px'; sum.style.background = 'var(--bg-3)'; sum.style.borderRadius = 'var(--radius-sm)';
+      const det = document.createElement('details'); det.className = 'theme-group'; det.open = true;
+      const sum = document.createElement('summary'); sum.textContent = g.label;
       det.appendChild(sum);
-      const grid = document.createElement('div'); grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(3, 1fr)'; grid.style.gap = '8px'; grid.style.marginTop = '8px';
+      const grid = document.createElement('div'); grid.className = 'grid-themes';
       items.forEach(([id, t]) => {
         const b = renderThemeBtnEl(id, t, mode);
         grid.appendChild(b);
@@ -51,10 +81,10 @@
       store.appendChild(det);
     });
     if (custom.length) {
-      const det = document.createElement('details'); det.open = true; det.style.margin = '8px 0';
-      const sum = document.createElement('summary'); sum.textContent = 'Importované'; sum.style.cursor = 'pointer'; sum.style.fontWeight = '600'; sum.style.textAlign = 'center'; sum.style.padding = '6px'; sum.style.background = 'var(--bg-3)'; sum.style.borderRadius = 'var(--radius-sm)';
+      const det = document.createElement('details'); det.className = 'theme-group'; det.open = true;
+      const sum = document.createElement('summary'); sum.textContent = 'Importované';
       det.appendChild(sum);
-      const grid = document.createElement('div'); grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(3, 1fr)'; grid.style.gap = '8px'; grid.style.marginTop = '8px';
+      const grid = document.createElement('div'); grid.className = 'grid-themes';
       custom.forEach(({ id, t }) => { grid.appendChild(renderThemeBtnEl(id, t, mode)); });
       det.appendChild(grid);
       store.appendChild(det);
@@ -81,13 +111,13 @@
       const sm = document.createElement('small'); sm.textContent = t.tagline + (String(id).startsWith('c-') ? ' (importovaná)' : '');
       meta.append(st, sm);
       b.append(pv, meta);
-      b.onclick = () => commit({ theme: id });
+      b.onclick = () => commit({ theme: id }, b);
       if (String(id).startsWith('c-')) {
         const del = document.createElement('button'); del.className = 'ghost del-theme'; del.textContent = '✕'; del.title = 'Odstrániť tému';
         del.onclick = (e) => {
           e.stopPropagation();
           const th = Object.assign({}, S.customThemes); delete th[id];
-          commit(S.theme === id ? { customThemes: th, theme: 'classic' } : { customThemes: th });
+          commit(S.theme === id ? { customThemes: th, theme: 'classic' } : { customThemes: th }, del);
         };
         meta.appendChild(del);
       }
@@ -118,8 +148,10 @@
     if ($('schedulePreview')) $('schedulePreview').checked = !!(S.ui && S.ui.schedule);
     if ($('todoPreview')) $('todoPreview').checked = !!(S.ui && S.ui.todo);
     if ($('colorblindSel')) $('colorblindSel').value = (S.ui && S.ui.colorblind) || 'off';
+    if ($('schedView') && document.activeElement !== $('schedView')) $('schedView').value = (S.ui && S.ui.schedView) || 'today';
+    if ($('schedGroups') && document.activeElement !== $('schedGroups')) $('schedGroups').value = (S.ui && S.ui.schedGroups) || '';
 
-    $('nick').value = S.nick || '';
+    if (document.activeElement !== $('nick')) $('nick').value = S.nick || '';
 
     $('experimentalOn').checked = !!S.experimental;
 
@@ -127,14 +159,14 @@
     const avStatus = $('avStatus');
     const urlInput = $('avUrlInput');
     let statusText = '';
-    if (S.avatar.mode === 'custom') statusText = 'Vlastný obrázok' + (S.avatar.dataUrl ? '' : ' (ne nahraný)');
+    if (S.avatar.mode === 'custom') statusText = 'Vlastný obrázok' + (S.avatar.dataUrl ? '' : ' (nenahraný)');
     else if (S.avatar.mode === 'url') statusText = 'Obrázok z URL' + (S.avatar.url ? '' : ' (nezadaná)');
     else statusText = avatarShot ? 'Pôvodná fotka z ISIC (snímka z poslednej návštevy AIS).' : 'Pôvodná fotka z ISIC, navštív AIS, aby sa uložila snímka do náhľadu.';
     pic.referrerPolicy = 'no-referrer';
-    pic.onerror = () => { pic.onerror = null; pic.src = 'icon48.png'; if (avStatus) avStatus.textContent = 'Obrázok sa nepodarilo načítať.'; };
+    pic.onerror = () => { pic.onerror = null; pic.src = 'icon128.png'; if (avStatus) avStatus.textContent = 'Obrázok sa nepodarilo načítať.'; };
     pic.src = S.avatar.mode === 'custom' && S.avatar.dataUrl ? S.avatar.dataUrl
       : S.avatar.mode === 'url' && S.avatar.url ? S.avatar.url
-        : avatarShot || 'icon48.png';
+        : avatarShot || 'icon128.png';
     if (urlInput) { urlInput.hidden = S.avatar.mode !== 'url'; urlInput.value = S.avatar.url || ''; }
     if (avStatus) avStatus.textContent = statusText;
     // zvýrazni aktívny mód
@@ -144,7 +176,7 @@
   }
 
   /* ================= odkazy v lište ================= */
-  const saveLinks = (links) => commit({ links });
+  const saveLinks = (links, el) => commit({ links }, el);
   function renderLinks() {
     const box = $('links');
     if (box.contains(document.activeElement) && document.activeElement.tagName === 'INPUT') return;   // neprepisuj počas písania
@@ -164,14 +196,14 @@
       const up = document.createElement('button'); up.textContent = '↑'; up.disabled = i === 0; up.title = 'Posunúť doľava';
       const down = document.createElement('button'); down.textContent = '↓'; down.disabled = i === S.links.length - 1; down.title = 'Posunúť doprava';
       const del = document.createElement('button'); del.textContent = '✕'; del.className = 'ghost'; del.title = 'Odstrániť';
-      const edit = (patch) => saveLinks(S.links.map((x, k) => (k === i ? Object.assign({}, x, patch) : x)));
-      sel.onchange = () => edit({ icon: sel.value });
-      name.onchange = () => { if (name.value.trim()) edit({ name: name.value }); else render(); };
-      url.onchange = () => { if (BU.cleanUrl(url.value)) edit({ url: BU.cleanUrl(url.value) }); else { toastMsg('Neplatná adresa'); url.value = l.url; } };   // render() sa pri zameranom inpute preskočí → vráť uloženú hodnotu explicitne (P1-9)
-      cb.onchange = () => edit({ hideOriginal: cb.checked });
-      const move = (d) => { const a = S.links.slice(); [a[i], a[i + d]] = [a[i + d], a[i]]; saveLinks(a); };
+      const edit = (patch, el) => saveLinks(S.links.map((x, k) => (k === i ? Object.assign({}, x, patch) : x)), el);
+      sel.onchange = () => edit({ icon: sel.value }, sel);
+      name.onchange = () => { if (name.value.trim()) edit({ name: name.value }, name); else render(); };
+      url.onchange = () => { if (BU.cleanUrl(url.value)) edit({ url: BU.cleanUrl(url.value) }, url); else { toastMsg('Neplatná adresa'); url.value = l.url; } };   // render() sa pri zameranom inpute preskočí → vráť uloženú hodnotu explicitne (P1-9)
+      cb.onchange = () => edit({ hideOriginal: cb.checked }, cb);
+      const move = (d) => { const a = S.links.slice(); [a[i], a[i + d]] = [a[i + d], a[i]]; saveLinks(a, d < 0 ? up : down); };
       up.onclick = () => move(-1); down.onclick = () => move(1);
-      del.onclick = () => saveLinks(S.links.filter((_, k) => k !== i));
+      del.onclick = () => saveLinks(S.links.filter((_, k) => k !== i), del);
       row.append(sel, name, url, hide, up, down, del);
       box.appendChild(row);
     });
@@ -179,11 +211,11 @@
     pre.innerHTML = '';
     BU.PRESETS.filter((p) => !S.links.some((l) => l.url === p.url)).forEach((p) => {
       const b = document.createElement('button'); b.className = 'ghost'; b.textContent = '+ ' + p.name;
-      b.onclick = () => saveLinks(S.links.concat([BU.cleanLink(Object.assign({}, p, { id: BU.uid() }))]));
+      b.onclick = () => saveLinks(S.links.concat([BU.cleanLink(Object.assign({}, p, { id: BU.uid() }))]), b);
       pre.appendChild(b);
     });
   }
-  $('addLink').onclick = () => saveLinks(S.links.concat([{ id: BU.uid(), name: 'Nový odkaz', url: '/', icon: 'link', hideOriginal: false }]));
+  $('addLink').onclick = () => saveLinks(S.links.concat([{ id: BU.uid(), name: 'Nový odkaz', url: '/', icon: 'link', hideOriginal: false }]), $('addLink'));
 
   /* ================= CSS snippety ================= */
   function renderSnippets() {
@@ -200,16 +232,16 @@
       const css = document.createElement('textarea'); css.value = sn.css; css.rows = 3; css.spellcheck = false;
       css.placeholder = 'CSS pre is.stuba.sk, napr.\n.rasp-tab { font-size: 13px }';
       const del = document.createElement('button'); del.textContent = '✕'; del.className = 'ghost'; del.title = 'Odstrániť';
-      const edit = (patch) => commit({ snippets: S.snippets.map((x, k) => (k === i ? Object.assign({}, x, patch) : x)) });
-      on.onchange = () => edit({ on: on.checked });
-      name.onchange = () => edit({ name: name.value });
-      css.onchange = () => edit({ css: css.value });
-      del.onclick = () => commit({ snippets: S.snippets.filter((_, k) => k !== i) });
+      const edit = (patch, el) => commit({ snippets: S.snippets.map((x, k) => (k === i ? Object.assign({}, x, patch) : x)) }, el);
+      on.onchange = () => edit({ on: on.checked }, on);
+      name.onchange = () => edit({ name: name.value }, name);
+      css.onchange = () => edit({ css: css.value }, css);
+      del.onclick = () => commit({ snippets: S.snippets.filter((_, k) => k !== i) }, del);
       row.append(on, name, css, del);
       box.appendChild(row);
     });
   }
-  $('addSnippet').onclick = () => commit({ snippets: S.snippets.concat([{ id: BU.uid(), name: 'Nový snippet', css: '', on: true }]) });
+  $('addSnippet').onclick = () => commit({ snippets: S.snippets.concat([{ id: BU.uid(), name: 'Nový snippet', css: '', on: true }]) }, $('addSnippet'));
 
   /* ================= zálohovanie a import tém ================= */
   function download(name, text) {
@@ -252,25 +284,36 @@
       }
       if (low.length && !confirm('Téma „' + v.name + '“ nespĺňa WCAG kontrast 4,5:1 (' + low.slice(0, 3).join(', ') + (low.length > 3 ? '…' : '') + '). Importovať aj tak?')) return;
       const id = 'c-' + BU.uid();
-      commit({ customThemes: Object.assign({}, S.customThemes, { [id]: v }), theme: id });
+      commit({ customThemes: Object.assign({}, S.customThemes, { [id]: v }), theme: id }, $('importTheme'));
       toastMsg('Téma „' + v.name + '“ importovaná');
     } catch (err) { toastMsg('Neplatný súbor témy'); }
   };
 
   /* ================= zapínanie ================= */
-  $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked });
-  if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) });
-  if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) });
-  if ($('mailPreview')) $('mailPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { mail: e.target.checked }) });
-  if ($('schedulePreview')) $('schedulePreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedule: e.target.checked }) });
-  if ($('todoPreview')) $('todoPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { todo: e.target.checked }) });
-  if ($('colorblindSel')) $('colorblindSel').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { colorblind: e.target.value }) });
+  $('masterSwitch').onchange = (e) => commit({ enabled: e.target.checked }, e.target);
+  if ($('hideOperinfo')) $('hideOperinfo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { hideOperinfo: e.target.checked }) }, e.target);
+  if ($('aisLogo')) $('aisLogo').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { aisLogo: e.target.checked }) }, e.target);
+  if ($('mailPreview')) $('mailPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { mail: e.target.checked }) }, e.target);
+  if ($('schedulePreview')) $('schedulePreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedule: e.target.checked }) }, e.target);
+  if ($('todoPreview')) $('todoPreview').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { todo: e.target.checked }) }, e.target);
+  if ($('colorblindSel')) $('colorblindSel').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { colorblind: e.target.value }) }, e.target);
+  if ($('schedView')) $('schedView').onchange = (e) => commit({ ui: Object.assign({}, S.ui, { schedView: e.target.value }) }, e.target);
+  let groupsTimer;
+  if ($('schedGroups')) $('schedGroups').oninput = (e) => {
+    clearTimeout(groupsTimer);
+    const el = e.target;
+    groupsTimer = setTimeout(() => commit({ ui: Object.assign({}, S.ui, { schedGroups: el.value }) }, el), 300);
+  };
 
-  /* ================= dashboard hodnotení ================= */
-  $('nick').value = S.nick || '';
-  $('nick').onchange = (e) => commit({ nick: e.target.value });
+  /* ================= prezývka ================= */
+  let nickTimer;
+  $('nick').addEventListener('input', (e) => {
+    clearTimeout(nickTimer);
+    const el = e.target;
+    nickTimer = setTimeout(() => commit({ nick: el.value.trim() }, el), 300);
+  });
   $('experimentalOn').checked = !!S.experimental;
-  $('experimentalOn').onchange = (e) => commit({ experimental: e.target.checked });
+  $('experimentalOn').onchange = (e) => commit({ experimental: e.target.checked }, e.target);
   function updateStatusText(info) {
     const el = $('updateStatus');
     if (!info) { el.textContent = 'Ešte neskontrolované.'; return; }
@@ -322,33 +365,33 @@
   };
 
   /* ================= zvyšné handlery ================= */
-  document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => commit({ mode: b.dataset.v })));
+  document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => commit({ mode: b.dataset.v }, b)));
   BU.FONTS.forEach((f) => { const o = document.createElement('option'); o.value = f.value; o.textContent = f.label; $('fontSel').appendChild(o); });
-  $('fontSel').onchange = (e) => setCustom('font', e.target.value);
-  $('fontCustom').onchange = (e) => { const v = e.target.value.trim(); if (v) setCustom('font', v + ', system-ui, sans-serif'); else setCustom('font', ''); };
-  $('accent').onchange = (e) => setCustom('accent', e.target.value);
-  $('link').onchange = (e) => setCustom('link', e.target.value);
+  $('fontSel').onchange = (e) => setCustom('font', e.target.value, e.target);
+  $('fontCustom').onchange = (e) => { const v = e.target.value.trim(); if (v) setCustom('font', v + ', system-ui, sans-serif', e.target); else setCustom('font', '', e.target); };
+  $('accent').onchange = (e) => setCustom('accent', e.target.value, e.target);
+  $('link').onchange = (e) => setCustom('link', e.target.value, e.target);
   $('radius').oninput = (e) => { $('radiusVal').textContent = e.target.value + ' px'; };
-  $('radius').onchange = (e) => setCustom('radius', e.target.value);
-  document.querySelectorAll('[data-reset]').forEach((b) => (b.onclick = () => setCustom(b.dataset.reset, '')));
+  $('radius').onchange = (e) => setCustom('radius', e.target.value, e.target);
+  document.querySelectorAll('[data-reset]').forEach((b) => (b.onclick = () => setCustom(b.dataset.reset, '', b)));
 
   // profilovka
   $('avUrl').onclick = async () => {
     const inp = $('avUrlInput');
     if (inp) inp.hidden = false;
-    await commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '', source: '', crop: null } });
+    await commit({ avatar: { mode: 'url', dataUrl: '', url: S.avatar.url || '', source: '', crop: null } }, inp);
     const i = $('avUrlInput');
     if (i) { i.value = S.avatar.url || ''; i.focus(); i.select(); }
   };
   const avUrlInput = $('avUrlInput');
   if (avUrlInput) {
-    const saveUrl = () => { const v = avUrlInput.value.trim(); if (v) commit({ avatar: { mode: 'url', dataUrl: '', url: v, source: '', crop: null } }); };
+    const saveUrl = () => { const v = avUrlInput.value.trim(); if (v) commit({ avatar: { mode: 'url', dataUrl: '', url: v, source: '', crop: null } }, avUrlInput); };
     avUrlInput.addEventListener('change', saveUrl);
     avUrlInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); saveUrl(); avUrlInput.blur(); } });
   }
-  $('avOrig').onclick = () => commit({ avatar: { mode: 'original', dataUrl: '', url: '', source: '', crop: null } });
+  $('avOrig').onclick = () => commit({ avatar: { mode: 'original', dataUrl: '', url: '', source: '', crop: null } }, $('avOrig'));
   if ($('avReloadShot')) $('avReloadShot').onclick = async () => {
-    try { const r = await chrome.storage.local.get('bu-avatar-shot'); const v = r && r['bu-avatar-shot']; avatarShot = typeof v === 'string' ? v : (v && v.data) || ''; render(); toast(); } catch (e) { console.warn(e); }
+    try { const r = await chrome.storage.local.get('bu-avatar-shot'); const v = r && r['bu-avatar-shot']; avatarShot = typeof v === 'string' ? v : (v && v.data) || ''; render(); toastMsg('Snímka obnovená'); } catch (e) { console.warn(e); }
   };
   $('avUpload').onclick = () => $('avFile').click();
   $('avFile').onchange = async (e) => {
@@ -357,10 +400,10 @@
     if (!f) return;
     try {
       const dataUrl = await fileToDataUrl(f);
-      commit({ avatar: { mode: 'custom', dataUrl, url: '', source: '', crop: null } });
+      commit({ avatar: { mode: 'custom', dataUrl, url: '', source: '', crop: null } }, $('avUpload'));
     } catch (err) {
       console.debug('betterAIS avatar upload failed', err);
-      toast('Obrázok sa nepodarilo načítať.');
+      toastMsg('Obrázok sa nepodarilo načítať.');
     }
   };
   async function fileToDataUrl(f) {
@@ -387,7 +430,7 @@
   }
   function readAsDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
 
-  $('reset').onclick = () => { if (confirm('Obnoviť všetky nastavenia betterAIS?')) { S = BU.normalize(null); BU.save(S); render(); toast(); } };
+  $('reset').onclick = () => { if (confirm('Obnoviť všetky nastavenia betterAIS?')) { S = BU.normalize(null); BU.save(S); render(); toastMsg('Nastavenia obnovené'); } };
 
   // Zmeny z inde (content script, iné zariadenie cez sync) sa prejavia naživo.
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {

@@ -8,181 +8,233 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <img src="icon128.png" alt="" style="height:1.4rem;width:auto;vertical-align:middle">
+    <img src="icon128.png" alt="">
     <h1>betterAIS <small>nastavenia vzhľadu</small></h1>
     <span class="ver" id="verBadge"></span>
   </header>
 
-  <section>
-    <h2>Zapínanie</h2>
-    <p class="sub">Hlavný vypínač. Jednotlivé stránky sa dajú vypnúť aj v popup-e rozšírenia.</p>
-    <div class="row">
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="masterSwitch"> Zapnúť betterAIS</label>
-    </div>
-  </section>
+  <nav class="nav" aria-label="Sekcie nastavení">
+    <a href="#vzhlad">Vzhľad</a>
+    <a href="#domov">Domovská stránka</a>
+    <a href="#profil">Profil</a>
+    <a href="#pristupnost">Prístupnosť</a>
+    <a href="#pokrocile">Pokročilé</a>
+    <a href="#nebezpecna" class="danger">Nebezpečná zóna</a>
+  </nav>
 
-  <section>
-    <h2>Voliteľné funkcie</h2>
-    <p class="sub">Doplnkové prvky na stránkach AIS. Všetky predvolene zapnuté.</p>
-    <div class="row" style="gap:10px; flex-wrap:wrap">
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="hideOperinfo"> Skryť štatistiky akcií AIS</label>
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="aisLogo"> Zobrazovať AIS logo v hlavičke</label>
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="mailPreview"> Náhľad pošty na hlavnej stránke</label>
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="schedulePreview"> Náhľad rozvrhu na hlavnej stránke</label>
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="todoPreview"> Zoznam úloh (To-Do) na hlavnej stránke</label>
-    </div>
-  </section>
-
-  <section>
-    <h2>Prístupnosť</h2>
-    <p class="sub">Prispôsobenie pre používateľov so zrakovým znevýhodnením. Režim pre farboslepých nahradí konfliktné farby (červená/zelena) bezpečnou paletou (modrá/oranžová) a pridá vzory.</p>
-    <div class="row" style="margin-top:10px">
-      <label class="f">Režim pre farboslepých
-        <select id="colorblindSel">
-          <option value="off">Vypnuté</option>
-          <option value="deuteranopia">Deuteranopia (červeno-zelená)</option>
-          <option value="protanopia">Protanopia (červeno-zelená)</option>
-          <option value="tritanopia">Tritanopia (modro-žltá)</option>
-          <option value="achromatopsia">Achromatopsia (úplná)</option>
-        </select></label>
-    </div>
-  </section>
-
-  <section>
-    <h2>Režim</h2>
-    <p class="sub">Svetlý alebo tmavý vzhľad. „Auto“ sa riadi nastavením systému. Prepínať sa dá aj slnkom/mesiacom v hlavičke UIS.</p>
-    <div class="seg" id="mode">
-      <button data-v="dark">Tmavý</button><button data-v="light">Svetlý</button><button data-v="auto">Auto</button>
-    </div>
-  </section>
-
-  <section>
-    <h2>Obchod s témami</h2>
-    <p class="sub">Každá téma má tmavý aj svetlý variant. Klikni a použije sa to hneď. Vlastnú tému vo formáte theme.json môžeš importovať nižšie.</p>
-    <div class="store" id="store"></div>
-  </section>
-
-  <section>
-    <h2>Úpravy navyše</h2>
-    <p class="sub">Prebijú farby a písmo zvolenej témy. Prázdne = podľa témy.</p>
-    <div class="row">
-      <label class="f">Farba zvýraznenia
-        <span class="row" style="gap:8px"><input type="color" id="accent"><button class="ghost" data-reset="accent">Reset</button></span></label>
-      <label class="f">Farba odkazov
-        <span class="row" style="gap:8px"><input type="color" id="link"><button class="ghost" data-reset="link">Reset</button></span></label>
-      <label class="f">Zaoblenie rohov: <b id="radiusVal"></b>
-        <span class="row" style="gap:8px"><input type="range" id="radius" min="0" max="28" step="1"><button class="ghost" data-reset="radius">Reset</button></span></label>
-      <label class="f">Písmo
-        <select id="fontSel"></select></label>
-      <label class="f">Vlastné písmo (nainštalované v systéme)
-        <input type="text" id="fontCustom" placeholder='napr. Inter alebo "Fira Sans"'></label>
-    </div>
-  </section>
-
-  <section>
-    <h2>Prezývka</h2>
-    <p class="sub">Lokálna prezývka, ktorá sa zobrazí v hlavičke UIS namiesto mena (len u teba, nesyncuje sa). Prázdne = pôvodné meno.</p>
-    <div class="row">
-      <label class="f">Tvoja prezývka
-        <input type="text" id="nick" placeholder="napr. Oliver" maxlength="40"></label>
-    </div>
-  </section>
-
-  <section>
-    <h2>Profilová fotka</h2>
-    <p class="sub">Nahraný obrázok sa uloží len u teba v prehliadači, nikam sa neposiela. Pri obrázku z URL sa prehliadač pri načítaní spojí so serverom, odkiaľ obrázok pochádza.</p>
-    <div class="avatar">
-      <img class="pic" id="pic" alt="">
-      <div>
-        <div class="row" style="gap:8px">
-          <button id="avUrl">Zadaj URL obrázka…</button>
-          <button id="avUpload" class="primary">Nahrať vlastnú…</button>
-          <button id="avOrig" class="ghost">Pôvodná z ISIC</button>
-          <button id="avReloadShot" class="ghost" title="Znovu načítať snímku z úložiska">↻ snímka</button>
-          <input type="file" id="avFile" accept="image/*" hidden>
+  <main class="panels">
+    <section class="panel" id="vzhlad">
+      <div class="card">
+        <h2>Režim a zapínanie</h2>
+        <p class="sub">Hlavný vypínač a farebný režim. Jednotlivé stránky sa dajú vypnúť aj v popup-e rozšírenia.</p>
+        <div class="setting-row">
+          <div class="setting-info"><strong>Zapnúť betterAIS</strong><small>Vypnutie rozšírenia na tejto stránke.</small></div>
+          <label class="switch"><input type="checkbox" id="masterSwitch"> Zapnuté</label>
         </div>
-        <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png/webp)" style="width:100%;margin-top:8px" hidden>
-        <p class="muted" id="avStatus" style="margin:8px 0 0"></p>
-      <p class="muted" style="margin:4px 0 0">GIF zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
+        <div class="seg" id="mode">
+          <button data-v="dark">Tmavý</button><button data-v="light">Svetlý</button><button data-v="auto">Auto</button>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <section>
-    <h2>Odkazy v hornej lište</h2>
-    <p class="sub">Pridaj si čokoľvek, čo používaš často. Zobrazia sa vedľa „Osobná administratíva“. Stránku môžeš pridať aj priamo v UIS tlačidlom <b>+</b> v hlavičke.</p>
-    <div id="links"></div>
-    <div class="row" style="margin-top:12px; gap:8px">
-      <button id="addLink" class="primary">+ Pridať odkaz</button>
-      <span class="muted">Rýchlo pridať:</span>
-      <span id="presets" class="row" style="gap:6px"></span>
-    </div>
-    <p class="muted" style="margin:10px 0 0">Adresa môže byť cesta v UIS (<code>/auth/posta/slozka.pl?lang=sk</code>) alebo celý odkaz (<code>https://…</code>). „Skryť pôvodný“ schová rovnaký odkaz v kartách na hlavnej stránke (presun).</p>
-  </section>
+      <div class="card">
+        <h2>Témy</h2>
+        <p class="sub">Každá téma má tmavý aj svetlý variant. Klikni a použije sa hneď. Vlastnú tému vo formáte theme.json môžeš importovať v Pokročilých.</p>
+        <div class="store" id="store"></div>
+      </div>
 
-  <section>
-    <h2>CSS snippety</h2>
-    <p class="sub">Vlastné CSS pre is.stuba.sk, prebijú tému, ale platia len vtedy, keď je snippet zapnutý. Ideálne na doladenie stránok, ktoré téma nezreactuje (rozvrh, termíny…).</p>
-    <div id="snippets"></div>
-    <div class="row" style="margin-top:12px">
-      <button id="addSnippet" class="primary">+ Pridať snippet</button>
-    </div>
-  </section>
+      <div class="card">
+        <h2>Úpravy navyše</h2>
+        <p class="sub">Prebijú farby a písmo zvolenej témy. Prázdne = podľa témy.</p>
+        <div class="field-grid">
+          <label class="field">Farba zvýraznenia
+            <span class="field-row"><input type="color" id="accent"><button class="ghost" data-reset="accent">Reset</button></span>
+          </label>
+          <label class="field">Farba odkazov
+            <span class="field-row"><input type="color" id="link"><button class="ghost" data-reset="link">Reset</button></span>
+          </label>
+          <label class="field">Zaoblenie rohov: <b id="radiusVal"></b>
+            <span class="field-row"><input type="range" id="radius" min="0" max="28" step="1"><button class="ghost" data-reset="radius">Reset</button></span>
+          </label>
+          <label class="field">Písmo
+            <select id="fontSel"></select>
+          </label>
+          <label class="field">Vlastné písmo (nainštalované v systéme)
+            <input type="text" id="fontCustom" placeholder='napr. Inter alebo "Fira Sans"'>
+          </label>
+        </div>
+      </div>
 
-  <section>
-    <h2>Experimentálny režim</h2>
-    <p class="sub">Ak je zapnutý, rozšírenie kontroluje a sťahuje najnovšiu verziu z GitHubu. Ak je vypnutý, používa sa len stabilná verzia.</p>
-    <div class="row">
-      <label class="switch" style="flex-direction:row"><input type="checkbox" id="experimentalOn"> Zapnúť experimentálny režim</label>
-    </div>
-  </section>
+      <div class="card">
+        <h2>Prvky rozhrania AIS</h2>
+        <p class="sub">Doplnkové prvky priamo na stránkach AIS.</p>
+        <div class="setting-row">
+          <div class="setting-info"><strong>Štatistiky akcií AIS</strong><small>Skryť štatistiky v kartách predmetov.</small></div>
+          <label class="switch"><input type="checkbox" id="hideOperinfo"> Skryť</label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><strong>AIS logo</strong><small>Zobrazovať logo v hlavičke.</small></div>
+          <label class="switch"><input type="checkbox" id="aisLogo"> Zobrazovať</label>
+        </div>
+      </div>
+    </section>
 
-  <section>
-    <h2>Aktualizácie</h2>
-    <p class="sub">Experimentálny režim kontroluje dostupnosť novšej verzie na GitHube. Novú verziu vieš nahrať aj ručne ako zip, plugin z neho aplikuje témy a nastavenia, ktoré sa dajú meniť za behu.</p>
-    <div class="row" style="gap:8px">
-      <button id="updateCheck">Skontrolovať aktualizácie</button>
-      <span class="muted" id="updateStatus">Ešte neskontrolované.</span>
-    </div>
-    <p class="muted" style="margin:10px 0 0"><a id="updateLink" href="#" hidden>Stiahnuť najnovšiu verziu</a></p>
-  </section>
+    <section class="panel" id="domov">
+      <div class="card">
+        <h2>Domovská stránka</h2>
+        <p class="sub">Náhľady sa načítajú z AIS s tvojím prihlásením a ukladajú sa len lokálne.</p>
+        <div class="setting-row">
+          <div class="setting-info"><strong>Pošta</strong><small>Zoznam posledných správ a počet neprečítaných.</small></div>
+          <label class="switch"><input type="checkbox" id="mailPreview"> Zapnuté</label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><strong>Rozvrh</strong><small>Dnes, zajtra alebo celý týždeň. Paralelné varianty akcií sa zbalia.</small></div>
+          <label class="switch"><input type="checkbox" id="schedulePreview"> Zapnuté</label>
+        </div>
+        <div class="field-grid">
+          <label class="field">Predvolené zobrazenie
+            <select id="schedView">
+              <option value="today">Dnes</option>
+              <option value="tomorrow">Zajtra</option>
+              <option value="week">Celý týždeň</option>
+            </select>
+          </label>
+          <label class="field">Moje skupiny
+            <input type="text" id="schedGroups" placeholder="napr. A2, 1B-RK4" maxlength="200">
+            <small>Ostatné varianty sa v rozvrhu skryjú. Čiarkou oddeľ názvy skupín alebo označenia z poznámok.</small>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><strong>To-Do</strong><small>Vlastný zoznam úloh, zápočtov a skúšok.</small></div>
+          <label class="switch"><input type="checkbox" id="todoPreview"> Zapnuté</label>
+        </div>
+      </div>
 
-  <section>
-    <h2>Zálohovanie a zdieľanie</h2>
-    <p class="sub">Nastavenia (vrátane tém, snippetov a odkazov) sa dajú exportovať do JSON a importovať na inom počítači. Téma sa dá importovať aj samostatne.</p>
-    <div class="row" style="gap:8px">
-      <button id="exportCfg">Exportovať nastavenia</button>
-      <button id="importCfg">Importovať nastavenia…</button>
-      <button id="importTheme" class="ghost">Importovať tému…</button>
-      <input type="file" id="cfgFile" accept="application/json,.json" hidden>
-      <input type="file" id="themeFile" accept="application/json,.json" hidden>
-    </div>
-    <p class="muted" style="margin:10px 0 0">Nastavenia sa okrem profilovky zrkadlia aj cez <code>chrome.storage.sync</code>, ak si prihlásený rovnakým účtom v prehliadači, téma a odkazy putujú medzi počítačmi automaticky.</p>
-  </section>
+      <div class="card">
+        <h2>Odkazy v hornej lište</h2>
+        <p class="sub">Pridaj si čokoľvek, čo používaš často. Zobrazia sa vedľa „Osobná administratíva“. Stránku môžeš pridať aj priamo v AIS tlačidlom <b>+</b> v hlavičke.</p>
+        <div id="links"></div>
+        <div class="field-row">
+          <button id="addLink" class="primary">+ Pridať odkaz</button>
+          <span class="muted">Rýchlo pridať:</span>
+          <span id="presets" class="field-row"></span>
+        </div>
+        <p class="muted">Adresa môže byť cesta v AIS (<code>/auth/posta/slozka.pl?lang=sk</code>) alebo celý odkaz (<code>https://…</code>). „Skryť pôvodný“ schová rovnaký odkaz v kartách na hlavnej stránke.</p>
+      </div>
+    </section>
 
-  <section>
-    <h2>Diagnostika</h2>
-    <p class="sub">Ak niečo v UIS vyzerá zle, otvor to na stránke (napr. rozbaľ menu pri svojom mene) a stlač <b>Ctrl+Shift+U</b> (skratka sa dá premapovať v <code>chrome://extensions/shortcuts</code>). Skopíruje sa štruktúra stránky s utajenými osobnými údajmi, ktorú stačí vložiť do hlásenia chyby. <b>Ctrl+Shift+Y</b> ti dovolí kliknúť na konkrétny prvok a skopírovať len ten. Paleta príkazov (Ctrl+K) vyhľadáva vo všetkých položkách menu.</p>
-    <div class="row" style="margin-top:10px; gap:8px">
-      <button id="copyDiag" class="ghost">Skopírovať údaje pre hlásenie chyby (verzia + nastavenia)</button>
-      <span class="muted" id="diagStatus"></span>
-    </div>
-    <p class="muted" style="margin:10px 0 0">Diagnostika obsahuje verziu rozšírenia, prehliadač, jazyk a sanitizované nastavenia (bez profilovky a snippetov). Vlož ju spolu s výpisom z Ctrl+Shift+U.</p>
-  </section>
+    <section class="panel" id="profil">
+      <div class="card">
+        <h2>Prezývka</h2>
+        <p class="sub">Lokálna prezývka, ktorá sa zobrazí v hlavičke a v menu pri mene (len u teba, nesyncuje sa). Prázdne = pôvodné meno.</p>
+        <label class="field">Tvoja prezývka
+          <input type="text" id="nick" placeholder="napr. Oliver" maxlength="40">
+        </label>
+      </div>
 
-  <section>
-    <h2>Skratky</h2>
-    <p class="sub">Klávesové skratky rozšírenia. Pre mapovanie otvor <code>chrome://extensions/shortcuts</code>.</p>
-    <div class="row" style="gap:12px; flex-wrap:wrap">
-      <span class="muted"><b>Ctrl+K</b> – paleta príkazov (vyhľadávanie v menu)</span>
-      <span class="muted"><b>Ctrl+Shift+U</b> – diagnostika stránky (dump)</span>
-      <span class="muted"><b>Ctrl+Shift+Y</b> – vybrať prvok na stránke</span>
-    </div>
-  </section>
+      <div class="card">
+        <h2>Profilová fotka</h2>
+        <p class="sub">Nahraný obrázok sa uloží len u teba v prehliadači, nikam sa neposiela. Pri obrázku z URL sa prehliadač pri načítaní spojí so serverom, odkiaľ obrázok pochádza.</p>
+        <div class="avatar">
+          <img class="pic" id="pic" alt="Náhľad profilovej fotky">
+          <div class="avatar-actions">
+            <div class="field-row">
+              <button id="avUrl">Zadaj URL obrázka…</button>
+              <button id="avUpload" class="primary">Nahrať vlastnú…</button>
+              <button id="avOrig" class="ghost">Pôvodná z ISIC</button>
+              <button id="avReloadShot" class="ghost" title="Znovu načítať snímku z úložiska">↻ snímka</button>
+              <input type="file" id="avFile" accept="image/*" hidden>
+            </div>
+            <input type="text" id="avUrlInput" placeholder="https://… (gif/jpg/png/webp)" class="wide" hidden>
+            <p class="muted" id="avStatus"></p>
+            <p class="muted">GIF zostane animovaný. Náhľad pôvodnej fotky je snímka z poslednej návštevy AIS.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <section>
-    <button id="reset" class="ghost">Obnoviť všetko na predvolené</button>
-  </section>
+    <section class="panel" id="pristupnost">
+      <div class="card">
+        <h2>Farboslepé režimy</h2>
+        <p class="sub">Nahradí konfliktné farby (červená/zelená) bezpečnou paletou (modrá/oranžová) a pridá vzory. Všetky vstavané témy spĺňajú kontrast 4,5:1.</p>
+        <div class="setting-row">
+          <div class="setting-info"><strong>Režim pre farboslepých</strong><small>Vyber podľa typu farbosleposti.</small></div>
+          <select id="colorblindSel">
+            <option value="off">Vypnuté</option>
+            <option value="deuteranopia">Deuteranopia (červeno-zelená)</option>
+            <option value="protanopia">Protanopia (červeno-zelená)</option>
+            <option value="tritanopia">Tritanopia (modro-žltá)</option>
+            <option value="achromatopsia">Achromatopsia (úplná)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="pokrocile">
+      <div class="card">
+        <h2>CSS snippety</h2>
+        <p class="sub">Vlastné CSS pre is.stuba.sk, prebijú tému, ale platia len vtedy, keď je snippet zapnutý.</p>
+        <div id="snippets"></div>
+        <button id="addSnippet" class="primary">+ Pridať snippet</button>
+      </div>
+
+      <div class="card">
+        <h2>Zálohovanie a zdieľanie</h2>
+        <p class="sub">Nastavenia (vrátane tém, snippetov a odkazov) sa dajú exportovať do JSON a importovať na inom počítači.</p>
+        <div class="field-row">
+          <button id="exportCfg">Exportovať nastavenia</button>
+          <button id="importCfg">Importovať nastavenia…</button>
+          <button id="importTheme" class="ghost">Importovať tému…</button>
+          <input type="file" id="cfgFile" accept="application/json,.json" hidden>
+          <input type="file" id="themeFile" accept="application/json,.json" hidden>
+        </div>
+        <p class="muted">Nastavenia sa okrem profilovky zrkadlia aj cez <code>chrome.storage.sync</code>, ak si prihlásený rovnakým účtom v prehliadači.</p>
+      </div>
+
+      <div class="card">
+        <h2>Experimentálne a aktualizácie</h2>
+        <p class="sub">Experimentálny režim kontroluje dostupnosť novšej verzie na GitHube. Novú verziu vieš nahrať aj ručne ako zip.</p>
+        <div class="setting-row">
+          <div class="setting-info"><strong>Experimentálny režim</strong><small>Sťahovať najnovšiu verziu z GitHubu.</small></div>
+          <label class="switch"><input type="checkbox" id="experimentalOn"> Zapnuté</label>
+        </div>
+        <div class="field-row">
+          <button id="updateCheck">Skontrolovať aktualizácie</button>
+          <span class="muted" id="updateStatus">Ešte neskontrolované.</span>
+        </div>
+        <p class="muted"><a id="updateLink" href="#" hidden>Stiahnuť najnovšiu verziu</a></p>
+      </div>
+
+      <div class="card">
+        <h2>Diagnostika</h2>
+        <p class="sub">Ak niečo vyzerá zle, otvor to na stránke AIS a stlač <b>Ctrl+Shift+U</b>. Skopíruje sa štruktúra stránky s utajenými osobnými údajmi. <b>Ctrl+Shift+Y</b> vyberie konkrétny prvok.</p>
+        <div class="field-row">
+          <button id="copyDiag" class="ghost">Skopírovať údaje pre hlásenie chyby</button>
+          <span class="muted" id="diagStatus"></span>
+        </div>
+        <p class="muted">Obsahuje verziu, prehliadač, jazyk a sanitizované nastavenia (bez profilovky a snippetov).</p>
+      </div>
+
+      <div class="card">
+        <h2>Skratky</h2>
+        <p class="sub">Mapovanie skratiek sa dá zmeniť v <code>chrome://extensions/shortcuts</code>.</p>
+        <table class="keys">
+          <tbody>
+            <tr><th><kbd>Ctrl+K</kbd></th><td>Paleta príkazov</td></tr>
+            <tr><th><kbd>Ctrl+Shift+U</kbd></th><td>Diagnostika stránky (dump)</td></tr>
+            <tr><th><kbd>Ctrl+Shift+Y</kbd></th><td>Vybrať prvok na stránke</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="nebezpecna">
+      <div class="card danger-zone">
+        <h2>Obnoviť všetko</h2>
+        <p class="sub">Vymaže témy, odkazy, snippety a prezývku a vráti predvolené nastavenia.</p>
+        <button id="reset" class="ghost">Obnoviť všetko na predvolené</button>
+      </div>
+    </section>
+  </main>
 </div>
 <div class="toast" id="toast">Uložené</div>
 <script src="themes.js"></script>
