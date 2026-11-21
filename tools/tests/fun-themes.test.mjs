@@ -59,6 +59,11 @@ test('palety štýlových tém sú platné', () => {
 test('štýlové témy majú jeden pevný režim', () => {
   for (const id of ids) {
     const t = BU.THEMES[id];
+    if (id === 'nostalgia') {
+      assert.equal(t.mode, undefined, id);
+      for (const mode of ['dark', 'light']) assert.equal(BU.compute({ theme: id, mode }).mode, mode, id);
+      continue;
+    }
     assert.ok(t.mode === 'dark' || t.mode === 'light', id);
     for (const mode of ['dark', 'light']) assert.equal(BU.compute({ theme: id, mode }).mode, t.mode, id);
   }
@@ -81,12 +86,15 @@ for (const id of ['retroxp', 'retro95', 'crtamber', 'gameboy', 'c64', 'synthwave
   });
 }
 
-test('Nostalgia je kill-switch s jedinou zmenou – hlavičkou', () => {
+test('Nostalgia je kill-switch okrem hlavičky, tlačidiel a panels Osobná administratíva', () => {
   const content = readFileSync('content.js', 'utf8');
   const css = readFileSync('base.css', 'utf8');
   assert.match(content, /offNow\(\).*S\.theme === 'nostalgia'/);
   assert.match(content, /dataset\.buNostalgia = '1'/);
+  assert.match(content, /offNow\(\) && S\.theme !== 'nostalgia'/);
   assert.match(css, /html\[data-bu-nostalgia="1"\] #header/);
+  assert.match(css, /html\[data-bu-nostalgia="1"\] nav\[aria-label="breadcrumb"\]/);
+  assert.match(css, /html\[data-bu-nostalgia="1"\] #bu-ctl \.bu-btn/);
   assert.ok(!BU.THEMES.nostalgia.css, 'Nostalgia nesmie mať vlastnú CSS vrstvu');
 });
 

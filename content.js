@@ -56,7 +56,13 @@
     const offEarly = !!(oc && (!oc.enabled || (oc.paths || []).includes(pagePath())));
     const c = JSON.parse(localStorage.getItem('bu:cache') || 'null');
     if (offEarly) setOff(true);
-    else if (c && c.theme !== 'nostalgia') { BU.applyVars(c); applyThemeCss(c.theme); }
+    else if (c) {
+      BU.applyVars(c);
+      if (c.theme === 'nostalgia') {
+        document.documentElement.dataset.buOff = '1';
+        document.documentElement.dataset.buNostalgia = '1';
+      } else applyThemeCss(c.theme);
+    }
   } catch (e) { swallow(e); }
 
   // Štýlové témy majú navyše vlastné CSS (rozsah html[data-bu-theme=...]); vkladá sa len pre aktívnu tému.
@@ -82,7 +88,14 @@
     const off = offNow();
     const wasOff = document.documentElement.dataset.buOff === '1';
     if (ready && off !== wasOff) { location.reload(); return; }   // kill-switch sa zmenil → čistý štart stránky
-    if (off) { setOff(true); mailPreview(); schedPreview(); todoPreview(); return; }
+    if (off) {
+      setOff(true);
+      if (S.theme === 'nostalgia' && S.enabled && !S.disabledPages.includes(pagePath())) {
+        BU.applyVars(BU.compute(S));
+        controls();
+      }
+      mailPreview(); schedPreview(); todoPreview(); return;
+    }
     setOff(false);
     const mode = BU.compute(S).mode;
     delete document.documentElement.dataset.buOff;
@@ -381,7 +394,7 @@
   const ICON_SET = '<svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
 
   function controls() {
-    if (!isTop || offNow()) return;
+    if (!isTop || (offNow() && S.theme !== 'nostalgia')) return;
     const eff = BU.resolveMode(S.mode);
     let box = document.getElementById('bu-ctl');
     if (!box) {

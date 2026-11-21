@@ -260,7 +260,6 @@ html[data-bu-theme="aqua"][data-bu-mode="dark"]:not([data-bu-off]), html[data-bu
   };
 
   for (const t of Object.values(FUN)) t[t.mode === 'light' ? 'dark' : 'light'] = t[t.mode];
-  BU.THEMES.nostalgia.mode = 'light';
   BU.THEMES.nostalgia.group = 'fun';
   Object.assign(BU.THEMES, FUN);
   BU.FUN_THEME_IDS = Object.keys(FUN).concat('nostalgia');

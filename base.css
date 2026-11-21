@@ -762,3 +762,8 @@ html[data-bu-nostalgia="1"] #header,
 html[data-bu-nostalgia="1"] .sd-header { background: #831135 !important; background-image: none !important; border-bottom: 1px solid #6d0e2c !important; box-shadow: none !important; }
 html[data-bu-nostalgia="1"] :is(#header, .sd-header) :is(a, span, div, p, b, strong, small, li, td, h1, h2, h3, h4) { color: #ffffff !important; }
 html[data-bu-nostalgia="1"] img.bu-logo-ais { filter: invert(1) brightness(1.15) !important; }
+html[data-bu-nostalgia="1"] nav[aria-label="breadcrumb"] { background: var(--bg-2) !important; border: 0 !important; border-bottom: 1px solid var(--border) !important; color: var(--text) !important; }
+html[data-bu-nostalgia="1"] nav[aria-label="breadcrumb"] a { color: var(--link) !important; }
+html[data-bu-nostalgia="1"] nav[aria-label="breadcrumb"] .active { color: var(--text) !important; }
+html[data-bu-nostalgia="1"] #bu-ctl .bu-btn { background: var(--bg-2) !important; border: 1px solid var(--border) !important; color: var(--text) !important; }
+html[data-bu-nostalgia="1"] #bu-ctl .bu-btn svg { stroke: var(--text) !important; }
