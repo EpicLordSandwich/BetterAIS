@@ -428,13 +428,17 @@
 
   /* ================= 5) Profilovka (len lokálne) ================= */
   function avatarCandidates() {
+    const id = ownId();
     return [...document.images].filter((img) => {
       if (img.dataset.buAv) return true;
       if (img.id === 'uis-logo' || img.classList.contains('bu-icon')) return false;
       const src = img.getAttribute('src') || '';
-      if (/foto\.pl|lide\/foto|podobizn|isic/i.test(src)) return true;
-      if (img.closest('#header') && !img.closest('.lang-switcher, #bu-ctl, .left')) return !/logo|flag|vlajk|lang|\.svg|icon/i.test(src);
-      return false;
+      const ownPlace = img.closest('#pfp, #header') && !img.closest('.lang-switcher, #bu-ctl, .left');
+      if (/foto\.pl|lide\/foto|podobizn|isic/i.test(src)) {
+        const pid = BU.notif.photoId(src);
+        return pid ? pid === id : !!ownPlace;
+      }
+      return !!ownPlace && !/logo|flag|vlajk|lang|\.svg|icon/i.test(src);
     });
   }
   // Vráti obrázok do pôvodného stavu. Nikdy nesiaha na štýly, ktoré sme nenastavili my —
@@ -452,15 +456,18 @@
     delete img.dataset.buAv; delete img.dataset.buKey;
     delete img.dataset.buOrigSrc; delete img.dataset.buOrigSrcset; delete img.dataset.buOrigAlt;
   }
+  function getNameEl() {
+    const info = document.querySelector('#header .info');
+    if (!info) return null;
+    const direct = info.querySelector(':scope > div:not(.dvdr):last-of-type');
+    if (direct && direct.textContent.trim()) return direct;
+    const divs = Array.from(info.children).filter((d) => d.tagName === 'DIV' && !d.classList.contains('dvdr') && d.textContent.trim());
+    return divs.length ? divs[divs.length - 1] : null;
+  }
   function avatarName() {
     if (S.nick) return S.nick;
-    const info = document.querySelector('#header .info');
-    if (info) {
-      const divs = Array.from(info.querySelectorAll('div'))
-        .filter((d) => d.textContent.trim() && !d.classList.contains('dvdr'));
-      if (divs.length) return divs[divs.length - 1].textContent.trim();
-    }
-    return 'A';
+    const el = getNameEl();
+    return el ? el.textContent.trim() : 'A';
   }
   function initialAvatarUrl() {
     const ch = ((avatarName().match(/[\p{L}\p{N}]/u) || ['A'])[0]).toUpperCase();
@@ -485,24 +492,25 @@
   function rememberIsicPhoto(imgs) {
     if (shotChecked) return;
     try {
-      const src = imgs.map((i) => i.dataset.buOrigSrc || i.getAttribute('src') || '')
-        .find((s) => /foto\.pl|lide\/foto|podobizn/i.test(s));
+      const id = ownId();
+      if (!id) return;
+      const src = BU.notif.pickOwnPhoto(imgs.map((i) => i.dataset.buOrigSrc || i.getAttribute('src') || ''), id);
       if (!src) return;
       const abs = new URL(src, location.href).href;
       if (!/^https?:\/\/[^/]*is\.stuba\.sk\//i.test(abs)) return;
       shotChecked = true;
       chrome.storage.local.get(AVATAR_SHOT_KEY).then((r) => {
         const prev = r && r[AVATAR_SHOT_KEY];
-        if (prev && prev.url === abs && prev.data) return;   // snímku pre túto fotku už máme
+        if (prev && prev.url === abs && prev.data && prev.id === id) return;
         const avCtrl = new AbortController(); const avTimer = setTimeout(() => avCtrl.abort(), 8000);
         return fetch(abs, { credentials: 'include', signal: avCtrl.signal }).then((res) => {
           if (!res.ok) return null;
           const ct = (res.headers.get('content-type') || '').toLowerCase();
-          if (!ct.startsWith('image/')) return null;   // prihlásenie vypršalo → HTML, neukladať
+          if (!ct.startsWith('image/')) return null;
           return res.blob().then((b) => {
             if (!b || b.size > 512 * 1024) return null;
             const fr = new FileReader();
-            fr.onload = () => { try { chrome.storage.local.set({ [AVATAR_SHOT_KEY]: { url: abs, data: String(fr.result) } }); } catch (e) { swallow(e); } };
+            fr.onload = () => { try { chrome.storage.local.set({ [AVATAR_SHOT_KEY]: { url: abs, data: String(fr.result), id } }); } catch (e) { swallow(e); } };
             fr.readAsDataURL(b);
           });
         }).finally(() => clearTimeout(avTimer));
@@ -1393,8 +1401,9 @@
   function ownId() {
     if (schedOwnId) return schedOwnId;
     const a = document.querySelector('#menu-popup .user-info a[href*="clovek.pl?id="]');
-    const img = document.querySelector('#pfp img[src*="foto.pl?id="]');
-    schedOwnId = BU.notif.photoId(a && a.getAttribute('href')) || BU.notif.photoId(img && img.getAttribute('src'))
+    const img = document.querySelector('#pfp img');
+    const src = img && (img.dataset.buOrigSrc || img.getAttribute('src') || '');
+    schedOwnId = BU.notif.photoId(a && a.getAttribute('href')) || BU.notif.photoId(src)
       || (document.body ? BU.notif.studentIdFromHtml(document.body.innerHTML.slice(0, 120000)) : '');
     return schedOwnId;
   }
@@ -1644,15 +1653,13 @@
   /* ================= prezývka v hlavičke ================= */
   function swapNick() {
     if (offNow()) return;
-    const info = document.querySelector('#header .info');
-    if (!info) return;
-    const divs = [...info.querySelectorAll('div')];
-    const nameDiv = divs.length ? divs[divs.length - 1] : null;
-    if (!nameDiv) return;
-    if (!nameDiv.dataset.buOrigName) nameDiv.dataset.buOrigName = nameDiv.textContent.trim();
-    const orig = nameDiv.dataset.buOrigName;
-    if (S.nick) nameDiv.textContent = S.nick;
-    else nameDiv.textContent = orig;
+    const targets = [getNameEl(), document.querySelector('#menu-popup .user-info a[href*="clovek.pl?id="]')];
+    targets.forEach((el) => {
+      if (!el) return;
+      if (!el.dataset.buOrigName) el.dataset.buOrigName = el.textContent.trim();
+      const wanted = S.nick || el.dataset.buOrigName;
+      if (el.textContent !== wanted) el.textContent = wanted;
+    });
   }
 
   function runHeavyDomScan() {

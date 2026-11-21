@@ -8,6 +8,7 @@ Unofficial. Not affiliated with STU.
 
 - Themes (10+), light/dark/auto mode, custom accent/link/radius/font
 - Custom nickname and profile picture (file/URL/original)
+- Rozvrh na domovskej stránke: Dnes / Zajtra / Celý týždeň, vlastné skupiny, 30-minútová vyrovnávacia pamäť
 - Custom links in header bar + presets
 - CSS snippets
 - Table-tools: sortable/filterable tables, CSV copy
@@ -29,7 +30,11 @@ Unofficial. Not affiliated with STU.
 
 Everything runs locally in the browser. Settings are stored in `chrome.storage` (local + sync for cross-device). The extension does **not** send browsing data to any server. The optional experimental update check contacts GitHub only when enabled and triggered manually from settings.
 
-The optional mail preview reads the AIS inbox list from the same site (`/auth/posta/slozka.pl`) using your existing login session, shows it on the main page, and caches the last list locally. It never opens, deletes or sends messages and uploads nothing. The optional schedule preview likewise reads one timetable page from the same site and caches it locally. Neither uploads anything.
+The optional mail preview reads the AIS inbox list from the same site (`/auth/posta/slozka.pl`) using your existing login session, shows it on the main page, and caches the last list locally. It never opens, deletes or sends messages and uploads nothing. The optional schedule preview reads the current week's timetable from `/auth/katalog/rozvrhy_view.pl` with the student ID taken from the page header, and caches the raw HTML locally for 30 minutes. Neither uploads anything.
+
+## Prezývka
+
+Lokálna prezývka sa zobrazuje v hlavičke (`#header .info`) a v rozbaľovacom menu pri mene (`#menu-popup .user-info a`). Nadpisy stránok (napr. „Osobný rozvrh študenta …“) zostávajú bez zmeny, aby sa neupravoval obsah AIS. Prezývka sa nikam nesynchronizuje.
 
 ## Development
 
